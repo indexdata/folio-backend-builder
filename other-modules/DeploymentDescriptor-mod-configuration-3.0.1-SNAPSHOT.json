@@ -1,0 +1,14 @@
+{
+  "srvcId": "mod-configuration-3.0.1-SNAPSHOT",
+  "nodeId": "localhost",
+  "descriptor": {
+    "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-configuration/mod-configuration-server/target/mod-configuration-server-fat.jar -Dhttp.port=%p",
+    "env": [
+      { "name" : "db.host", "value" : "localhost"},
+      { "name" : "db.port", "value" : 5432},
+      { "name" : "db.username", "value" : "folio_admin" },
+      { "name" : "db.password", "value" : "folio_admin" },
+      { "name" : "db.database", "value" : "okapi_modules" }
+    ]
+  }
+}

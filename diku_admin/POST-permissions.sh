@@ -1,0 +1,1 @@
+curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -X POST -d@permissions.json http://localhost:9130/perms/users

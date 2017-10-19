@@ -1,0 +1,1 @@
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-users-14.2.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
