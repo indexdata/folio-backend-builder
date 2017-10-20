@@ -1,8 +1,7 @@
-
+curl -X DELETE http://localhost:9130/_/proxy/tenants/diku/modules/mod-users-bl-2.1.1-SNAPSHOT
 curl -X DELETE http://localhost:9130/_/proxy/tenants/diku/modules/mod-users-14.2.2-SNAPSHOT
 curl -X DELETE http://localhost:9130/_/proxy/tenants/diku/modules/mod-permissions-5.0.1-SNAPSHOT
 curl -X DELETE http://localhost:9130/_/proxy/tenants/diku/modules/mod-login-4.0.1-SNAPSHOT
-curl -X DELETE http://localhost:9130/_/proxy/tenants/diku/modules/mod-users-bl-2.1.1-SNAPSHOT
 curl -X DELETE http://localhost:9130/_/proxy/tenants/diku/modules/mod-authtoken-1.0.1-SNAPSHOT
 
 # mod-permissions must be first, other modules need to write permissions to it
