@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-inventory-6.0.0-SNAPSHOT",
+  "srvcId": "mod-inventory-7.0.1-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-inventory/target/mod-inventory.jar",

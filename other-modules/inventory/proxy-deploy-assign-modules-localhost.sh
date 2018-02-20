@@ -5,20 +5,21 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 
 echo mod-inventory-storage deploy 
 
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/branch-test/DeploymentDescriptor-mod-inventory-storage-6.0.0-SNAPSHOT.json http://localhost:9130/_/discovery/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage-7.2.0-SNAPSHOT.json http://localhost:9130/_/discovery/modules
 
 echo mod-inventory-storage assign
 
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-inventory-storage-6.0.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-inventory-storage-7.2.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-inventory proxy
 
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory/build/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 
 echo mod-inventory deploy
 
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/branch-test/DeploymentDescriptor-mod-inventory-6.0.0-SNAPSHOT.json http://localhost:9130/_/discovery/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-7.0.1-SNAPSHOT.json http://localhost:9130/_/discovery/modules
 
 echo mod-inventory assign
 
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-inventory-6.0.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-inventory-7.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+
