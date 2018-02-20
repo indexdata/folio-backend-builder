@@ -1,0 +1,38 @@
+{"query": "query { 
+  instances { 
+     id,
+     source,
+     title,
+     alternativeTitles,
+     edition,
+     series,
+     identifiers { value, identifierTypeId,
+                   identifierType { name }
+                 },
+     contributors { name,
+                    contributorTypeId,
+                    contributorNameTypeId,
+                    primary,
+                    contributorType { name },
+                    contributorNameType { name }
+                  },
+     subjects,
+     classifications { classificationNumber,
+                       classificationTypeId,
+                       classificationType { name }
+                     },
+     publication { publisher,
+                   place,
+                   dateOfPublication },
+     urls,
+     instanceTypeId,
+     instanceType { name },
+     instanceFormatId,
+     instanceFormat {name},
+     physicalDescriptions,
+     languages, 
+     notes, 
+     metadata { updatedByUser { username } }
+  }
+ }"
+}
