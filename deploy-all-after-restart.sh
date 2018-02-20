@@ -17,7 +17,6 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$AUTHN_MODS
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$OTHER_MODS/DeploymentDescriptor-mod-configuration-3.0.1-SNAPSHOT.json http://localhost:9130/_/discovery/modules
 
 # Inventory
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$INVENTORY_MODS/DeploymentDescriptor-mod-inventory-storage-6.0.0-SNAPSHOT.json http://localhost:9130/_/discovery/modules
 
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$INVENTORY_MODS/DeploymentDescriptor-mod-inventory-storage-5.1.1-SNAPSHOT.json http://localhost:9130/_/discovery/modules
-
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$INVENTORY_MODS/DeploymentDescriptor-mod-inventory-5.1.2-SNAPSHOT.json http://localhost:9130/_/discovery/modules
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$INVENTORY_MODS/DeploymentDescriptor-mod-inventory-6.0.0-SNAPSHOT.json http://localhost:9130/_/discovery/modules

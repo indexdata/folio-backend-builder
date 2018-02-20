@@ -3,4 +3,3 @@ token=$(curl -s -X POST -D - -H "Content-type: application/json" -H "X-Okapi-Ten
 echo $token
 
 curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" http://$1/users?query=\(username%3Ddiku_admin\)
-
