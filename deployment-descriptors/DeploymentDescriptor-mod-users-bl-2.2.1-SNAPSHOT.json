@@ -1,8 +1,8 @@
 {
-  "srvcId": "mod-users-14.2.2-SNAPSHOT",
+  "srvcId": "mod-users-bl-2.2.1-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dstorage=postgres -jar /home/ne/folio/mod-users/target/mod-users-fat.jar -Dhttp.port=%p",
+    "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-users-bl/target/mod-users-bl-fat.jar -Dhttp.port=%p",
     "env": [
       { "name" : "db.host", "value" : "localhost"},
       { "name" : "db.port", "value" : 5432},
@@ -10,5 +10,6 @@
       { "name" : "db.password", "value" : "folio_admin" },
       { "name" : "db.database", "value" : "okapi_modules" }
     ]
+  }
   }
 }

@@ -1,1 +1,1 @@
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-users-bl-2.1.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-users-bl-2.2.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
