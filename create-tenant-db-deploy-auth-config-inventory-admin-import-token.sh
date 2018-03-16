@@ -20,7 +20,7 @@ cd $FOLIO/mod-inventory-storage/sample-data/
 
 ./import.sh diku
 
-$FOLIO/install-folio-backend/other-modules/graphql/proxy-deploy-assign-localhost.sh
+#$FOLIO/install-folio-backend/other-modules/graphql/proxy-deploy-assign-localhost.sh
 
 cd $FOLIO/install-folio-backend
 
