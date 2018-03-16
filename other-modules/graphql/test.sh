@@ -4,4 +4,6 @@ curl -w '\n' -X POST -D - -H "Content-type: application/json" -H "X-Okapi-Tenant
 
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -d '{"query": "query { groups { group, metadata { createdByUser { username } } } } "}' http://localhost:9130/graphql
 
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -d @instances-query.json  http://localhost:9130/graphql
+#curl -w '\n' -X POST -D - -H "Content-type: application/json" -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -d @instances-query.json  http://localhost:9130/graphql
+
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -d @instance-query-by-id.json  http://localhost:9130/graphql
