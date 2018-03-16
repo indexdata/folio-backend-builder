@@ -16,9 +16,14 @@
 
 ./diku_admin/create-diku_admin.sh
 
+cd $FOLIO/mod-inventory-storage/reference-data/
+
+tenant=diku ./import.sh diku
+
 cd $FOLIO/mod-inventory-storage/sample-data/
 
 ./import.sh diku
+
 
 #$FOLIO/install-folio-backend/other-modules/graphql/proxy-deploy-assign-localhost.sh
 
