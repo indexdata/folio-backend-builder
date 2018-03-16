@@ -5,7 +5,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 
 echo mod-inventory-storage deploy 
 
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage-7.2.0-SNAPSHOT.json http://localhost:9130/_/discovery/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage.json http://localhost:9130/_/discovery/modules
 
 echo mod-inventory-storage assign
 
@@ -17,7 +17,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 
 echo mod-inventory deploy
 
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-7.0.1-SNAPSHOT.json http://localhost:9130/_/discovery/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory.json http://localhost:9130/_/discovery/modules
 
 echo mod-inventory assign
 
