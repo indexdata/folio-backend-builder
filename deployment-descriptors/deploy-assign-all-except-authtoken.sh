@@ -14,19 +14,21 @@ curl -X DELETE http://localhost:9130/_/proxy/tenants/diku/modules/mod-authtoken-
 echo Deploy mod-permissions-5.0.1-SNAPSHOT 
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-permissions-5.0.1-SNAPSHOT.json http://localhost:9130/_/discovery/modules
 echo Assign mod-permissions to DIKU
-$workdir/assign-modules/assign-mod-permissions-to-diku.sh 
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-permissions-5.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 echo Deploy mod-users-14.5.0-SNAPSHOT
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-users-14.5.0-SNAPSHOT.json http://localhost:9130/_/discovery/modules
 echo Assign mod-users to diku
-$workdir/assign-modules/assign-mod-users-to-diku.sh
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-users-14.5.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 echo Deploy mod-login-4.0.1-SNAPSHOT
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-login-4.0.1-SNAPSHOT.json http://localhost:9130/_/discovery/modules
 echo Assign mod-login to DIKU
-$workdir/assign-modules/assign-mod-login-to-diku.sh 
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-login-4.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 echo Deploy mod-users-bl-2.2.1-SNAPSHOT
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-users-bl-2.2.1-SNAPSHOT.json http://localhost:9130/_/discovery/modules
 echo Assign mod-users-bl to DIKU
-$workdir/assign-modules/assign-mod-users-bl-to-diku.sh 
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-users-bl-2.2.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+echo Assign internal module to DIKU
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "okapi-2.9.4-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 echo List modules
 curl http://localhost:9130/_/discovery/modules
 echo List DIKUs modules
