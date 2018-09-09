@@ -28,7 +28,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/de
 echo Assign mod-users-bl to DIKU
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-users-bl-2.2.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 echo Assign internal module to DIKU
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "okapi-2.9.4-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "okapi-2.14.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 echo List modules
 curl http://localhost:9130/_/discovery/modules
 echo List DIKUs modules
