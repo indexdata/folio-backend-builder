@@ -7,6 +7,7 @@ item_storage_address=http://localhost:9130/item-storage/items
 instance_storage_address=http://localhost:9130/instance-storage/instances
 loan_type_storage_address=http://localhost:9130/loan-types
 material_type_storage_address=http://localhost:9130/material-types
+instance_relationship_type_storage_address=http://localhost:9130/instance-relationship-types
 identifier_type_storage_address=http://localhost:9130/identifier-types
 creator_type_storage_address=http://localhost:9130/creator-types
 contributor_type_storage_address=http://localhost:9130/contributor-types
@@ -41,6 +42,15 @@ for f in $datadir/items/*.json; do
          -H "X-Okapi-Token: ${token}" \
          -d @$f \
          "${item_storage_address}"
+done
+
+for f in $datadir/instancerelationshiptypes/*.json; do
+    curl -w '\n' -X POST -D - \
+         -H "Content-type: application/json" \
+         -H "X-Okapi-Tenant: ${tenant}" \
+         -H "X-Okapi-Token: ${token}" \
+         -d @$f \
+         "${instance_relationship_type_storage_address}"
 done
 
 for f in $datadir/identifiertypes/*.json; do
