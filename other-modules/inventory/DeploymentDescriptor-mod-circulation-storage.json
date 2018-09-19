@@ -1,5 +1,5 @@
 {
-  "srvcId" : "mod-circulation-storage-5.0.2-SNAPSHOT",
+  "srvcId" : "mod-circulation-storage-6.1.1-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor" : {
     "exec" : "java -Dstorage=postgres -jar /home/ne/folio/mod-circulation-storage/target/mod-circulation-storage-fat.jar -Dhttp.port=%p",

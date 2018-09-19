@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-circulation-10.4.1-SNAPSHOT",
+  "srvcId": "mod-circulation-12.0.1-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-circulation/target/mod-circulation.jar"

@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-codex-mux-2.2.2-SNAPSHOT",
+  "srvcId": "mod-codex-mux-2.2.3-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -jar /home/ne/folio/mod-codex-mux/target/mod-codex-mux-fat.jar -Dhttp.port=%p"
