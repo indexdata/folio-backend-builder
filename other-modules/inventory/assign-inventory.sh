@@ -21,3 +21,7 @@ curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-ci
 echo mod-circulation assign
 
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-circulation-12.1.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+
+echo mod-rtac assign
+
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-rtac-1.1.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules

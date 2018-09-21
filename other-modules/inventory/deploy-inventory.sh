@@ -21,3 +21,7 @@ curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install
 echo mod-circulation deploy
 
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-circulation.json http://localhost:9130/_/discovery/modules
+
+echo mod-rtac deploy
+
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-rtac.json http://localhost:9130/_/discovery/modules

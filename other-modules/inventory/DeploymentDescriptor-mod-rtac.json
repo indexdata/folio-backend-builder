@@ -1,0 +1,7 @@
+{
+  "srvcId": "mod-rtac-1.1.1-SNAPSHOT",
+  "nodeId": "localhost",
+  "descriptor": {
+    "exec": "java -Dport=%p -jar /home/ne/folio/mod-rtac/target/mod-rtac-fat.jar -Dhttp.port=%p"
+  }
+}
