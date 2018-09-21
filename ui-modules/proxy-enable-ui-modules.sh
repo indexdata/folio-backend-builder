@@ -5,7 +5,7 @@ uidesc=$FOLIO/folio-testing-platform-cut-down/ModuleDescriptors
 echo Enable ui inventory
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$uidesc/inventory.json http://localhost:9130/_/proxy/modules
 
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "folio_inventory-1.0.2000194"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "folio_inventory-1.0.3000235"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo Enable ui users
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$uidesc/users.json http://localhost:9130/_/proxy/modules
