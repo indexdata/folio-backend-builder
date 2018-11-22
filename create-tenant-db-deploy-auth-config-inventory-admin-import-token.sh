@@ -1,20 +1,14 @@
+workdir=$FOLIO/install-folio-backend
+
 ./okapi/create-tenant.sh
 
 ./drop-pgdb-okapi_modules-and-roles.sh
 
 ./create-pgdb-okapi_modules.sh
 
-./authn-proxy-modules/register-all-module-proxies.sh
-
-./deployment-descriptors/deploy-assign-all-except-authtoken.sh
-
-./other-modules/proxy-deploy-assign-modules.sh
-
-./other-modules/inventory/proxy-deploy-assign-modules-localhost.sh
+./register-deploy-assign-modules.sh
 
 ./ui-modules/proxy-enable-ui-modules.sh
-
-./diku_admin/create-diku_admin.sh
 
 cd $FOLIO/mod-inventory-storage/reference-data/
 
@@ -24,10 +18,12 @@ cd $FOLIO/mod-inventory-storage/sample-data/
 
 ./import.sh diku
 
+$workdir/diku_admin/create-diku_admin.sh
 
-#$FOLIO/install-folio-backend/other-modules/graphql/proxy-deploy-assign-localhost.sh
 
-cd $FOLIO/install-folio-backend
-
-./deployment-descriptors/deploy-assign-authtoken.sh
+# Locks down module access to authenticated users
+echo Deploy mod-authtoken
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-authtoken.json http://localhost:9130/_/discovery/modules
+echo Assign mod-authtoken to DIKU
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-authtoken-1.4.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
