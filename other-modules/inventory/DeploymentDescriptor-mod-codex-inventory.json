@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-codex-inventory-1.3.0-SNAPSHOT",
+  "srvcId": "mod-codex-inventory-1.4.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -jar /home/ne/folio/mod-codex-inventory/target/mod-codex-inventory-fat.jar -Dhttp.port=%p"

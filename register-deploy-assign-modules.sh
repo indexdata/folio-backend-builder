@@ -61,7 +61,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 echo Deploy mod-codex-inventory
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-codex-inventory.json http://localhost:9130/_/discovery/modules
 echo Assign mod-codex-inventory
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-codex-inventory-1.3.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-codex-inventory-1.4.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-codex-mux
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-codex-mux/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
