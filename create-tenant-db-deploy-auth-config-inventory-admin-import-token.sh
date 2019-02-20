@@ -10,9 +10,8 @@ workdir=$FOLIO/install-folio-backend
 
 ./ui-modules/proxy-enable-ui-modules.sh
 
-cd $FOLIO/mod-inventory-storage/reference-data/
-
-tenant=diku ./import.sh diku
+#cd $FOLIO/mod-inventory-storage/reference-data/
+#tenant=diku ./import.sh diku
 
 cd $FOLIO/mod-inventory-storage/sample-data/
 
