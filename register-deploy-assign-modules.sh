@@ -111,3 +111,10 @@ echo Deploy mod-notify
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/mod-notify/target/DeploymentDescriptor.json http://localhost:9130/_/discovery/modules
 echo Assign mod-notify
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-notify-1.1.6-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+
+echo mod-union-inventory
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-union-inventory/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-union-inventory
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-union-inventory.json http://localhost:9130/_/discovery/modules
+echo Assign mod-union-inventory
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/mod-union-inventory/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
