@@ -1,8 +1,8 @@
 {
-  "srvcId": "mod-union-inventory-1.0.0-SNAPSHOT",
+  "srvcId": "mod-union-catalog-1.0.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dstorage=postgres -jar /home/ne/folio/mod-union-inventory/target/mod-union-inventory-fat.jar -Dhttp.port=%p",
+    "exec": "java -Dstorage=postgres -jar /home/ne/folio/mod-union-catalog/target/mod-union-catalog-fat.jar -Dhttp.port=%p",
     "env": [
       { "name": "db.host", "value": "localhost"},
       { "name": "db.port", "value": 5432},

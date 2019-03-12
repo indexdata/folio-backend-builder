@@ -1,4 +1,17 @@
 {
     "userId" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
-    "permissions" : ["perms.all", "login.all", "users.all", "configuration.all", "users-bl.all", "inventory-storage.all", "inventory.all", "union-storage.all", "circulation.all", "notify.all"]
+    "permissions" : [
+      "perms.all",
+      "login.all",
+      "users.all",
+      "configuration.all",
+      "users-bl.all",
+      "calendar.collection.all",
+      "inventory-storage.all",
+      "inventory.all",
+      "union-catalog.all",
+      "inventory-match.all",
+      "circulation.all",
+      "circulation-storage.all",
+      "notify.all"]
 }
