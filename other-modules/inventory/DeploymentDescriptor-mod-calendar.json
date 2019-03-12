@@ -1,8 +1,8 @@
 {
-  "srvcId" : "mod-circulation-storage-7.0.0-SNAPSHOT",
+  "srvcId": "mod-calendar-1.3.0-SNAPSHOT",
   "nodeId": "localhost",
-  "descriptor" : {
-    "exec" : "java -Dstorage=postgres -jar /home/ne/folio/mod-circulation-storage/target/mod-circulation-storage-fat.jar -Dhttp.port=%p",
+  "descriptor": {
+    "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -jar /home/ne/folio/mod-inventory-storage/target/mod-inventory-storage-fat.jar -Dhttp.port=%p",
     "env": [
       { "name": "db.host", "value": "localhost"},
       { "name": "db.port", "value": 5432},
@@ -10,6 +10,5 @@
       { "name": "db.password", "value": "folio_admin" },
       { "name": "db.database", "value": "okapi_modules" }
     ]
-
   }
 }
