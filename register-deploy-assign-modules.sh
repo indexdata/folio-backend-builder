@@ -70,26 +70,33 @@ curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install
 echo Assign mod-codex-mux
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-codex-mux-2.2.3-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
+echo mod-calendar
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-calendar/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-calendar
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-calendar.json http://localhost:9130/_/discovery/modules
+echo Assign mod-calendar
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-calendar-1.3.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+
 echo mod-circulation-storage
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-circulation-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-circulation-storage
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-circulation-storage.json http://localhost:9130/_/discovery/modules
 echo Assign mod-circulation-storage
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-circulation-storage-6.3.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/mod-circulation-storage/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-circulation
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-circulation/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-circulation
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-circulation.json http://localhost:9130/_/discovery/modules
 echo Assign mod-circulation
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-circulation-13.1.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/mod-circulation/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-rtac
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-rtac/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-rtac
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-rtac.json http://localhost:9130/_/discovery/modules
 echo Assign mod-rtac
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-rtac-1.2.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-rtac-1.2.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 #echo mod-patron (requires fees and fines to install)
 #curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-patron/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules

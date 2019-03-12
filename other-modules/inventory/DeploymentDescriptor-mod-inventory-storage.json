@@ -2,7 +2,7 @@
   "srvcId": "mod-inventory-storage-15.2.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dstorage=postgres -jar /home/ne/folio/mod-inventory-storage/target/mod-inventory-storage-fat.jar -Dhttp.port=%p",
+    "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -jar /home/ne/folio/mod-inventory-storage/target/mod-inventory-storage-fat.jar -Dhttp.port=%p",
     "env": [
       { "name": "db.host", "value": "localhost"},
       { "name": "db.port", "value": 5432},
