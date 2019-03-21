@@ -37,7 +37,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 echo Deploy mod-inventory-storage
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage.json http://localhost:9130/_/discovery/modules
 echo Install mod-inventory-storage for diku
-curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-15.2.0-SNAPSHOT", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
+curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-15.3.0-SNAPSHOT", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
 
 echo mod-users-bl
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-users-bl/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
