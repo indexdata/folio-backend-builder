@@ -1,7 +1,14 @@
 {
-  "srvcId": "mod-notify-1.1.6-SNAPSHOT",
+  "srvcId": "mod-notify-2.2.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dloglevel=DEBUG -Dport=%p -jar ../mod-notify/target/mod-notify-fat.jar -Dhttp.port=%p embed_postgres=true"
+    "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -Dport=%p -jar /home/ne/folio/mod-notify/target/mod-notify-fat.jar -Dhttp.port=%p",
+    "env": [
+      { "name": "db.host", "value": "localhost"},
+      { "name": "db.port", "value": 5432},
+      { "name": "db.username", "value": "folio_admin" },
+      { "name": "db.password", "value": "folio_admin" },
+      { "name": "db.database", "value": "okapi_modules" }
+    ]
   }
 }

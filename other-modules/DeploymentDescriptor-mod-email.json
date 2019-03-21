@@ -1,8 +1,8 @@
 {
-  "srvcId": "mod-configuration-5.0.2-SNAPSHOT",
+  "srvcId": "mod-email-1.2.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-configuration/mod-configuration-server/target/mod-configuration-server-fat.jar -Dhttp.port=%p",
+    "exec": "java -Dstorage=postgres -Dport=%p -jar /home/ne/folio/mod-email/target/mod-email-fat.jar -Dhttp.port=%p",
     "env": [
       { "name" : "db.host", "value" : "localhost"},
       { "name" : "db.port", "value" : 5432},
