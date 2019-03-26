@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-inventory-storage-15.3.0-SNAPSHOT",
+  "srvcId": "mod-inventory-storage-15.3.2-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -jar /home/ne/folio/mod-inventory-storage/target/mod-inventory-storage-fat.jar -Dhttp.port=%p",
