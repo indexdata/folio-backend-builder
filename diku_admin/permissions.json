@@ -13,6 +13,7 @@
       "inventory-match.all",
       "circulation.all",
       "circulation-storage.all",
-      "notify.all"
+      "notify.all",
+      "source-storage.all"
     ]
 }

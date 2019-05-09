@@ -1,0 +1,1 @@
+curl -s -X POST -D - -H "Content-type: application/json" -H "X-Okapi-Tenant: diku"  -d "{ \"username\": \"$1\", \"password\": \"$2\"}" http://$3/authn/login | grep x-okapi-token | cut -d " " -f2 
