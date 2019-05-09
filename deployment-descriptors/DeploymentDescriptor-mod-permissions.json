@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-permissions-5.4.0-SNAPSHOT",
+  "srvcId": "mod-permissions-5.6.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dstorage=postgres -jar /home/ne/folio/mod-permissions/target/mod-permissions-fat.jar -Dhttp.port=%p",

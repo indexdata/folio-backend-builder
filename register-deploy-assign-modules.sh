@@ -1,15 +1,16 @@
 workdir=$FOLIO/install-folio-backend
 
+echo Assign internal module to DIKU
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "okapi-2.28.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+
 # mod-permissions must be first, other modules need to write permissions to it
 echo mod-permissions 
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-permissions/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-permissions
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-permissions.json http://localhost:9130/_/discovery/modules
 echo Assign mod-permissions to DIKU
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-permissions-5.4.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-permissions-5.6.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
-echo Assign internal module to DIKU
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "okapi-2.22.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-users
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-users/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -148,4 +149,9 @@ curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-rt
 #echo Assign mod-patron
 #curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-patron-1.2.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
-
+echo mod-source-record-storage
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-source-record-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-source-record-storage
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-source-record-storage.json http://localhost:9130/_/discovery/modules
+echo Assign mod-source-record-storage
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-source-record-storage-2.2.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
