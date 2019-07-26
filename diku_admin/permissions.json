@@ -6,7 +6,7 @@
       "users.all",
       "configuration.all",
       "users-bl.all",
-      "calendar.collection.all",
+      "calendar.all",
       "inventory-storage.all",
       "inventory.all",
       "union-catalog.all",
