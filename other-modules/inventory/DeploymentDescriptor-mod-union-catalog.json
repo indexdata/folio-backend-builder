@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-union-catalog-1.0.0-SNAPSHOT",
+  "srvcId": "mod-union-catalog-2.0.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dstorage=postgres -jar /home/ne/folio/mod-union-catalog/target/mod-union-catalog-fat.jar -Dhttp.port=%p",
