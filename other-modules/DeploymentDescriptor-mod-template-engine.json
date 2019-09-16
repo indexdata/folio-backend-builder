@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-template-engine-1.3.0-SNAPSHOT",
+  "srvcId": "mod-template-engine-1.7.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dstorage=postgres -Dport=%p -jar /home/ne/folio/mod-template-engine/target/mod-template-engine-fat.jar -Dhttp.port=%p",
