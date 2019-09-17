@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-source-record-storage-2.2.0-SNAPSHOT",
+  "srvcId": "mod-source-record-storage-2.7.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -jar /home/ne/folio/mod-source-record-storage/mod-source-record-storage-server/target/mod-source-record-storage-server-fat.jar -Dhttp.port=%p",

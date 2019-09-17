@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-notify-2.2.0-SNAPSHOT",
+  "srvcId": "mod-notify-2.4.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -Dport=%p -jar /home/ne/folio/mod-notify/target/mod-notify-fat.jar -Dhttp.port=%p",
