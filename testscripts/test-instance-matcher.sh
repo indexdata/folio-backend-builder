@@ -115,7 +115,8 @@ curl -w '\n' -X PUT -D - \
          -d '{ 
               "source": "Uptown",
               "title": "Book1",
-              "notes": ["Uptown"],
+              "indexTitle": "book1",
+              "notes": [{"instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c", "note": "Uptown"}],
               "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f"
             }' \
          http://localhost:9130/instance-storage-match/instances
@@ -128,7 +129,8 @@ curl -w '\n' -X PUT -D - \
          -d '{ 
               "source": "Uptown",
               "title": "Book2",
-              "notes": ["Uptown"],
+              "indexTitle": "book2",
+              "notes": [{"instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c", "note": "Uptown"}],
               "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f"
             }' \
          http://localhost:9130/instance-storage-match/instances
@@ -141,25 +143,10 @@ curl -w '\n' -X PUT -D - \
          -d '{ 
               "source": "Downtown",
               "title": "Book1",
-              "notes": ["Downtown"],
+              "indexTitle": "book1",
+              "notes": [{"instanceNoteTypeId": "6a2533a7-4de2-4e64-8466-074c2fa9308c", "note": "Downtown"}],
               "instanceTypeId": "6312d172-f0cf-40f6-b27d-9fa8feaf332f"
             }' \
          http://localhost:9130/instance-storage-match/instances
 
-#curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" http://localhost:9130/instance-storage/instances?query=%28title%3D%22Book1%22%29
 
-#curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/instance-storage/instances
-
-token=$($FOLIO/install-folio-backend/util-scripts/get-token-diku_admin.sh localhost:9130)
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/item-storage/items
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/holdings-storage/holdings
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/instance-storage/instances
-
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/locations/53cf956f-c1df-410b-8bea-27f712cca7c0
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/locations/fcd64ce1-6995-48f0-840e-89ffa2288371
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/locations/758258bc-ecc1-41b8-abca-f7b610822ffd
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/locations/b241764c-1466-4e1d-a028-1a3684a5da87
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/locations/f34d27c6-a8eb-461b-acd6-5dea81771e70
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/location-units/libraries/5d78803e-ca04-4b4a-aeae-2c63b924518b
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/location-units/campuses/62cf76b7-cca5-4d33-9217-edf42ce1a848
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://localhost:9130/location-units/institutions/40ee00ca-a518-4b49-be01-0638d0a4ac57
