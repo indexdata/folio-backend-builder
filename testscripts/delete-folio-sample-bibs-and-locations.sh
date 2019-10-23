@@ -1,2 +1,3 @@
+cd "$(dirname "$0")"
 ./delete-sample-bibs.sh
-./delete-sample-locations.sh
+./delete-folio-sample-locations.sh

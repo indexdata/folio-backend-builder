@@ -1,6 +1,69 @@
-host=localhost:9130
-
+host=$1
 token=$($FOLIO/install-folio-backend/util-scripts/get-token-diku_admin.sh $host)
+
+curl -w '\n' -X POST -D - \
+  -H "Content-type: application/json" \
+  -H "X-Okapi-Tenant: diku" \
+  -H "X-Okapi-Token: $token" \
+  -d '{ 
+        "id": "3a028d8d-2fd9-4219-90d4-58a2f50a28be",
+        "name": "Unspecified institution",
+        "code": "UI"
+     }' \
+  http://$host/location-units/institutions
+
+curl -w '\n' -X POST -D - \
+  -H "Content-type: application/json" \
+  -H "X-Okapi-Tenant: diku" \
+  -H "X-Okapi-Token: $token" \
+  -d '{ 
+        "id": "3a028d8d-2fd9-4219-90d4-58a2f50a28be",
+        "name": "Unspecified campus ÆØÅæøåÄÖäö",
+        "code": "UC",
+        "institutionId": "3a028d8d-2fd9-4219-90d4-58a2f50a28be"
+     }' \
+  http://$host/location-units/campuses
+
+curl -w '\n' -X POST -D - \
+  -H "Content-type: application/json" \
+  -H "X-Okapi-Tenant: diku" \
+  -H "X-Okapi-Token: $token" \
+  -d '{ 
+        "id": "8ade8e78-8cdb-499f-8f45-d8cf8cd3a904",
+        "name": "Unspecified library",
+        "code": "UL",
+        "campusId": "3a028d8d-2fd9-4219-90d4-58a2f50a28be"
+     }' \
+  http://$host/location-units/libraries
+
+curl -w '\n' -X POST -D - \
+  -H "Content-type: application/json" \
+  -H "X-Okapi-Tenant: diku" \
+  -H "X-Okapi-Token: $token" \
+  -d '{
+        "id": "c8f57ff4-366f-4c94-8186-d6439fae1d22",
+        "name": "Unspecified location",
+        "code": "UI/UC/UL/L",
+        "isActive": true,
+        "institutionId": "3a028d8d-2fd9-4219-90d4-58a2f50a28be",
+        "campusId": "3a028d8d-2fd9-4219-90d4-58a2f50a28be",
+        "libraryId": "8ade8e78-8cdb-499f-8f45-d8cf8cd3a904",
+        "primaryServicePoint": "3a40852d-49fd-4df2-a1f9-6e2641a6e91f",
+        "servicePointIds": [ "3a40852d-49fd-4df2-a1f9-6e2641a6e91f" ]
+    }' \
+    http://$host/locations
+
+curl -w '\n' -X POST -D - \
+  -H "Content-type: application/json" \
+  -H "X-Okapi-Tenant: diku" \
+  -H "X-Okapi-Token: $token" \
+  -d '{
+        "id": "2117d011-f52b-4efe-ab97-f11d0a4b77e5",
+        "name": "Unspecified library record identifier",
+        "source": "RESHARE"
+    }' \
+    http://$host/identifier-types
+
 
 curl -w '\n' -X POST -D - \
   -H "Content-type: application/json" \
@@ -127,4 +190,5 @@ curl -w '\n' -X POST -D - \
         "source": "RESHARE"
     }' \
     http://$host/identifier-types
+
 

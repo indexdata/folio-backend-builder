@@ -1,1 +1,0 @@
-curl -X DELETE -D - -w '\n' http://localhost:9130/_/proxy/tenants/$2/modules/$1

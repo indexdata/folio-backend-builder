@@ -4,7 +4,6 @@ Okapi, an external PostgreSQL database, auth and user modules and select other m
 
 Prerequisites:
   - PostgreSQL installed
-     (on October 18 2017, local PostgreSQL was updated to 9.6, required by some dbupdate scripts in RMB)
 
   - Okapi database user created in PostgreSQL, and okapi database initialized
      See: https://github.com/folio-org/okapi/blob/master/doc/guide.md#storage
@@ -17,7 +16,7 @@ Prerequisites:
     Initialize database (empty modules and tenants tables):
 
       java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase
-        (inttdatabase will reuse existing tables)
+        (initdatabase will reuse existing tables)
 
   - Okapi started 
       java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar dev
@@ -68,10 +67,6 @@ Option 3) Deploy authn modules and other modules again after Okapi re-start
 
   ./deploy-all-after-restart.sh
 
-
-Data: 
-  If importing inventory data after API lockdown, use this script that obtains and pass auth token:
-   ./data/inventory/import.sh
 
 
 Test:

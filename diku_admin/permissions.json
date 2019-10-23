@@ -8,9 +8,7 @@
       "calendar.all",
       "inventory-storage.all",
       "inventory.all",
-      "union-catalog.all",
       "inventory-match.all",
-      "circulation.all",
       "circulation-storage.all",
       "notify.all",
       "source-storage.all"
