@@ -18,7 +18,7 @@ curl -w '\n' -X POST -D - \
   -H "X-Okapi-Token: $token" \
   -d '{ 
         "id": "3a028d8d-2fd9-4219-90d4-58a2f50a28be",
-        "name": "Unspecified campus ÆØÅæøåÄÖäö",
+        "name": "Unspecified campus",
         "code": "UC",
         "institutionId": "3a028d8d-2fd9-4219-90d4-58a2f50a28be"
      }' \
