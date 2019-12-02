@@ -1,0 +1,7 @@
+{
+  "srvcId": "mod-marc-storage-0.0.1-SNAPSHOT",
+  "nodeId": "localhost",
+  "descriptor": {
+    "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -jar /home/ne/folio/mod-marc-storage/target/mod-marc-storage-fat.jar -Dhttp.port=%p"
+  }
+}

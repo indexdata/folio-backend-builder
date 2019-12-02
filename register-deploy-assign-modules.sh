@@ -71,13 +71,6 @@ curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install
 echo Assign mod-codex-mux
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-codex-mux-2.2.3-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
-echo mod-calendar
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-calendar/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-calendar
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-calendar.json http://localhost:9130/_/discovery/modules
-echo Assign mod-calendar
-curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-calendar-1.6.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
 echo mod-circulation-storage
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-circulation-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-circulation-storage
@@ -168,6 +161,13 @@ echo Deploy mod-inventory-match
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-match.json http://localhost:9130/_/discovery/modules
 echo Assign mod-inventory-match
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/mod-inventory-match/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
+
+echo mod-marc-storage
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-marc-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-marc-storage
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-marc-storage.json http://localhost:9130/_/discovery/modules
+echo Assign mod-marc-storage
+curl -w '\n' -X POST -D - -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 # Note: Many of these modules are required due to the dependency tree of mod-users-bl
 # mod-users-bl
