@@ -1,7 +1,7 @@
 {
-  "srvcId": "mod-inventory-match-2.4.1-SNAPSHOT",
+  "srvcId": "mod-inventory-match-2.4.2-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dport=%p -Dloglevel=DEBUG -jar /home/ne/folio/mod-inventory-match/target/mod-inventory-match-fat.jar embed_postgres=true"
+    "exec": "java -Dport=%p -Dloglevel=DEBUG -jar /home/ne/folio/mod-inventory-match/target/mod-inventory-match-fat.jar"
   }
 }
