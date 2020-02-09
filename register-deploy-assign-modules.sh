@@ -162,7 +162,7 @@ curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install
 echo Assign mod-inventory-match
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/mod-inventory-match/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
 
-echo mod-marc-storage
+echo mod-marc-storage proxy
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-marc-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-marc-storage
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-marc-storage.json http://localhost:9130/_/discovery/modules
