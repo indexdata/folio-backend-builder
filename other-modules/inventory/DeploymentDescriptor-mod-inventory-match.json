@@ -1,7 +1,7 @@
 {
-  "srvcId": "mod-inventory-match-2.4.3-SNAPSHOT",
+  "srvcId": "mod-inventory-match-3.0.0",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dport=%p -Dloglevel=DEBUG -jar /home/ne/git-ole/mod-inventory-match/target/mod-inventory-match-fat.jar"
+    "exec": "java -Dport=%p -Dloglevel=INFO -jar /home/ne/git-ole/mod-inventory-match/target/mod-inventory-match-fat.jar"
   }
 }

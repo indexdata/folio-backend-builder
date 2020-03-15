@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-users-bl-5.1.0-SNAPSHOT",
+  "srvcId": "mod-users-bl-5.2.1-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-users-bl/target/mod-users-bl-fat.jar -Dhttp.port=%p",

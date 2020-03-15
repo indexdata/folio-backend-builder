@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-authtoken-2.3.0-SNAPSHOT",
+  "srvcId": "mod-authtoken-2.5.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-authtoken/target/mod-authtoken-fat.jar -Dhttp.port=%p",
