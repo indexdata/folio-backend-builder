@@ -1,5 +1,6 @@
 workdir=$FOLIO/install-folio-backend
 GITOLE=/home/ne/git-ole
+GITID=/home/ne/gitprojects
 
 
 echo Assign internal module to DIKU
@@ -170,6 +171,13 @@ echo Deploy mod-marc-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-marc-storage.json http://localhost:9130/_/discovery/modules
 echo Assign mod-marc-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+
+echo mod-harvester-admin
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-harvester-admin
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/harvester/DeploymentDescriptor-mod-harvester-admin.json http://localhost:9130/_/discovery/modules
+echo Assign mod-harvester-admin
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
 
 # Note: Many of these modules are required due to the dependency tree of mod-users-bl
 # mod-users-bl

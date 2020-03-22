@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-inventory-match-3.0.0",
+  "srvcId": "mod-inventory-match-3.1.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dport=%p -Dloglevel=INFO -jar /home/ne/git-ole/mod-inventory-match/target/mod-inventory-match-fat.jar"

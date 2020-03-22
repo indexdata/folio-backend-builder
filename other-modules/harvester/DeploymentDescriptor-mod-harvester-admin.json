@@ -1,0 +1,11 @@
+{
+  "srvcId": "mod-harvester-admin-1.0.0-SNAPSHOT",
+  "nodeId": "localhost",
+  "descriptor": {
+    "exec": "java -Dport=%p -Dloglevel=INFO -jar /home/ne/gitprojects/mod-harvester-admin/target/mod-harvester-admin-fat.jar",
+    "env": [
+      { "name": "harvester_port", "value": 8080},
+      { "name": "harvester_host", "value": "localhost"}
+    ]
+  }
+}

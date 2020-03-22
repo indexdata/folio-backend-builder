@@ -2,13 +2,6 @@
   "srvcId": "mod-inventory-14.1.0-shared-inventory2",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/git-ole/mod-inventory/target/mod-inventory.jar",
-    "env": [
-      { "name": "db.host", "value": "localhost"},
-      { "name": "db.port", "value": 5432},
-      { "name": "db.username", "value": "folio_admin" },
-      { "name": "db.password", "value": "folio_admin" },
-      { "name": "db.database", "value": "okapi_modules" }
-    ]
+    "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/git-ole/mod-inventory/target/mod-inventory.jar"
   }
 }

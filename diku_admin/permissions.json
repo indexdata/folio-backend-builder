@@ -10,6 +10,7 @@
       "inventory-match.all",
       "circulation-storage.all",
       "notify.all",
-      "source-storage.all"
+      "source-storage.all",
+      "harvester-admin.all"
     ]
 }
