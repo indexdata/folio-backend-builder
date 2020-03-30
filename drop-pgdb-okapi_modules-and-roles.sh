@@ -12,4 +12,4 @@ sudo -u postgres bash -c "psql -c \"DROP ROLE diku_mod_inventory_storage;\""
 sudo -u postgres bash -c "psql -c \"DROP ROLE diku_mod_circulation_storage;\""
 sudo -u postgres bash -c "psql -c \"DROP ROLE diku_mod_password_validator;\""
 sudo -u postgres bash -c "psql -c \"DROP ROLE diku_mod_source_record_storage;\""
-
+sudo -u postgres bash -c "psql -c \"DROP ROLE diku_mod_marc_storage;\""

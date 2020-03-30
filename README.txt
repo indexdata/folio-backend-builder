@@ -80,3 +80,8 @@ curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" http://localhost:9130/
 curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" http://localhost:9130/instance-storage/instances
 
 curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" http://localhost:9130/instance-formats
+
+Log in to dabase: psql -U folio_admin postgresql://localhost:5432/okapi_modules     folio_admin
+  Schemas:  \dn
+  Describe table:  \d diku_mod_inventory_storage.instance
+

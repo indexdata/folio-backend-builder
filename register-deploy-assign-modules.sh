@@ -41,7 +41,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod
 echo Deploy mod-inventory-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage.json http://localhost:9130/_/discovery/modules
 echo Install mod-inventory-storage for diku
-curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-19.2.0-shared-inventory2", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
+curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-19.2.0-shared-inventory3", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
 
 echo register mod-authtoken
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-authtoken/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -170,7 +170,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod
 echo Deploy mod-marc-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-marc-storage.json http://localhost:9130/_/discovery/modules
 echo Assign mod-marc-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.2"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-harvester-admin
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules

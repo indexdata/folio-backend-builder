@@ -1,7 +1,14 @@
 {
-  "srvcId": "mod-marc-storage-0.0.1-SNAPSHOT",
+  "srvcId": "mod-marc-storage-0.0.2",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -jar /home/ne/git-ole/mod-marc-storage/target/mod-marc-storage-fat.jar -Dhttp.port=%p"
+    "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -jar /home/ne/git-ole/mod-marc-storage/target/mod-marc-storage-fat.jar -Dhttp.port=%p",
+    "env": [
+      { "name": "DB_HOST", "value": "localhost"},
+      { "name": "DB_PORT", "value": 5432},
+      { "name": "DB_USERNAME", "value": "folio_admin" },
+      { "name": "DB_PASSWORD", "value": "folio_admin" },
+      { "name": "DB_DATABASE", "value": "okapi_modules" }
+    ]
   }
 }

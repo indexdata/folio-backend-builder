@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-inventory-storage-19.2.0-shared-inventory2",
+  "srvcId": "mod-inventory-storage-19.2.0-shared-inventory3",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dstorage=postgres -Dloglevel=INFO -jar /home/ne/git-ole/mod-inventory-storage/target/mod-inventory-storage-fat.jar -Dhttp.port=%p",

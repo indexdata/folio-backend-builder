@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-inventory-14.1.0-shared-inventory2",
+  "srvcId": "mod-inventory-14.1.0-shared-inventory3",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/git-ole/mod-inventory/target/mod-inventory.jar"
