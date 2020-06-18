@@ -1,7 +1,8 @@
-host=$1
+banner="This will delete ALL instances, holdings and items"
 
-token=$($FOLIO/install-folio-backend/util-scripts/get-token-diku_admin.sh  $host)
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://$host/item-storage/items
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://$host/holdings-storage/holdings
-curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -X DELETE http://$host/instance-storage/instances
+. $1
+
+curl -H "X-Okapi-Tenant: $tenant" -H "X-Okapi-Token: $token" -X DELETE $protocol://$host/item-storage/items
+curl -H "X-Okapi-Tenant: $tenant" -H "X-Okapi-Token: $token" -X DELETE $protocol://$host/holdings-storage/holdings
+curl -H "X-Okapi-Tenant: $tenant" -H "X-Okapi-Token: $token" -X DELETE $protocol://$host/instance-storage/instances
 
