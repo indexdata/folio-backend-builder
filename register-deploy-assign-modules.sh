@@ -170,7 +170,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod
 echo Deploy mod-marc-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-marc-storage.json http://localhost:9130/_/discovery/modules
 echo Assign mod-marc-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.2"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.4-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-harvester-admin
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
