@@ -1,0 +1,8 @@
+{
+  "srvcId": "mod-inventory-update-0.0.1",
+  "nodeId": "localhost",
+  "descriptor": {
+    "exec": "java -Dport=%p -Dloglevel=INFO -jar /home/ne/git-ole/mod-inventory-update/target/mod-inventory-update-fat.jar"
+  }
+}
+  

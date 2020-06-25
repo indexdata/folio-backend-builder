@@ -7,7 +7,7 @@
       "configuration.all",
       "inventory-storage.all",
       "inventory.all",
-      "inventory-match.all",
+      "inventory-update.all",
       "circulation-storage.all",
       "notify.all",
       "source-storage.all",

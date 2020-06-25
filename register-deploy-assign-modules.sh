@@ -158,12 +158,20 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod
 #echo Assign mod-union-catalog
 #curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-union-catalog/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
 
-echo mod-inventory-match
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-match/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-inventory-match
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-match.json http://localhost:9130/_/discovery/modules
-echo Assign mod-inventory-match
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-match/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
+#echo mod-inventory-match
+#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-match/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+#echo Deploy mod-inventory-match
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-match.json http://localhost:9130/_/discovery/modules
+#echo Assign mod-inventory-match
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-match/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
+
+echo mod-inventory-update
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-update/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-inventory-update
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-update.json http://localhost:9130/_/discovery/modules
+echo Assign mod-inventory-update
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-update/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
+
 
 echo mod-marc-storage proxy
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-marc-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
