@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-login-6.1.0-SNAPSHOT",
+  "srvcId": "mod-login-7.1.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "java -Dstorage=postgres -jar /home/ne/folio/mod-login/target/mod-login-fat.jar -Dhttp.port=%p",

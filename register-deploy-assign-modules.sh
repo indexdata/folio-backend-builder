@@ -4,7 +4,7 @@ GITID=/home/ne/gitprojects
 
 
 echo Assign internal module to DIKU
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "okapi-2.37.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "okapi-3.1.3-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 # mod-permissions must be first, other modules need to write permissions to it
 echo mod-permissions 
@@ -12,7 +12,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 echo Deploy mod-permissions
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-permissions.json http://localhost:9130/_/discovery/modules
 echo Assign mod-permissions to DIKU
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-permissions-5.10.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-permissions-5.12.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 
 echo mod-users
@@ -27,7 +27,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 echo Deploy mod-login
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-login.json http://localhost:9130/_/discovery/modules
 echo Assign mod-login to DIKU
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-login-6.1.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-login-7.1.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-password-validator
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-password-validator/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -39,7 +39,7 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod
 echo mod-inventory-storage
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-inventory-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage.json http://localhost:9130/_/discovery/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage-shared-inventory.json http://localhost:9130/_/discovery/modules
 echo Install mod-inventory-storage for diku
 curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-19.2.0-shared-inventory3", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
 
@@ -51,7 +51,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 echo Deploy mod-source-record-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-source-record-storage.json http://localhost:9130/_/discovery/modules
 echo Assign mod-source-record-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-source-record-storage-2.7.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-source-record-storage-4.0.4"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-inventory
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -178,7 +178,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod
 echo Deploy mod-marc-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-marc-storage.json http://localhost:9130/_/discovery/modules
 echo Assign mod-marc-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.4-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.5-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-harvester-admin
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
