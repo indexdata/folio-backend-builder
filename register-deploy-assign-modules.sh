@@ -4,16 +4,24 @@ GITID=/home/ne/gitprojects
 
 
 echo Assign internal module to DIKU
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "okapi-3.1.3-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "okapi-3.1.3"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
-# mod-permissions must be first, other modules need to write permissions to it
+# Set up faux APIs to stand in for required module dependencies that the shared index don't use
+echo mod-shared-index-muted-apis
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-shared-index-muted-apis/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-shared-index-muted-apis
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/DeploymentDescriptor-mod-shared-index-muted-apis.json http://localhost:9130/_/discovery/modules
+echo Assign mod-shared-index-muted-apis
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-shared-index-muted-apis/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
+
+
+# mod-permissions must be before any modules requiring permissions, those modules need to write permissions to it
 echo mod-permissions 
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-permissions/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-permissions
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-permissions.json http://localhost:9130/_/discovery/modules
 echo Assign mod-permissions to DIKU
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-permissions-5.12.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
 
 echo mod-users
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-users/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -41,17 +49,10 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod
 echo Deploy mod-inventory-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage-shared-inventory.json http://localhost:9130/_/discovery/modules
 echo Install mod-inventory-storage for diku
-curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-19.2.0-shared-inventory3", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
+curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-19.4.0-shared-inventory3", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
 
 echo register mod-authtoken
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-authtoken/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-
-echo mod-source-record-storage
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-source-record-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-source-record-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-source-record-storage.json http://localhost:9130/_/discovery/modules
-echo Assign mod-source-record-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-source-record-storage-4.0.4"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-inventory
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -60,110 +61,12 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/inst
 echo Assign mod-inventory
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
 
-echo mod-codex-inventory
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-codex-inventory/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-codex-inventory
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-codex-inventory.json http://localhost:9130/_/discovery/modules
-echo Assign mod-codex-inventory
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-codex-inventory-1.6.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-echo mod-codex-mux
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-codex-mux/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-codex-mux
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-codex-mux.json http://localhost:9130/_/discovery/modules
-echo Assign mod-codex-mux
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-codex-mux-2.2.3-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-echo mod-circulation-storage
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-circulation-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-circulation-storage
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-circulation-storage.json http://localhost:9130/_/discovery/modules
-echo Assign mod-circulation-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-circulation-storage-9.3.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
 echo mod-configuration
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-configuration/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-configuration
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/DeploymentDescriptor-mod-configuration.json http://localhost:9130/_/discovery/modules
 echo Assign mod-configuration
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-configuration-5.0.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-echo mod-event-config
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-event-config/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-event-config
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/DeploymentDescriptor-mod-event-config.json http://localhost:9130/_/discovery/modules
-echo Assign mod-event
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-event-config-1.2.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-echo mod-template-engine
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-template-engine/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-template-engine
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/DeploymentDescriptor-mod-template-engine.json http://localhost:9130/_/discovery/modules
-echo Assign mod-template-engine
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-template-engine-1.7.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-echo mod-email
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-email/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-email
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/DeploymentDescriptor-mod-email.json http://localhost:9130/_/discovery/modules
-echo Assign mod-email
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-email-1.2.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-echo mod-sender
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-sender/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-sender
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/DeploymentDescriptor-mod-sender.json http://localhost:9130/_/discovery/modules
-echo Assign mod-sender
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-sender-1.1.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-echo mod-notify
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-notify/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-notify
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/DeploymentDescriptor-mod-notify.json http://localhost:9130/_/discovery/modules
-echo Assign mod-notify
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-notify-2.4.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-#echo mod-feesfines
-#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-feesfines/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-#echo Deploy mod-feesfines
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-feesfines.json http://localhost:9130/_/discovery/modules
-#echo Assign mod-feesfines
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-feesfines-15.4.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-#echo mod-circulation
-#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-circulation/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-#echo Deploy mod-circulation
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-circulation.json http://localhost:9130/_/discovery/modules
-#echo Assign mod-circulation
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-circulation/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
-
-#echo mod-rtac
-#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-rtac/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-#echo Deploy mod-rtac
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-rtac.json http://localhost:9130/_/discovery/modules
-#echo Assign mod-rtac
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-rtac-1.3.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-#echo mod-patron
-#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-patron/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-#echo Deploy mod-patron
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-patron.json http://localhost:9130/_/discovery/modules
-#echo Assign mod-patron
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-patron-1.2.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-
-#echo mod-union-catalog
-#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-union-catalog/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-#echo Deploy mod-union-catalog
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-union-catalog.json http://localhost:9130/_/discovery/modules
-#echo Assign mod-union-catalog
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-union-catalog/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
-
-#echo mod-inventory-match
-#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-match/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-#echo Deploy mod-inventory-match
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-match.json http://localhost:9130/_/discovery/modules
-#echo Assign mod-inventory-match
-#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-match/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-inventory-update
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-update/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -172,7 +75,6 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/inst
 echo Assign mod-inventory-update
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-update/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
 
-
 echo mod-marc-storage proxy
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-marc-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-marc-storage
@@ -180,12 +82,12 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/inst
 echo Assign mod-marc-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.5-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
-echo mod-harvester-admin
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-harvester-admin
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/harvester/DeploymentDescriptor-mod-harvester-admin.json http://localhost:9130/_/discovery/modules
-echo Assign mod-harvester-admin
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
+#echo mod-harvester-admin
+#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+#echo Deploy mod-harvester-admin
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/harvester/DeploymentDescriptor-mod-harvester-admin.json http://localhost:9130/_/discovery/modules
+#echo Assign mod-harvester-admin
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
 
 # Note: Many of these modules are required due to the dependency tree of mod-users-bl
 # mod-users-bl
@@ -206,6 +108,8 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITID/mod-
 #            /authtoken/ [mod-authtoken]
 #             [mod-authtoken] requires: /permissions/ [mod-permissions]
 #
+#
+#            Replaced by no-op API stand-ins
 #            /notify/ [mod-notify]
 #             [mod-notify] requires: /users/ [mod-users]
 #                                    /mod-event/ [mod-event-config]

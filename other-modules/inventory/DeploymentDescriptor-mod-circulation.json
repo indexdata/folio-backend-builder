@@ -1,7 +1,0 @@
-{
-  "srvcId": "mod-circulation-16.7.0-SNAPSHOT",
-  "nodeId": "localhost",
-  "descriptor": {
-    "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-circulation/target/mod-circulation.jar"
-  }
-}

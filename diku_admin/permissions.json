@@ -7,9 +7,6 @@
       "configuration.all",
       "inventory-storage.all",
       "inventory.all",
-      "inventory-update.all",
-      "circulation-storage.all",
-      "notify.all",
-      "harvester-admin.all"
+      "inventory-update.all"
     ]
 }

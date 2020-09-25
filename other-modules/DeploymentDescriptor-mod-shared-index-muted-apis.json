@@ -1,0 +1,7 @@
+{
+  "srvcId": "mod-shared-index-muted-apis-1.0-SNAPSHOT",
+  "nodeId": "localhost",
+  "descriptor": {
+    "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dport=%p -DlogLevel=INFO -jar /home/ne/git-ole/mod-shared-index-muted-apis/target/mod-shared-index-muted-apis-fat.jar"
+  }
+}

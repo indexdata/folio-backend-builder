@@ -1,7 +1,0 @@
-{
-  "srvcId": "mod-codex-inventory-1.6.0-SNAPSHOT",
-  "nodeId": "localhost",
-  "descriptor": {
-    "exec": "java -jar /home/ne/folio/mod-codex-inventory/target/mod-codex-inventory-fat.jar -Dhttp.port=%p"
-  }
-}
