@@ -1,7 +1,7 @@
 {
-  "srvcId": "mod-inventory-16.1.0-shared-inventory3",
+  "srvcId": "mod-inventory-16.1.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/git-ole/mod-inventory/target/mod-inventory.jar"
+    "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-inventory/target/mod-inventory.jar"
   }
 }

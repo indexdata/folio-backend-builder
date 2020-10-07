@@ -45,21 +45,21 @@ echo Assign mod-password-validator to DIKU
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-password-validator-1.4.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-inventory-storage
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-inventory-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage-shared-inventory.json http://localhost:9130/_/discovery/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage.json http://localhost:9130/_/discovery/modules
 echo Install mod-inventory-storage for diku
-curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-19.4.0-shared-inventory3", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
+curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-19.4.0-SNAPSHOT", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
 
 echo register mod-authtoken
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-authtoken/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 
 echo mod-inventory
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-inventory
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory.json http://localhost:9130/_/discovery/modules
 echo Assign mod-inventory
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-configuration
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-configuration/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -69,11 +69,11 @@ echo Assign mod-configuration
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-configuration-5.0.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-inventory-update
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-update/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-update/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-inventory-update
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-update.json http://localhost:9130/_/discovery/modules
 echo Assign mod-inventory-update
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-inventory-update/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-update/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
 
 echo mod-marc-storage proxy
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-marc-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
