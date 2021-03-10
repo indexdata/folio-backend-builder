@@ -2,7 +2,7 @@
   "srvcId": "mod-marc-storage-0.0.5-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dstorage=postgres -Dloglevel=DEBUG -jar /home/ne/git-ole/mod-marc-storage/target/mod-marc-storage-fat.jar -Dhttp.port=%p",
+    "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dstorage=postgres -Dloglevel=DEBUG -jar /home/ne/git-ole/mod-marc-storage/target/mod-marc-storage-fat.jar -Dhttp.port=%p",
     "env": [
       { "name": "DB_HOST", "value": "localhost"},
       { "name": "DB_PORT", "value": 5432},

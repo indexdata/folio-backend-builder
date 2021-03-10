@@ -16,7 +16,7 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod
 
 
 # mod-permissions must be before any modules requiring permissions, those modules need to write permissions to it
-echo mod-permissions 
+echo mod-permissions
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-permissions/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-permissions
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-permissions.json http://localhost:9130/_/discovery/modules
@@ -30,7 +30,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/de
 echo Assign mod-users to diku
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-users-16.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
-echo mod-login 
+echo mod-login
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-login/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-login
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/deployment-descriptors/DeploymentDescriptor-mod-login.json http://localhost:9130/_/discovery/modules
@@ -49,7 +49,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 echo Deploy mod-inventory-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage.json http://localhost:9130/_/discovery/modules
 echo Install mod-inventory-storage for diku
-curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-19.4.0-SNAPSHOT", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
+curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-20.0.0-SNAPSHOT", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
 
 echo register mod-authtoken
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-authtoken/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -98,7 +98,7 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod
 #            /login/ [mod-login]
 #             [mod-login] requires: users [mod-users]
 #
-#            /service-points/ [mod-inventory-storage]    
+#            /service-points/ [mod-inventory-storage]
 #
 #            /service-points-users/ [mod-inventory-storage]
 #
@@ -117,7 +117,7 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod
 #                                     [mod-template-engine] requires: /patron-notice-policy-storage/ [mod-circulation-storage]
 #                                    /message-delivery/ [mod-sender]
 #                                     [mod-sender] requires: /users/ [mod-users]
-#                                                            /email/ [mod-email]    
+#                                                            /email/ [mod-email]
 #                                                             [mod-email] requires: /configuration/ [mod-configuration]
 #
 #            /configuration/ [mod-configuration]
