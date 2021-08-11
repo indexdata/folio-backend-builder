@@ -23,6 +23,13 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/de
 echo Assign mod-permissions to DIKU
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-permissions-5.12.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
+echo mod-tags
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-tags/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-users
+curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-tags/target/DeploymentDescriptor.json http://localhost:9130/_/discovery/modules
+echo Assign mod-users to diku
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-tags-0.8.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+
 echo mod-users
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-users/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-users
@@ -49,7 +56,7 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 echo Deploy mod-inventory-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/install-folio-backend/other-modules/inventory/DeploymentDescriptor-mod-inventory-storage.json http://localhost:9130/_/discovery/modules
 echo Install mod-inventory-storage for diku
-curl -w '\n' -X POST -d '[ { "id": "mod-inventory-storage-20.0.0-SNAPSHOT", "action": "enable" } ]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue
+curl -w '\n'         -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-storage/target/Install.json http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue
 
 echo register mod-authtoken
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-authtoken/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -121,3 +128,5 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod
 #                                                             [mod-email] requires: /configuration/ [mod-configuration]
 #
 #            /configuration/ [mod-configuration]
+
+date

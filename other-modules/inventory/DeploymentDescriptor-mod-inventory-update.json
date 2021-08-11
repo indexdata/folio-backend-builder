@@ -1,5 +1,5 @@
 {
-  "srvcId": "mod-inventory-update-0.0.4-SNAPSHOT",
+  "srvcId": "mod-inventory-update-0.0.5-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
     "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dport=%p -Dloglevel=INFO -jar /home/ne/folio/mod-inventory-update/target/mod-inventory-update-fat.jar"

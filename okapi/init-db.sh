@@ -1,1 +1,2 @@
-java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase
+/usr/lib/jvm/java-1.11.0-openjdk-amd64/bin/java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase
+

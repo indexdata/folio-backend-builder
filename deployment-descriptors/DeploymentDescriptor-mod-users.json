@@ -2,7 +2,7 @@
   "srvcId": "mod-users-16.0.1-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-users/target/mod-users-fat.jar -Dhttp.port=%p",
+    "exec": "/home/ne/opt/jdk1.8.0_121/bin/java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-users/target/mod-users-fat.jar -Dhttp.port=%p",
     "env": [
       { "name" : "DB_host", "value" : "localhost"},
       { "name" : "DB_port", "value" : 5432},

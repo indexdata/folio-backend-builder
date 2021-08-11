@@ -2,7 +2,7 @@
   "srvcId": "mod-login-7.1.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dstorage=postgres -jar /home/ne/folio/mod-login/target/mod-login-fat.jar -Dhttp.port=%p",
+    "exec": "/home/ne/opt/jdk1.8.0_121/bin/java -Dstorage=postgres -jar /home/ne/folio/mod-login/target/mod-login-fat.jar -Dhttp.port=%p",
     "env": [
       { "name" : "db.host", "value" : "localhost"},
       { "name" : "db.port", "value" : 5432},
