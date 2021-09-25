@@ -9,6 +9,8 @@
       "inventory-storage.all",
       "inventory.all",
       "inventory-update.all",
-      "circulation.all"
+      "circulation.all",
+      "harvester-admin.all",
+      "harvester-admin.delete-all"
     ]
 }
