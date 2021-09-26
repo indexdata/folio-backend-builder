@@ -1,0 +1,12 @@
+{
+    "username" : "north_admin",
+    "id" : "fdd13752-e311-49a5-8d2b-094e3742d656",
+    "active" : true,
+    "proxyFor" : [ ],
+    "personal" : {
+      "lastName" : "ADMINISTRATOR",
+      "firstName" : "NORTH",
+      "email" : "admin@north.org",
+      "addresses" : [ ]
+    }
+  }

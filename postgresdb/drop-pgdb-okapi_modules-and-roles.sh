@@ -1,0 +1,13 @@
+sudo -u postgres bash -c "psql -c \"DROP DATABASE okapi_modules;\""
+#sudo -u postgres bash -c "psql -c \"DROP ROLE diku_mod_permissions;\""
+#sudo -u postgres bash -c "psql -c \"DROP ROLE diku_mod_users;\""
+#sudo -u postgres bash -c "psql -c \"DROP ROLE diku_mod_login;\""
+sudo -u postgres bash -c "psql -c \"DROP ROLE IF EXISTS diku_mod_configuration;\""
+sudo -u postgres bash -c "psql -c \"DROP ROLE IF EXISTS diku_mod_inventory_storage;\""
+sudo -u postgres bash -c "psql -c \"DROP ROLE IF EXISTS diku_mod_password_validator;\""
+sudo -u postgres bash -c "psql -c \"DROP ROLE IF EXISTS diku_mod_marc_storage;\""
+
+sudo -u postgres bash -c "psql -c \"DROP ROLE IF EXISTS north_mod_configuration;\""
+sudo -u postgres bash -c "psql -c \"DROP ROLE IF EXISTS north_mod_inventory_storage;\""
+sudo -u postgres bash -c "psql -c \"DROP ROLE IF EXISTS north_mod_password_validator;\""
+sudo -u postgres bash -c "psql -c \"DROP ROLE IF EXISTS north_mod_marc_storage;\""

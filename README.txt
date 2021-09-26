@@ -1,5 +1,5 @@
 Utils, scripts, sample data files etc for installing a local FOLIO backend instance with
-Okapi, an external PostgreSQL database, auth and user modules and select other modules. 
+Okapi, an external PostgreSQL database, auth and user modules and select other modules.
 
 
 Prerequisites:
@@ -18,50 +18,50 @@ Prerequisites:
       java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase
         (initdatabase will reuse existing tables)
 
-  - Okapi started 
+  - Okapi started
       java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar dev
 
     (or both of the above:  ./okapi/init-db-start-okapi.sh)
 
   - Create tenant 'diku'
-  ./okapi/create-tenant.sh
+  ./okapi/create-tenants.sh
 
-Option 1) Remove modules database 
+Option 1) Remove modules database
 
-  ./drop-pgdb-okapi_modules-and-roles.sh 
+  ./postgresdb/drop-pgdb-okapi_modules-and-roles.sh
 
-  Then follow "Option 2) Install authn modules from scratch" 
+  Then follow "Option 2) Install authn modules from scratch"
 
 Option 2) Create modules database and install authn modules, then other modules, from scratch
- 
-  ./create-pgdb-okapi_modules.sh
 
-  If super user folio_admin does not already exist (we did not drop folio_admin above)
-  ./create-pg-superuser-folio-admin.sh  
+  ./postgresdb/create-pgdb-okapi_modules.sh
+
+  If super user folio_admin does not already exist (the general installation script does NOT drop folio_admin)
+  ./create-pg-superuser-folio-admin.sh
 
   Register base modules proxies:
   ./authn-proxy-modules/register-all-module-proxies.sh
 
   ./deployment-descriptors/deploy-assign-all-except-authtoken.sh
 
-  ./other-modules/proxy-deploy-assign-modules.sh
+  ./modules/proxy-deploy-assign-modules.sh
 
-  ./other-modules/inventory/proxy-deploy-assign-modules-localhost.sh
+  ./modules/inventory/proxy-deploy-assign-modules-localhost.sh
 
   ./diku_admin/create-diku_admin.sh
     (this assumes that the permissions set up in permissions.json are still valid,
      the diku_admin/get-'xyz'.sh scripts can fetch new data if not. There are then assumptions in
      the scripts about the UUID to use, fetching new user/creds/perms may require changes to that)
 
-  Can import inventory sample data from mod-inventory-storage before lock down of 
+  Can import inventory sample data from mod-inventory-storage before lock down of
   API access (before next command after this) by this:
 
   cd $FOLIO/mod-inventory-storage/sample-data/
   ./import.sh diku
 
-  Lock down API access 
+  Lock down API access
   ./deployment-descriptors/deploy-assign-authtoken.sh
-  
+
 
 Option 3) Deploy authn modules and other modules again after Okapi re-start
 

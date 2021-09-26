@@ -1,5 +1,5 @@
-AUTHN_MODS=$FOLIO/install-folio-backend/deployment-descriptors
-OTHER_MODS=$FOLIO/install-folio-backend/other-modules/
+AUTHN_MODS=$FOLIO/install-folio-backend/modules/users-and-auth
+OTHER_MODS=$FOLIO/install-folio-backend/modules/
 INVENTORY_MODS=$OTHER_MODS/inventory
 
 # Basic users and permissions modules
