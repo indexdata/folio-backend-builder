@@ -1,8 +1,8 @@
 {
-  "srvcId": "mod-users-bl-6.1.0-SNAPSHOT",
+  "srvcId": "mod-users-bl-7.5.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "/home/ne/opt/jdk1.8.0_121/bin/java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-users-bl/target/mod-users-bl-fat.jar -Dhttp.port=%p",
+    "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dport=%p -Dstorage=postgres -jar /home/nielserik/folio/mod-users-bl/target/mod-users-bl-fat.jar -Dhttp.port=%p",
     "env": [
       { "name" : "db.host", "value" : "localhost"},
       { "name" : "db.port", "value" : 5432},

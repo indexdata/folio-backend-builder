@@ -1,7 +1,9 @@
-curl -X DELETE -D - -w '\n' http://localhost:9130/_/proxy/tenants/diku/modules/mod-inventory-17.1.0-SNAPSHOT
+export FOLIO=/home/nielserik/folio
+
+curl -X DELETE -D - -w '\n' http://localhost:9130/_/proxy/tenants/diku/modules/mod-inventory-19.0.1-SNAPSHOT
 
 sleep 2
-curl -X DELETE -D - -w '\n' http://localhost:9130/_/discovery/modules/mod-inventory-17.1.0-SNAPSHOT
+curl -X DELETE -D - -w '\n' http://localhost:9130/_/discovery/modules/mod-inventory-19.0.1-SNAPSHOT
 
 sleep 2
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -d @../inventory/DeploymentDescriptor-mod-inventory.json http://localhost:9130/_/discovery/modules

@@ -1,7 +1,14 @@
 {
-  "srvcId": "mod-inventory-17.1.0-SNAPSHOT",
+  "srvcId": "mod-inventory-19.0.1-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dport=%p -Dstorage=postgres -jar /home/ne/folio/mod-inventory/target/mod-inventory.jar"
+    "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dport=%p -Dstorage=postgres -jar /home/nielserik/folio/mod-inventory/target/mod-inventory.jar",
+    "env": [
+      { "name": "DB_HOST", "value": "localhost"},
+      { "name": "DB_PORT", "value": 5432},
+      { "name": "DB_USERNAME", "value": "folio_admin" },
+      { "name": "DB_PASSWORD", "value": "folio_admin" },
+      { "name": "DB_DATABASE", "value": "okapi_modules" }
+    ]
   }
 }

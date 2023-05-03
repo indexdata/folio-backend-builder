@@ -1,7 +1,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 workdir=$SCRIPT_DIR
-GITOLE=/home/ne/git-ole
-GITID=/home/ne/gitprojects
+GITOLE=~/git-ole
+GITID=~/gitprojects
 
 
 #echo Assign internal module to DIKU
@@ -15,8 +15,8 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$workdir/De
 
 echo Assign mod-shared-index-muted-apis to diku
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-shared-index-muted-apis/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-shared-index-muted-apis to north
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-shared-index-muted-apis/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/north/modules
+#echo Assign mod-shared-index-muted-apis to north
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITOLE/mod-shared-index-muted-apis/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/north/modules
 
 
 # mod-permissions must be before any modules requiring permissions, those modules need to write permissions to it
@@ -27,8 +27,8 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/us
 
 echo Assign mod-permissions to DIKU
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-permissions-5.12.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-permissions to NORTH
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-permissions-5.12.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
+#echo Assign mod-permissions to NORTH
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-permissions-5.12.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
 
 
 echo mod-tags
@@ -38,8 +38,8 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-
 
 echo Assign mod-tags to diku
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-tags-0.8.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-tags to north
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-tags-0.8.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
+#echo Assign mod-tags to north
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-tags-0.8.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
 
 
 echo mod-users
@@ -49,8 +49,8 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/us
 
 echo Assign mod-users to diku
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-users-16.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-users to north
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-users-16.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
+#echo Assign mod-users to north
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-users-16.0.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
 
 
 echo mod-login
@@ -60,8 +60,8 @@ curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/us
 
 echo Assign mod-login to DIKU
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-login-7.1.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-login to NORTH
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-login-7.1.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
+#echo Assign mod-login to NORTH
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-login-7.1.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
 
 
 echo mod-password-validator
@@ -70,23 +70,25 @@ echo Deploy mod-password-validator
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/users-and-auth/DeploymentDescriptor-mod-password-validator.json http://localhost:9130/_/discovery/modules
 
 echo Assign mod-password-validator to DIKU
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-password-validator-1.4.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-password-validator to NORTH
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-password-validator-1.4.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-password-validator-1.8.2"}' http://localhost:9130/_/proxy/tenants/diku/modules
+#echo Assign mod-password-validator to NORTH
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-password-validator-2.5.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
 
 
-echo mod-inventory-storage
+echo Register mod-inventory-storage
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-inventory-storage
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$workdir/inventory/DeploymentDescriptor-mod-inventory-storage.json http://localhost:9130/_/discovery/modules
 
-echo Install mod-inventory-storage for diku
+echo Install mod-inventory-storage to diku
 curl -w '\n'         -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-storage/target/Install.json http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue
-echo Install mod-inventory-storage for north
-curl -w '\n'         -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-storage/target/Install.json http://localhost:9130/_/proxy/tenants/north/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue
+#echo Install mod-inventory-storage for north
+#curl -w '\n'         -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-storage/target/Install.json http://localhost:9130/_/proxy/tenants/north/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue
 
 echo register mod-authtoken
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-authtoken/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+
+$workdir/ref-mod-circulation.sh
 
 echo mod-inventory
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -95,19 +97,20 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$workdir/in
 
 echo Assign mod-inventory to diku
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-inventory to north
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory/target/Activate.json http://localhost:9130/_/proxy/tenants/north/modules
+#echo Assign mod-inventory to north
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory/target/Activate.json http://localhost:9130/_/proxy/tenants/north/modules
 
 
-echo mod-configuration
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-configuration/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-configuration
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/DeploymentDescriptor-mod-configuration.json http://localhost:9130/_/discovery/modules
+# UN-DEPRECATED?
+#echo mod-configuration
+#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-configuration/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+#echo Deploy mod-configuration
+#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$workdir/DeploymentDescriptor-mod-configuration.json http://localhost:9130/_/discovery/modules
 
-echo Assign mod-configuration to diku
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-configuration-5.0.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-configuration to north
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-configuration-5.0.2-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
+#echo Assign mod-configuration to diku
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-configuration-5.9.1-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+#echo Assign mod-configuration to north
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-configuration-5.9.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
 
 
 echo mod-inventory-update
@@ -117,28 +120,38 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$workdir/in
 
 echo Assign mod-inventory-update to diku
 curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-update/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-inventory-update to north
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-update/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/north/modules
+#echo Assign mod-inventory-update to north
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$FOLIO/mod-inventory-update/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/north/modules
 
-echo mod-marc-storage proxy
-curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-marc-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-echo Deploy mod-marc-storage
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$workdir/inventory/DeploymentDescriptor-mod-marc-storage.json http://localhost:9130/_/discovery/modules
+#echo mod-marc-storage proxy
+#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITOLE/mod-marc-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+#echo Deploy mod-marc-storage
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$workdir/inventory/DeploymentDescriptor-mod-marc-storage.json http://localhost:9130/_/discovery/modules
 
-echo Assign mod-marc-storage to diku
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.5-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-marc-storage to north
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.5-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
+#echo Assign mod-marc-storage to diku
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.5-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
+#echo Assign mod-marc-storage to north
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-marc-storage-0.0.5-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/north/modules
 
 echo mod-harvester-admin
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-harvester-admin
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$workdir/harvester/DeploymentDescriptor-mod-harvester-admin.json http://localhost:9130/_/discovery/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$workdir/harvester/DeploymentDescriptor-mod-harvester-admin-local.json http://localhost:9130/_/discovery/modules
 
 echo Assign mod-harvester-admin to diku
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/TenantModuleDescriptor-template.json http://localhost:9130/_/proxy/tenants/diku/modules
-echo Assign mod-harvester-admin to north
-curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/TenantModuleDescriptor-template.json http://localhost:9130/_/proxy/tenants/north/modules
+curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-harvester-admin-1.0.1-SNAPSHOT" }' http://localhost:9130/_/proxy/tenants/diku/modules
+#echo Assign mod-harvester-admin to north
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITID/mod-harvester-admin/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/north/modules
+
+$workdir/ref-mod-finance-orders.sh
+
+
+#echo mod-eusage-reports
+#curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-eusage-reports/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+#echo Deploy mod-eusage-reports
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$workdir/inventory/DeploymentDescriptor-mod-eusage-reports.json http://localhost:9130/_/discovery/modules
+#echo Assign mod-eusage-reports to diku
+#curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d '{"id": "mod-eusage-reports-1.1.0-SNAPSHOT"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
 
 # Note: Many of these modules are required due to the dependency tree of mod-users-bl
@@ -172,6 +185,6 @@ curl -w '\n' -D -    -X POST -H "Content-type: application/json" -d @$GITID/mod-
 #                                                            /email/ [mod-email]
 #                                                             [mod-email] requires: /configuration/ [mod-configuration]
 #
-#            /configuration/ [mod-configuration]
+#             Deprecated: /configuration/ [mod-configuration]
 
 date

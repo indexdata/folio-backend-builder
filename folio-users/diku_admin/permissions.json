@@ -5,12 +5,11 @@
       "login.all",
       "users.all",
       "tags.all",
-      "configuration.all",
       "inventory-storage.all",
       "inventory.all",
       "inventory-update.all",
-      "circulation.all",
-      "harvester-admin.all",
-      "harvester-admin.delete-all"
+      "orders-storage.module.all",
+      "finance.module.all",
+      "harvester-admin.all"
     ]
 }

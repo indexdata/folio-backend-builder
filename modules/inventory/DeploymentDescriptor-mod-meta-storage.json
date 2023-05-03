@@ -1,0 +1,14 @@
+{
+    "srvcId": "mod-meta-storage-0.0.1-SNAPSHOT",
+    "nodeId": "localhost",
+    "descriptor": {
+      "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dstorage=postgres -Dloglevel=INFO -jar /home/nielserik/folio/mod-meta-storage/server/target/mod-meta-storage-server-fat.jar -Dhttp.port=%p",
+      "env": [
+        { "name": "DB_HOST", "value": "localhost"},
+        { "name": "DB_PORT", "value": 5432},
+        { "name": "DB_USERNAME", "value": "folio_admin" },
+        { "name": "DB_PASSWORD", "value": "folio_admin" },
+        { "name": "DB_DATABASE", "value": "okapi_modules" }
+      ]
+    }
+}

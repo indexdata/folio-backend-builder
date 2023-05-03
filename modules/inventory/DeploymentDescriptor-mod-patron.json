@@ -2,6 +2,6 @@
   "srvcId": "mod-patron-1.2.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "java -Dport=%p -jar /home/ne/folio/mod-patron/target/mod-patron-fat.jar -Dhttp.port=%p"
+    "exec": "java -Dport=%p -jar /home/nielserik/folio/mod-patron/target/mod-patron-fat.jar -Dhttp.port=%p"
   }
 }

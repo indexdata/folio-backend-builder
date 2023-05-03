@@ -4,4 +4,4 @@ workdir=$SCRIPT_DIR
 
 $workdir/POST-user.sh diku diku_admin
 $workdir/POST-credentials.sh diku diku_admin
-$workdir/POST-permissions.sh diku diku_admin
+$workdir/POST-permissions.sh diku diku_admin $workdir/diku_admin/permissions-invstor-invupd-modhaadm.json

@@ -1,4 +1,4 @@
-token=$(/home/ne/folio/install-folio-backend/util-scripts/get-token-diku_admin.sh localhost:9130)
+token=$(~/folio/install-folio-backend/util-scripts/get-token-diku_admin.sh localhost:9130)
 
 curl -w '\n' -X POST -D - -H "Content-type: application/json" -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -d '{"query": "query { users { id, username } }"}' http://localhost:9130/graphql
 
