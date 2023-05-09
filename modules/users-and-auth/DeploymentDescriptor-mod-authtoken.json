@@ -1,8 +1,8 @@
 {
-  "srvcId": "mod-authtoken-2.6.0-SNAPSHOT",
+  "srvcId": "mod-authtoken-2.14.0-SNAPSHOT",
   "nodeId": "localhost",
   "descriptor": {
-    "exec": "/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java -Dport=%p -Dstorage=postgres -jar /home/nielserik/folio/mod-authtoken/target/mod-authtoken-fat.jar -Dhttp.port=%p",
+    "exec": "/usr/lib/jvm/java-11-openjdk-amd64/jre/bin/java -Dport=%p -Dstorage=postgres -jar /home/nielserik/folio/mod-authtoken/target/mod-authtoken-fat.jar -Dhttp.port=%p",
     "env": [
       { "name": "db.host", "value": "localhost"},
       { "name": "db.port", "value": 5432},

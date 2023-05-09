@@ -5,7 +5,6 @@ clear
 
 ./tenants/create-tenants.sh
 ./modules/register-deploy-assign-modules.sh
-#./modules/register-deploy-assign-inventory-storage-and-update.sh
 
 $workdir/folio-users/create-diku_admin.sh
 

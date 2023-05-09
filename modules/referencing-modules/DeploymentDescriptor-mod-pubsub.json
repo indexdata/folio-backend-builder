@@ -1,0 +1,66 @@
+{
+    "srvcId": "mod-pubsub-2.10.0-SNAPSHOT",
+    "nodeId": "localhost",
+    "descriptor": {
+      "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dport=%p -jar /home/nielserik/folio/mod-pubsub/mod-pubsub-server/target/mod-pubsub-server-fat.jar -Dhttp.port=%p",
+      "env": [
+        {
+          "name": "JAVA_OPTIONS",
+          "value": "-XX:MaxRAMPercentage=66.0 -XX:+HeapDumpOnOutOfMemoryError"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "localhost"
+        },
+        {
+          "name": "DB_PORT",
+          "value": "5432"
+        },
+        {
+          "name": "DB_USERNAME",
+          "value": "folio_admin"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "value": "folio_admin"
+        },
+        {
+          "name": "DB_DATABASE",
+          "value": "okapi_modules"
+        },
+        {
+          "name": "DB_QUERYTIMEOUT",
+          "value": "60000"
+        },
+        {
+          "name": "DB_CHARSET",
+          "value": "UTF-8"
+        },
+        {
+          "name": "DB_MAXPOOLSIZE",
+          "value": "5"
+        },
+        {
+          "name": "KAFKA_HOST",
+          "value": "localhost"
+        },
+        {
+          "name": "KAFKA_PORT",
+          "value": "9092"
+        },
+        {
+          "name": "OKAPI_URL",
+          "value": "http://localhost:9130"
+        },
+        {
+          "name": "SYSTEM_USER_NAME",
+          "value": "pub-sub"
+        },
+        {
+          "name": "SYSTEM_USER_PASSWORD",
+          "value": "pubsub"
+        }
+      ]
+   
+    }
+  }

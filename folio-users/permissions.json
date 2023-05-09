@@ -4,12 +4,11 @@
       "perms.all",
       "login.all",
       "users.all",
-      "tags.all",
       "inventory-storage.all",
       "inventory.all",
-      "inventory-update.all",
-      "orders-storage.module.all",
-      "finance.module.all",
-      "harvester-admin.all"
+      "circulation.all",
+      "circulation-storage.all",
+      "feefines.all",
+      "configuration.all"
     ]
 }

@@ -1,0 +1,8 @@
+{
+    "srvcId": "mod-notify-3.0.1-SNAPSHOT",
+    "nodeId": "localhost",
+    "descriptor": {
+      "exec": "usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dport=%p -jar /home/nielserik/folio/mod-notify/target/mod-notify-fat.jar -Dhttp.port=%p"
+    }
+  }
+  
