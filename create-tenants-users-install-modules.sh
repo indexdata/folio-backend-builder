@@ -3,9 +3,9 @@ export workdir=$SCRIPT_DIR
 
 clear
 
-./tenants/create-tenants.sh
+./tenants/create-tenant-diku.sh
+
 ./modules/register-deploy-assign-modules.sh
-#./modules/register-deploy-assign-inventory-storage-and-update.sh
 
 $workdir/folio-users/create-diku_admin.sh
 
