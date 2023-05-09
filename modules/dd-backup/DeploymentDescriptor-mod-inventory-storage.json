@@ -4,7 +4,7 @@
   "descriptor": {
     "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dstorage=postgres -Dloglevel=INFO -jar /home/nielserik/folio/mod-inventory-storage/target/mod-inventory-storage-fat.jar -Dhttp.port=%p",
     "env": [
-      { "name": "DB_HOST", "value": "localhost"},
+      { "name": "DB_HOST", "value": "192.168.1.188"},
       { "name": "DB_PORT", "value": 5432},
       { "name": "DB_USERNAME", "value": "folio_admin" },
       { "name": "DB_PASSWORD", "value": "folio_admin" },
