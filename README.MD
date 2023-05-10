@@ -1,45 +1,46 @@
-Utils, scripts, sample data files etc for installing a local FOLIO backend instance with
-Okapi, an external PostgreSQL database, auth and user modules and select other modules.
+# FOLIO installation scripts, select modules.
+
+Utils, scripts, sample data files etc for installing a local FOLIO backend instance with Okapi, an external PostgreSQL database, auth and user modules and select other modules.
 
 
-# Prerequisites
-  - PostgreSQL installed
+## Prerequisites
+* PostgreSQL installed
+* Okapi database user created in PostgreSQL, and okapi database initialized and Okapi started. See https://github.com/folio-org/okapi/blob/master/doc/guide.md#storage.
 
-  - Okapi database user created in PostgreSQL, and okapi database initialized and Okapi started. See https://github.com/folio-org/okapi/blob/master/doc/guide.md#storage.
-
+### Create Okapi user in PostgreSQL
 ```
 sudo -u postgres -i
 createuser -P okapi   # When it asks for a password, enter okapi25
 createdb -O okapi okapi
 ```
 
-Initialize database (empty modules and tenants tables):
+### Initialize database
 
 ```
 java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase  
 ```
-Start Okapi 
+### Start Okapi 
 ```
 java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar dev
 ```
-Or for both of the above:
+### Or for both initializing and starting
 ```    
 ./okapi/init-db-start-okapi.sh)
 ```
 
-# Install modules for tenant diku
+## Install modules for tenant diku
 ```
   ./drop-and-recreate-okapi-modules-database.sh
 
   ./create-tenants-users-install-modules.sh
 ```
-# Misc PostgreSQL
+## Miscellaneous
 
-## Log in to Okapi modules' database
+### Log in to Okapi modules' database
 ```
 psql -U folio_admin postgresql://localhost:5432/okapi_modules
 ```
-## Size of databases on disk:
+### Size of databases on disk:
 
 ```
 SELECT pg_database.datname,  
