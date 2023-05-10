@@ -5,4 +5,4 @@ username=$2
 permissionsFile=$3
 
 echo POST permissions for user $username at $tenant
-curl -H "X-Okapi-Tenant: ${tenant}" -H "Content-type: application/json" -X POST -d@$permissionsFile http://localhost:9130/perms/users
+curl -H "X-Okapi-Tenant: ${tenant}" -H "Content-type: application/json" -d@$permissionsFile http://localhost:9130/perms/users

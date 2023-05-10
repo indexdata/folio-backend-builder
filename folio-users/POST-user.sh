@@ -4,4 +4,4 @@ tenant=$1
 username=$2
 
 echo POST $username to $tenant
-curl -H "X-Okapi-Tenant: ${tenant}" -H "Content-type: application/json" -X POST -d@$workdir/$username/user.json http://localhost:9130/users
+curl -H "X-Okapi-Tenant: ${tenant}" -H "Content-type: application/json" -d@$workdir/$username/user.json http://localhost:9130/users

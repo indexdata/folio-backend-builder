@@ -5,5 +5,5 @@ username=$2
 
 echo POST credentials for user $username at $tenant
 
-curl -v -H "X-Okapi-Tenant: ${tenant}" -H "Content-type: application/json" -X POST -d@$workdir/$username/credentials.json http://localhost:9130/authn/credentials
-echo Enter; read
+curl -H "X-Okapi-Tenant: ${tenant}" -H "Content-type: application/json" -X POST -d@$workdir/$username/credentials.json http://localhost:9130/authn/credentials
+#echo Enter; read
