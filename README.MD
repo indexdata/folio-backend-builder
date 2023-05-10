@@ -2,6 +2,9 @@
 
 Utils, scripts, sample data files etc for installing a local FOLIO backend instance with Okapi, an external PostgreSQL database, auth and user modules and select other modules.
 
+Most scripts here require environment var `FOLIO` to be set to the main checkout directory for FOLIO components, for example
+
+`export FOLIO=~/folio-git-directory; ./script.sh`
 
 ## Prerequisites
 * PostgreSQL installed
@@ -24,9 +27,10 @@ java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-co
 java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar dev
 ```
 #### Or, to initialize the database and start Okapi
-```    
-./okapi/init-db-start-okapi.sh)
-```
+In root of this project, and assuming Okapi is checked out to `<home-dir>/folio` do
+
+`export FOLIO=~/folio; ./okapi/init-db-start-okapi.sh`
+
 
 ## Install modules for tenant diku
 ```
@@ -37,9 +41,8 @@ java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar d
 ## Miscellaneous
 
 #### Log in to Okapi modules' database
-```
-psql -U folio_admin postgresql://localhost:5432/okapi_modules
-```
+`psql -U folio_admin postgresql://localhost:5432 okapi_modules`
+
 #### Size of databases on disk:
 
 ```

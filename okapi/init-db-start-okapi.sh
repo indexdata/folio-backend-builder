@@ -1,8 +1,9 @@
 # Initializes (empties) Okapi's database (tenants and modules)
 # Starts Okapi
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 clear
 
-$FOLIO/install-folio-backend/okapi/init-db.sh
+$SCRIPT_DIR/init-db.sh
 
-$FOLIO/install-folio-backend/okapi/start-okapi.sh
+$SCRIPT_DIR/start-okapi.sh
