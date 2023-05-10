@@ -19,13 +19,12 @@ createdb -O okapi okapi
 
 #### Initialize database
 
-```
-java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase  
-```
+`java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase`
+
 #### Start Okapi 
-```
-java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar dev
-```
+
+`java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar dev`
+
 #### Or, to initialize the database and start Okapi
 In root of this project, and assuming Okapi is checked out to `<home-dir>/folio` do
 
@@ -33,11 +32,11 @@ In root of this project, and assuming Okapi is checked out to `<home-dir>/folio`
 
 
 ## Install modules for tenant diku
-```
-  ./drop-and-recreate-okapi-modules-database.sh
 
-  export FOLIO=/path/to/module-checkouts; ./create-tenants-users-install-modules.sh
-```
+`./drop-and-recreate-okapi-modules-database.sh`
+
+`export FOLIO=~/folio; ./create-tenants-users-install-modules.sh`
+
 ## Miscellaneous
 
 #### Log in to Okapi modules' database
