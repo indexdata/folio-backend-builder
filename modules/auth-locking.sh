@@ -12,3 +12,8 @@ curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "mod-authtoken-
 
 echo Assign mod-users-bl to DIKU
 curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "mod-users-bl-'$V_MOD_USERS_BL'"}' http://localhost:9130/_/proxy/tenants/diku/modules
+
+# diku_admin can't give permissions to self?
+#token=$(curl -s -H "Content-type: application/json" -H "X-Okapi-Tenant: diku"  -d '{"username": "diku_admin", "password": "admin"}' "http://localhost:9130/authn/login" | jq -r '.okapiToken')
+#curl -H "X-Okapi-Tenant: diku" -H "X-Okapi-Token: $token" -H "Content-type: application/json" \
+#     -d '{"permissionName": "users-bl.all"}' http://localhost:9130/perms/users/$PU_ID/permissions

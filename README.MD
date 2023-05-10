@@ -12,8 +12,9 @@ Most scripts here require environment var `FOLIO` to be set to the main checkout
 * Kafka installed and running.
 * Okapi checked out from folio-org at Github, together with all referenced FOLIO modules.
 * Okapi and FOLIO modules built.
+* These scripts use `curl` and `jq`
 
-Before installing Okapi, the database with the `okapi` user must be created.
+Before installing Okapi, the database with the `okapi` user must be created. See next section.
 
 #### Create Okapi user in PostgreSQL
 

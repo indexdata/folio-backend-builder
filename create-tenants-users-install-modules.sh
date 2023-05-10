@@ -8,8 +8,6 @@ started=`date`
 
 ./modules/register-deploy-assign-modules.sh
 
-$workdir/users/create-diku_admin.sh
-
 ./modules/auth-locking.sh
 
 echo Started $started
