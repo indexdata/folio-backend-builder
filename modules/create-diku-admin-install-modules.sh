@@ -261,8 +261,7 @@ echo Deploy mod-patron-blocks
 $DEPLOY/dd-pg.sh mod-patron-blocks $V_MOD_PATRON_BLOCKS $JAVA_11 $GITFOLIO target/mod-patron-blocks-fat.jar localhost
 echo Install mod-patron-blocks for diku
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-patron-blocks-'$V_MOD_PATRON_BLOCKS'"}' http://localhost:9130/_/proxy/tenants/diku/modules
-for perm in patron-block-conditions.collection.get patron-block-conditions.item.get patron-block-conditions.item.put patron-block-limits.collection.get patron-block-limits.item.get patron-block-limits.item.post patron-block-limits.item.put patron-block-limits.item.delete automated-patron-blocks.collection.get user-summary.item.get patron-blocks.synchronization.job.post patron-blocks.synchronization.job.get
-; do
+for perm in patron-block-conditions.collection.get patron-block-conditions.item.get patron-block-conditions.item.put patron-block-limits.collection.get patron-block-limits.item.get patron-block-limits.item.post patron-block-limits.item.put patron-block-limits.item.delete automated-patron-blocks.collection.get user-summary.item.get patron-blocks.synchronization.job.post patron-blocks.synchronization.job.get; do
   curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json"  -d '{"permissionName": "'$perm'"}' http://localhost:9130/perms/users/$PU_ID/permissions
 done
 #echo enter; read
