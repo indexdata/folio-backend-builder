@@ -8,8 +8,9 @@ Most scripts here require environment var `FOLIO` to be set to the main checkout
 
 ## Prerequisites
 
-* PostgreSQL installed
-* Okapi checked out from folio-org at Github, together with all desired FOLIO modules.
+* PostgreSQL installed and running.
+* Kafka installed and running.
+* Okapi checked out from folio-org at Github, together with all referenced FOLIO modules.
 * Okapi and FOLIO modules built.
 
 Before installing Okapi, the database with the `okapi` user must be created.
