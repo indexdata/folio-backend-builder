@@ -7,23 +7,23 @@ Utils, scripts, sample data files etc for installing a local FOLIO backend insta
 * PostgreSQL installed
 * Okapi database user created in PostgreSQL, and okapi database initialized and Okapi started. See https://github.com/folio-org/okapi/blob/master/doc/guide.md#storage.
 
-### Create Okapi user in PostgreSQL
+#### Create Okapi user in PostgreSQL
 ```
 sudo -u postgres -i
 createuser -P okapi   # When it asks for a password, enter okapi25
 createdb -O okapi okapi
 ```
 
-### Initialize database
+#### Initialize database
 
 ```
 java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase  
 ```
-### Start Okapi 
+#### Start Okapi 
 ```
 java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar dev
 ```
-### Or for both initializing and starting
+#### Or for both initializing and starting
 ```    
 ./okapi/init-db-start-okapi.sh)
 ```
@@ -36,11 +36,11 @@ java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar d
 ```
 ## Miscellaneous
 
-### Log in to Okapi modules' database
+#### Log in to Okapi modules' database
 ```
 psql -U folio_admin postgresql://localhost:5432/okapi_modules
 ```
-### Size of databases on disk:
+#### Size of databases on disk:
 
 ```
 SELECT pg_database.datname,  
