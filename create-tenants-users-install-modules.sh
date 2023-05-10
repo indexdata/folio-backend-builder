@@ -8,7 +8,7 @@ started=`date`
 
 ./modules/register-deploy-assign-modules.sh
 
-$workdir/folio-users/create-diku_admin.sh
+$workdir/users/create-diku_admin.sh
 
 ./modules/auth-locking.sh
 

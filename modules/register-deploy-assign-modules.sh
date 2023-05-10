@@ -2,8 +2,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 workdir=$SCRIPT_DIR
 GITOLE=~/git-ole
 GITID=~/gitprojects
+THISGIT=~/gitne
 GITFOLIO=$FOLIO
-DEPLOY=$FOLIO/install-folio-backend/deploy
+DEPLOY=$THISGIT/install-folio-backend/modules/deploy
 
 JAVA_11=/usr/lib/jvm/java-11-openjdk-amd64/bin/java
 
