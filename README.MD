@@ -7,10 +7,15 @@ Most scripts here require environment var `FOLIO` to be set to the main checkout
 `export FOLIO=~/folio-git-directory; ./script.sh`
 
 ## Prerequisites
+
 * PostgreSQL installed
-* Okapi database user created in PostgreSQL, and okapi database initialized and Okapi started. See https://github.com/folio-org/okapi/blob/master/doc/guide.md#storage.
+* Okapi checked out from folio-org at Github, together with all desired FOLIO modules.
+* Okapi and FOLIO modules built.
+
+Before installing Okapi, the database with the `okapi` user must be created.
 
 #### Create Okapi user in PostgreSQL
+
 ```
 sudo -u postgres -i
 createuser -P okapi   # When it asks for a password, enter okapi25
