@@ -1,8 +1,0 @@
-{
-    "srvcId": "mod-sender-1.11.0-SNAPSHOT",
-    "nodeId": "localhost",
-    "descriptor": {
-      "exec": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java -Dport=%p -jar ../mod-sender/target/mod-sender-fat.jar -Dhttp.port=%p"
-    }
-}
-  
