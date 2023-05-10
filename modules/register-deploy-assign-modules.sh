@@ -7,28 +7,28 @@ DEPLOY=$FOLIO/install-folio-backend/deploy
 
 JAVA_11=/usr/lib/jvm/java-11-openjdk-amd64/bin/java
 
-V_MOD_SHARED_INDEX_MUTED_APIS="1.0-SNAPSHOT"
-V_MOD_PERMISSIONS="6.4.0-SNAPSHOT"
-V_MOD_INVENTORY_STORAGE="26.1.0-SNAPSHOT"
-V_MOD_USERS="19.2.0-SNAPSHOT"
-V_MOD_LOGIN="7.10.0-SNAPSHOT"
-V_MOD_PASSWORD_VALIDATOR="3.1.0-SNAPSHOT"
-V_MOD_AUTHTOKEN="2.14.0-SNAPSHOT"
-V_MOD_USERS_BL="7.6.0-SNAPSHOT"
-V_MOD_PUBSUB="2.10.0-SNAPSHOT"
-V_MOD_CIRCULATION_STORAGE="16.1.0-SNAPSHOT"
-V_MOD_EVENT_CONFIG="2.6.0-SNAPSHOT"
-V_MOD_CONFIGURATION="5.9.2-SNAPSHOT"
-V_MOD_TEMPLATE_ENGINE="1.19.0-SNAPSHOT"
-V_MOD_EMAIL="1.15.4-SNAPSHOT"
-V_MOD_SENDER="1.11.0-SNAPSHOT"
-V_MOD_NOTIFY="3.0.1-SNAPSHOT"
-V_MOD_FEESFINES="18.3.0-SNAPSHOT"
-V_MOD_PATRON_BLOCKS="1.9.0-SNAPSHOT"
-V_MOD_CALENDAR="2.4.3-SNAPSHOT"
-V_MOD_NOTES="5.1.0-SNAPSHOT"
-V_MOD_CIRCULATION=""
-V_MOD_INVENTORY="20.1.0-SNAPSHOT"
+V_MOD_SHARED_INDEX_MUTED_APIS="1.0-SNAPSHOT"  ## (source-storage-records, instance-authority-links for inventory)
+V_MOD_PERMISSIONS="6.4.0-SNAPSHOT"            ## users-bl, pubsub, authtoken
+V_MOD_INVENTORY_STORAGE="26.1.0-SNAPSHOT"     ## circulation, inventory, feesfines, circulation-storage
+V_MOD_USERS="19.2.0-SNAPSHOT"                 ## circulation, inventory, notes, feesfines, notify, sender, users-bl, pubsub, authtoken, login
+V_MOD_LOGIN="7.10.0-SNAPSHOT"                 ## users-bl, pubsub
+V_MOD_PASSWORD_VALIDATOR="3.1.0-SNAPSHOT"     ## users-bl
+V_MOD_AUTHTOKEN="2.14.0-SNAPSHOT"             ## users-bl
+V_MOD_PUBSUB="2.10.0-SNAPSHOT"                ## circulation, feesfines, circulation-storage
+V_MOD_CIRCULATION_STORAGE="16.1.0-SNAPSHOT"   ## circulation, inventory, feesfines, template-engine
+V_MOD_EVENT_CONFIG="2.6.0-SNAPSHOT"           ## notify
+V_MOD_CONFIGURATION="5.9.2-SNAPSHOT"          ## circulation, notes, email, template-engine, users-bl
+V_MOD_USERS_BL="7.6.0-SNAPSHOT"               ## 
+V_MOD_TEMPLATE_ENGINE="1.19.0-SNAPSHOT"       ## notify
+V_MOD_EMAIL="1.15.4-SNAPSHOT"                 ## sender
+V_MOD_SENDER="1.11.0-SNAPSHOT"                ## notify
+V_MOD_NOTIFY="3.0.1-SNAPSHOT"                 ## feesfines
+V_MOD_FEESFINES="18.3.0-SNAPSHOT"             ## circulation  
+V_MOD_PATRON_BLOCKS="1.9.0-SNAPSHOT"          ## circulation
+V_MOD_CALENDAR="2.4.3-SNAPSHOT"               ## circulation
+V_MOD_NOTES="5.1.0-SNAPSHOT"                  ## circulation
+V_MOD_CIRCULATION=""                          ##
+V_MOD_INVENTORY="20.1.0-SNAPSHOT"             ##
 
 # Set up faux APIs to stand in for required module dependencies that the shared index don't use
 echo Register mod-shared-index-muted-apis
