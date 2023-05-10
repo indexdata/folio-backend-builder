@@ -32,7 +32,7 @@ java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar d
 ```
   ./drop-and-recreate-okapi-modules-database.sh
 
-  ./create-tenants-users-install-modules.sh
+  export FOLIO=/path/to/module-checkouts; ./create-tenants-users-install-modules.sh
 ```
 ## Miscellaneous
 
