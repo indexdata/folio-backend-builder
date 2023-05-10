@@ -1,3 +1,5 @@
+# Enables authentication for tenant diku
+
 V_MOD_AUTHTOKEN="2.14.0-SNAPSHOT"
 V_MOD_USERS_BL="7.6.0-SNAPSHOT"
 

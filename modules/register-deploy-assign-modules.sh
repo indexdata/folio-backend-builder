@@ -1,5 +1,11 @@
+# Installs listed modules
+# OBS:
+# Requires environment variable `FOLIO` to be set to the directory where FOLIO modules are checked out to. 
+#
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 workdir=$SCRIPT_DIR
+
+# Git checkout directories for modules and this installation tool
 GITOLE=~/git-ole
 GITID=~/gitprojects
 THISGIT=~/gitne

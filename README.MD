@@ -23,7 +23,7 @@ java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-co
 ```
 java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar dev
 ```
-#### Or for both initializing and starting
+#### Or, to initialize the database and start Okapi
 ```    
 ./okapi/init-db-start-okapi.sh)
 ```
