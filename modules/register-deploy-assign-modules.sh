@@ -30,22 +30,21 @@ V_MOD_NOTES="5.1.0-SNAPSHOT"
 V_MOD_CIRCULATION=""
 V_MOD_INVENTORY="20.1.0-SNAPSHOT"
 
-
-
 # Set up faux APIs to stand in for required module dependencies that the shared index don't use
-echo mod-shared-index-muted-apis
+echo Register mod-shared-index-muted-apis
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITOLE/mod-shared-index-muted-apis/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-shared-index-muted-apis
 $DEPLOY/dd-no-pg.sh mod-shared-index-muted-apis $V_MOD_SHARED_INDEX_MUTED_APIS $JAVA_11 $GITOLE target/mod-shared-index-muted-apis-fat.jar 
 echo Assign mod-shared-index-muted-apis to diku
 curl -w '\n' -D -     -H "Content-type: application/json" -d @$GITOLE/mod-shared-index-muted-apis/target/TenantModuleDescriptor.json http://localhost:9130/_/proxy/tenants/diku/modules
+#echo enter; read
 
 # mod-permissions must come before any modules requiring permissions; those modules need to write permissions to it
 echo mod-permissions
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-permissions/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-permissions
 $DEPLOY/dd-pg.sh mod-permissions $V_MOD_PERMISSIONS $JAVA_11 $GITFOLIO target/mod-permissions-fat.jar localhost
-echo Assign mod-permissions to DIKU
+echo Install mod-permissions for DIKU
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-permissions-'$V_MOD_PERMISSIONS'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 #echo enter; read
 
@@ -53,19 +52,19 @@ echo Register mod-inventory-storage
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$FOLIO/mod-inventory-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-inventory-storage
 $DEPLOY/dd-pg.sh mod-inventory-storage $V_MOD_INVENTORY_STORAGE $JAVA_11 $GITFOLIO target/mod-inventory-storage-fat.jar localhost
-echo Install mod-inventory-storage to diku
+echo Install mod-inventory-storage for diku
 curl -w '\n'          -H "Content-type: application/json" -d @$FOLIO/mod-inventory-storage/target/Install.json http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=loadReference%3Dtrue%2CloadSample%3Dtrue
 #echo enter; read
 
-echo mod-users
+echo Register mod-users
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-users/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-users
 $DEPLOY/dd-pg-kafka.sh mod-users $V_MOD_USERS $JAVA_11 $GITFOLIO target/mod-users-fat.jar localhost
-echo Assign mod-users to diku
+echo Install mod-users for diku
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-users-'$V_MOD_USERS'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 #echo enter; read
 
-echo mod-login
+echo Register mod-login
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-login/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-login
 $DEPLOY/dd-pg.sh mod-login $V_MOD_LOGIN $JAVA_11 $GITFOLIO target/mod-login-fat.jar localhost
@@ -73,7 +72,7 @@ echo Assign mod-login to DIKU
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-login-'$V_MOD_LOGIN'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 #echo enter; read
 
-echo mod-password-validator
+echo Register mod-password-validator
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-password-validator/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-password-validator
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"srvcId": "mod-password-validator-'$V_MOD_PASSWORD_VALIDATOR'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
@@ -94,12 +93,13 @@ echo Install mod-pubsub for diku
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-pubsub-'$V_MOD_PUBSUB'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 #echo enter; read 
 
-echo register mod-circulation-storage
+echo Register mod-circulation-storage
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-circulation-storage/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-circulation-storage
 $DEPLOY/dd-pg.sh mod-circulation-storage $V_MOD_CIRCULATION_STORAGE $JAVA_11 $FOLIO target/mod-circulation-storage-fat.jar localhost
-echo assign mod-circulation-storage to diku
+echo Install mod-circulation-storage for diku
 curl -w '\n'          -H "Content-type: application/json" -d @$GITFOLIO/mod-circulation-storage/target/Install.json http://localhost:9130/_/proxy/tenants/diku/modules
+#echo enter; read
 
 echo Register mod-event-config                 for mod-notify
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-event-config/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -115,10 +115,11 @@ $DEPLOY/dd-pg.sh mod-configuration $V_MOD_CONFIGURATION $JAVA_11 $FOLIO mod-conf
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-configuration-'$V_MOD_CONFIGURATION'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 #echo enter; read
 
-echo mod-users-bl
+echo Register mod-users-bl
 curl -w '\n' -D - -s -X POST -H "Content-type: application/json" -d @$FOLIO/mod-users-bl/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-users-bl
 $DEPLOY/dd-pg.sh mod-users-bl $V_MOD_USERS_BL $JAVA_11 $FOLIO target/mod-users-bl-fat.jar localhost
+#echo enter; read
 
 echo Register mod-template-engine              for mod-notify
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-template-engine/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -158,37 +159,44 @@ echo Deploy mod-feesfines
 $DEPLOY/dd-pg.sh mod-feesfines $V_MOD_FEESFINES $JAVA_11 $FOLIO target/mod-feesfines-fat.jar localhost
 echo Install mod-feesfines for diku
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-feesfines-'$V_MOD_FEESFINES'"}' http://localhost:9130/_/proxy/tenants/diku/modules
+#echo enter; read
 
 echo Register mod-calendar                      for mod-circulation
 curl -w '\n' -D - -s  "Content-type: application/json" -d @$GITFOLIO/mod-calendar/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-calendar
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"srvcId": "mod-calendar-'$V_MOD_CALENDAR'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
+echo Install mod-calendar for diku
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-calendar-'$V_MOD_CALENDAR'"}' http://localhost:9130/_/proxy/tenants/diku/modules
+#echo enter; read 
 
 echo Register mod-patron-blocks                 for mod-circulation
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-patron-blocks/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-patron-blocks
 $DEPLOY/dd-pg.sh mod-patron-blocks $V_MOD_PATRON_BLOCKS $JAVA_11 $FOLIO target/mod-patron-blocks-fat.jar localhost
+echo Install mod-patron-blocks for diku
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-patron-blocks-'$V_MOD_PATRON_BLOCKS'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 #echo enter; read
 
 echo Register mod-notes                         for mod-circulation
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-notes/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+echo Deploy mod-notes
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"srvcId": "mod-notes-'$V_MOD_NOTES'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
+echo Install mod-notes for diku
 curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "mod-notes-'$V_MOD_NOTES'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 #echo enter; read
 
-echo register mod-circulation
+echo Register mod-circulation
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-circulation/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-circulation
 curl -w '\n' -D -     -H "Content-type: application/json" -d @$workdir/DeploymentDescriptor-mod-circulation.json http://localhost:9130/_/discovery/modules
-echo assign mod-circulation to diku
+echo Install mod-circulation for diku
 curl -w '\n'          -H "Content-type: application/json" -d @$GITFOLIO/mod-circulation/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
 #echo enter; read 
 
-echo mod-inventory
+echo Register mod-inventory
 curl -w '\n' -D - -s  -H "Content-type: application/json" -d @$GITFOLIO/mod-inventory/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
 echo Deploy mod-inventory
 $DEPLOY/dd-pg-kafka.sh mod-inventory $V_MOD_INVENTORY $JAVA_11 $GITFOLIO target/mod-inventory.jar localhost
-echo Assign mod-inventory to diku
+echo Install mod-inventory for diku
 curl -w '\n' -D -     -H "Content-type: application/json" -d @$GITFOLIO/mod-inventory/target/Activate.json http://localhost:9130/_/proxy/tenants/diku/modules
-
-date
+#echo enter; read 
