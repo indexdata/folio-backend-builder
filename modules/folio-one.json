@@ -158,6 +158,9 @@
                 "pathToJar": "target/mod-inventory-storage-fat.jar",
                 "pgHost": "localhost"
             },
+            "install": {
+                "tenantParameters": "loadReference%3Dtrue%2CloadSample%3Dtrue"
+            },
             "permissions": [
                 "inventory-storage.all"
             ]

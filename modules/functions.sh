@@ -55,6 +55,13 @@ deploymentDescriptor() {
   moduleConfig $1 $2 $3 | jq -r '.deployment.descriptor'
 }
 
+installParameters() {
+  install=$(moduleConfig $1 $2 $3 | jq -r '.install')
+  if [[ ! -z "$install" ]]; then
+     echo $install | jq -r '.tenantParameters'
+  fi
+}
+
 permissions() {
   moduleConfig $1 $2 $3 | jq -r '.permissions[]'  
 }

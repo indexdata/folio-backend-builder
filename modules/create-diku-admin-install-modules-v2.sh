@@ -87,6 +87,7 @@ for mod in $selectedModules; do
   DEPLOY_DESCRIPTOR=$(deploymentDescriptor $MOD $VERSION $CONF)
   JAVA_PATH=$(javaHome $MOD $VERSION $CONF)
   PG_HOST=$(pgHost $MOD $VERSION $CONF)
+  TENANT_PARAM=$(installParameters $MOD $VERSION $CONF)
   echo "Register $MOD"
   curl -w '\n' -D - -H "Content-type: application/json" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
   echo "Deploy $MOD"
@@ -102,7 +103,12 @@ for mod in $selectedModules; do
   if [[ "$MOD" != "mod-authtoken" && "$MOD" != "mod-users-bl" ]]
     then
      echo "Install $MOD for diku"
-     curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "'$MOD'-'$VERSION'"}' http://localhost:9130/_/proxy/tenants/diku/modules
+     if [[ ! -z "$TENANT_PARAM" && ! "$TENANT_PARAME" == "null" ]]; then
+       # Has tenant init parameters - send to 'install' end-point
+       curl -w '\n' -D -     -H "Content-type: application/json" -d '[{"id": "'$MOD'-'$VERSION'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=$TENANT_PARAM
+     else
+       curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "'$MOD'-'$VERSION'", "action": "enable"}' http://localhost:9130/_/proxy/tenants/diku/modules
+     fi
      PERMISSIONS=$(permissions $MOD $VERSION $CONF)
      for permission in $PERMISSIONS; do
           curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" \

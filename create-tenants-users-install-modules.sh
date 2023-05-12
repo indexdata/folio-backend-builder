@@ -1,7 +1,6 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 export workdir=$SCRIPT_DIR
 
-clear
 started=`date`
 
 ./tenants/create-tenants.sh
