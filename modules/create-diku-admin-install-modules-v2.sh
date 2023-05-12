@@ -73,6 +73,7 @@ for mod in $selectedModules; do
   nv=(${mod//:/ })
   MOD="${nv[0]}"
   VERSION="${nv[1]}"
+
   CFG=$(moduleConfig $MOD $VERSION $CONF)
   if [[ -z "$CFG" ]]; then
     echo "
@@ -80,6 +81,7 @@ for mod in $selectedModules; do
     "
     exit
   fi
+
   BASE_DIR=$(baseDir $MOD $VERSION $CONF)
   JAR_PATH=$(pathToJar $MOD $VERSION $CONF)
   DEPLOY_TYPE=$(deploymentType $MOD $VERSION $CONF)
@@ -88,6 +90,7 @@ for mod in $selectedModules; do
   JAVA_PATH=$(javaHome $MOD $VERSION $CONF)
   PG_HOST=$(pgHost $MOD $VERSION $CONF)
   TENANT_PARAM=$(installParameters $MOD $VERSION $CONF)
+
   echo "Register $MOD"
   curl -w '\n' -D - -H "Content-type: application/json" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
   echo "Deploy $MOD"
