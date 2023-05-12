@@ -60,7 +60,7 @@ PU_ID=$(curl -s -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d
 #echo Got puId $PU_ID; read
 
 # Install selected modules
-selectedModules=$(jq -r '.selectedModules[] | .name + ":" + .version' $CONF)
+selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name + ":" + .version' $CONF)
 for mod in $selectedModules; do
   nv=(${mod//:/ })
   MOD="${nv[0]}"
@@ -123,3 +123,6 @@ curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "mod-users-bl-'
 
 echo "Installatin of a FOLIO using '$CONF' was started at $started"
 echo "Ended at `date`"
+echo "Installed modules, diku:" 
+echo " "
+curl -s http://localhost:9130/_/proxy/tenants/diku/modules | jq -r '.[].id'

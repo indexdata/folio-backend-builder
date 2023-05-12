@@ -1,5 +1,5 @@
 selectedModules() {
-  jq -r '.selectedModules[]' $1 
+  jq -r '.selectedModules[] | select(.name != null)' $1 
 }
 
 moduleConfig() {

@@ -13,7 +13,7 @@ error=""
 
 ###
 echo "Checking that configurations exist for all selected modules"
-selectedModules=$(jq -r '.selectedModules[] | .name + ":" + .version' $CFGJSON)
+selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name + ":" + .version' $CFGJSON)
 for mod in $selectedModules; do
   arr=(${mod//:/ })
   found=$(jq --arg mod ${arr[0]} \

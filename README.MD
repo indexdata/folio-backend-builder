@@ -61,6 +61,28 @@ Optionally, the install configuration can be (lightly) checked using:
 
 `./modules/validate-config.sh modules/my-folio-config.json`
 
+Modules can be de-selected by removing the entry from `selectedModules`. The module configuration can be retained in the config if desired.
+
+Alternatively, at module can be skipped by renaming the property `name`. Name it `skipped` instead for example:
+
+```
+{ "name": "mod-patron-blocks",           "version": "1.9.0-SNAPSHOT"},
+{ "name": "mod-calendar",                "version": "2.4.3-SNAPSHOT"},
+{ "name": "mod-notes",                   "version": "5.1.0-SNAPSHOT"},
+{ "skipped": "mod-circulation",             "version": "23.6.0-SNAPSHOT"},
+{ "skipped": "mod-inventory",               "version": "20.1.0-SNAPSHOT"}
+```
+
+## Install in one go
+If Okapi is ready, it should be possible to run the install configuration like this:
+
+```
+export FOLIO=~/folio; cd ~/install-folio-backend ; clear; \
+./postgresdb/drop-and-recreate-okapi-modules-database.sh;\
+./modules/validate-config.sh modules/my-folio.json; read;\
+./modules/install-a-folio.sh modules/my-folio.json
+```
+
 ## Could-Dos
 
 ### Get rid of all static deployment descriptors
