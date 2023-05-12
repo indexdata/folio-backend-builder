@@ -55,7 +55,7 @@ To clean up the database schema first and start from scratch, do:
 
 Then run the installation itself; pass in the project configuration JSON: 
 
-`export FOLIO=~/folio; ./create-tenants-users-install-modules.sh modules/my-folio-config.json`
+`export FOLIO=~/folio; ./install-a-folio.sh modules/my-folio-config.json`
 
 Optionally, the install configuration can be (lightly) checked using:
 
