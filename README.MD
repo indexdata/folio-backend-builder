@@ -69,6 +69,12 @@ Some modules need environment variables beyond the standard Postgres and Kafka o
 ### Handle multiple tenants and users that could additionally be other than 'diku'
 The script will only handle one tenant from the config and one user. Also, despite the tenant and user being configurable, the install script in it's current form will only work with 'diku' and 'diku_admin'. Both issues would be nice to resolve. 
 
+### Only drop PG roles for modules that are being installed.
+The script drop-pgdb-okapi_modules-and-roles.sh will drop any roles it knows of. I might just drop the currently relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip it. 
+
+### Simplify main install script with some bash functions around curl requests
+Perhaps. 
+
 ## Miscellaneous notes
 
 #### Log in to Okapi modules' database
