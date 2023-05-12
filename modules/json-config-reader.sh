@@ -66,3 +66,15 @@ permissions() {
   moduleConfig $1 $2 $3 | jq -r '.permissions[]'  
 }
 
+users() {
+  jq '.users[].user' $1   
+}
+
+credentials() {
+  jq '.users[].credentials' $1   
+}
+
+tenants() {
+  jq '.tenants[]' $1
+}
+

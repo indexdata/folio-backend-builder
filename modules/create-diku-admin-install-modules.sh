@@ -19,6 +19,9 @@ DEPLOY=$workdir/deploy
 # Import jq functions for retrieving setting from the config file 
 source $workdir/json-config-reader.sh
 
+tenants=$(tenants $CONF)
+curl -w '\n' -D - -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants
+
 # Basic infrastructure to create users
 userModules=$(jq -r '.userModules[] | .name + ":" + .version' $CONF)
 for mod in $userModules; do
@@ -38,28 +41,10 @@ for mod in $userModules; do
   curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "'$MOD'-'$VERSION'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 done
 
-echo "
-Creating user diku_admin in order to assign permissions to them.
-"
-curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d  '{
-  "username" : "diku_admin",
-  "id" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
-  "active" : true,
-  "proxyFor" : [ ],
-  "personal" : {
-    "lastName" : "ADMINISTRATOR",
-    "firstName" : "DIKU",
-    "email" : "admin@diku.example.org",
-    "addresses" : [ ]
-  }
-}' http://localhost:9130/users
-
-echo "
-Assigning password 'admin' to diku_admin
-"
-curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -X POST -d '{ "userId":"1ad737b0-d847-11e6-bf26-cec0c932ce01",
-  "password":"admin" }' http://localhost:9130/authn/credentials
-
+users=$(users $CONF)
+curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d "$users" http://localhost:9130/users
+credentials=$(credentials $CONF)
+curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d "$credentials" http://localhost:9130/authn/credentials
 echo "
 Give diku_admin permissions for perms, login, users
 "
@@ -72,7 +57,7 @@ PU_ID=$(curl -s -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d
     ]
 }' http://localhost:9130/perms/users | jq -r '.id')
 #echo Got puId $PU_ID; read
-
+read
 # Install selected modules
 selectedModules=$(jq -r '.selectedModules[] | .name + ":" + .version' $CONF)
 for mod in $selectedModules; do

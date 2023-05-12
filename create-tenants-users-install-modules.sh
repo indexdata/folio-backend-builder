@@ -9,8 +9,6 @@ fi
 
 started=`date`
 
-./tenants/create-tenants.sh
-
 ./modules/create-diku-admin-install-modules.sh $CONF
 
 ./modules/auth-locking.sh

@@ -27,6 +27,33 @@
         { "name": "mod-circulation",             "version": "23.6.0-SNAPSHOT"},
         { "name": "mod-inventory",               "version": "20.1.0-SNAPSHOT"}
     ],
+    "tenants": [
+        {
+            "id": "diku",
+            "name": "Datalogisk Institut",
+            "description": "Danish Library Technology Institute"
+        }
+    ],
+    "users": [
+        {
+            "user": {
+                "username" : "diku_admin",
+                "id" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
+                "active" : true,
+                "proxyFor" : [ ],
+                "personal" : {
+                    "lastName" : "ADMINISTRATOR",
+                    "firstName" : "DIKU",
+                    "email" : "admin@diku.example.org",
+                    "addresses" : [ ]
+                }
+            },
+            "credentials" : {
+                "userId":"1ad737b0-d847-11e6-bf26-cec0c932ce01",
+                "password":"admin" 
+            }
+        }
+    ],
     "checkoutRoots": [
         {
             "symbol": "GIT-FOLIO",
@@ -537,6 +564,5 @@
                 "inventory.all"
             ]
         }
-
     ]
 }
