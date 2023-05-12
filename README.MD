@@ -2,12 +2,12 @@
 
 Scripts for installing a local FOLIO backend, built from directories of Git checkouts, and based on a project specific installation file written in JSON.
 
-Given the prerequisites described below, the scripts will configure a local PostgreSQL database, and initialize and start Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and enabling the modules with Okapi. The configuration also contains settings for tenants and users, though they are currently required to be 'diku' and 'diku_admin' respectively. See ./modules/my-folio.json 
+Given the prerequisites described below, the scripts will configure a local Postgres database, and initialize and start Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and enabling the modules with Okapi. The configuration also contains settings for tenants and users, though they are currently required to be 'diku' and 'diku_admin' respectively. See [sample configuration](./modules/my-folio.json) 
 
-The order of operations off the main installation script is roughly:
+The order of operations of the main installation script is roughly:
 
 * Create tenant diku 
-* Install basic modules for the user infrasctructure
+* Install basic modules for the user infrastructure
 * Create user 'diku_admin' with credentials
 * Install selected FOLIO modules for 'diku' with permissions to 'diku_admin' 
 * Lock down auth by enabling authtoken and users-bl for tenant diku
@@ -18,14 +18,14 @@ Some scripts here require that the environment var `FOLIO` is set to the main ch
 
 ## Prerequisites
 
-* PostgreSQL installed and running.
+* Postgres installed and running.
 * Kafka installed and running.
-* Okapi checked out from folio-org at Github, together with all FOLIO modules to be installed.
+* Okapi checked out from folio-org at GitHub, together with all FOLIO modules to be installed.
 * Okapi and FOLIO modules are built (`mvn install`), some perhaps dockerized.
-* PostgreSQL has a user 'okapi' and a database 'okapi' created (see instructions next).
+* Postgres has a user 'okapi' and a database 'okapi' created (see instructions next).
 * `curl` and `jq` will be needed for running the module installations scripts.
 
-#### Create Okapi user in PostgreSQL
+#### Create Okapi user in Postgres
 
 ```
 sudo -u postgres -i
@@ -55,15 +55,15 @@ To clean up the database schema first and start from scratch, do:
 
 Then run the installation itself; pass in the project configuration JSON: 
 
-`export FOLIO=~/folio; ./install-a-folio.sh modules/my-folio-config.json`
+`export FOLIO=~/folio; ./install-a-folio.sh modules/my-folio.json`
 
 The configuration has settings for one or more JVMs and any given system could of course use other locations for Java, so those settings must be adapted. See the property `jvms`. It's possible that the selected modules can be run with the default JVM on a system, making this setting obsolete in some cases. However, from time to time, the JVM requirements for different FOLIO modules have diverged. The checkout directories (`checkoutRoots`) should also be amended to fit the directory structure on the given development box. 
 
 ### Checking the configuration 
 
-Optionally, the install configuration can be (lightly) checked using:
+Optionally, the installation configuration can be (lightly) checked using:
 
-`./modules/validate-config.sh modules/my-folio-config.json`
+`./modules/validate-config.sh modules/my-folio.json`
 
 ### Deselecting modules 
 
@@ -80,7 +80,7 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 ```
 
 ## Install in one go
-If Okapi is ready, and the JVM paths are checked, it should be possible to run the install configuration like this:
+If Okapi is ready, and the JVM paths are checked, it should be possible to run the installation configuration like this:
 
 ```
 export FOLIO=~/folio; cd ~/install-folio-backend ; clear; \
@@ -104,9 +104,9 @@ jq -r '.moduleConfigs[] |
 
 ```
 
-If tagged released were used throughout - rather than snapshots as in `my-folio.json`, the script could easily be extended to check out given tags after cloning. The script could of course also do git pulls across an existing check out directory of FOLIO modules. 
+If tagged released were used throughout - rather than snapshots as in `my-folio.json`, the script could easily be extended to check out given tags after cloning. The script could of course also do git pulls across an existing check-out directory of FOLIO modules. 
 
-The shown command doesn't account for diverging JVM requirements. The info needed to support that is in the JSON config but it's a bit trickier to get out. 
+The shown command doesn't account for diverging JVM requirements. The info needed to support that is in the JSON config, but it's a bit trickier to get out. 
 
 ## Could-Dos
 
@@ -114,12 +114,12 @@ The shown command doesn't account for diverging JVM requirements. The info neede
 Some modules need environment variables beyond the standard Postgres and Kafka ones. For those modules, static deployment descriptors are kept in the ./modules directory. They could preferably be included in the JSON config instead. Examples of this are added to the my-folio.json config for pubsub and circulation.
 
 #### Handle multiple tenants and users that could additionally be other than 'diku'
-The script will only handle one tenant from the config and one user. Also, despite the tenant and user being configurable, the install script in it's current form will only work with 'diku' and 'diku_admin'. Both issues would be nice to resolve. 
+The script will only handle one tenant from the config and one user. Also, despite the tenant and user being configurable, the installation script in its current form will only work with 'diku' and 'diku_admin'. Both issues would be nice to resolve. 
 
 #### Only drop PG roles for modules that are being installed.
 The script drop-pgdb-okapi_modules-and-roles.sh will drop any roles it knows of. I might just drop the currently relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip it. 
 
-#### Simplify main install script with some bash functions around curl requests
+#### Simplify main installation script with some bash functions around curl requests
 Perhaps. 
 
 ## Miscellaneous notes
