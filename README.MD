@@ -2,7 +2,9 @@
 
 Utils, scripts, sample data files etc for installing a local FOLIO backend instance with Okapi, an external PostgreSQL database, auth and user modules and select other modules.
 
-Most scripts here require environment var `FOLIO` to be set to the main checkout directory for FOLIO components, for example
+Modules to install are selected and configured in a single JSON file. See ./modules/folio-hebis-reminder-fees.json 
+
+Some scripts here require environment var `FOLIO` to be set to the main checkout directory for FOLIO components, for example
 
 `export FOLIO=~/folio-git-directory; ./script.sh`
 
@@ -40,14 +42,23 @@ In root of this project, and assuming Okapi is checked out to `<home-dir>/folio`
 
 ## Install modules for tenant diku
 
+To clean up the database schema to start from scratch: 
+
 `./drop-and-recreate-okapi-modules-database.sh`
 
-`export FOLIO=~/folio; ./create-tenants-users-install-modules.sh`
+Run installation 
+`export FOLIO=~/folio; ./create-tenants-users-install-modules.sh`  modules/my-folio-config.json
+
+Before installing modules, the config file can be checked with:
+
+`./modules/validate-config.sh modules/my-folio-config.json`
 
 ## Miscellaneous
 
 #### Log in to Okapi modules' database
-`psql -U folio_admin postgresql://localhost:5432 okapi_modules`
+`psql -U folio_admin -d okapi_modules -h localhost`
+
+(was once `psql -U folio_admin postgresql://localhost:5432 okapi_modules`)
 
 #### Size of databases on disk:
 
