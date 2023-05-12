@@ -1,7 +1,5 @@
 # Installs listed modules. User diku_admin is created as soon as permissions, users, and login is in place. 
 # This is so that permissions can be assigned to diku_admin on a module by module basis.
-# OBS:
-# Requires environment variable `FOLIO` to be set to the directory where FOLIO modules are checked out to. 
 #
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 workdir=$SCRIPT_DIR
@@ -16,7 +14,6 @@ else
 fi
 
 started=`date`  
-
 
 # Path to utility scripts for deploying modules 
 DEPLOY=$workdir/deploy
