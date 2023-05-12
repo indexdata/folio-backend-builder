@@ -6,7 +6,7 @@ installation file written in JSON.
 Given the prerequisites described below, the scripts will configure a local Postgres database, and initialize and start
 Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and
 enabling the modules with Okapi. The configuration also contains settings for tenants and users, though they are
-currently required to be 'diku' and 'diku_admin' respectively. See [sample configuration](./modules/my-folio.json)
+currently required to be 'diku' and 'diku_admin' respectively. See [sample configuration](./projects/my-folio.json)
 
 The order of operations of the main installation script is roughly:
 
@@ -25,7 +25,7 @@ The order of operations of the main installation script is roughly:
 * Postgres has a user 'okapi' and a database 'okapi' created (see instructions next).
 * `curl` and `jq` will be needed for running the module installations scripts.
 
-#### Create Okapi user in Postgres
+#### Create Okapi user in Postgres (once)
 
 ```
 sudo -u postgres -i
@@ -33,9 +33,20 @@ createuser -P okapi   # When it asks for a password, enter okapi25
 createdb -O okapi okapi
 ```
 
-#### Initialize database
+Details in the [Okapi guide](https://github.com/folio-org/folio-org.github.io/blob/5d80dd7d847ad16685965bd9e0d57f76f1dac40c/_remote/okapi/doc/guide.md#storage).
+
+#### Create super user folio_admin (once)
+
+Creates the Postgres user that modules will use for creating their database schema in the `okapi_modules` database.
+
+`./postgresdb/create-pg-superuser-folio-admin.sh`
+
+#### Initialize database if desired
 
 `java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase`
+
+Details in the [Okapi guide](https://github.com/folio-org/folio-org.github.io/blob/5d80dd7d847ad16685965bd9e0d57f76f1dac40c/_remote/okapi/doc/guide.md#storage).
+
 
 #### Start Okapi
 
@@ -49,13 +60,13 @@ In root of this project, and assuming Okapi is checked out to `$HOME/folio` do
 
 ## Install modules for tenant diku
 
-To clean up the database schema first and start from scratch, do:
+To clean up the database schema after previous installations to start from scratch, do:
 
 `./postgresdb/drop-and-recreate-okapi-modules-database.sh`
 
-Then run the installation itself; pass in the project configuration JSON:
+Then run the installation script; pass in the project configuration JSON:
 
-`./install-a-folio.sh modules/my-folio.json`
+`./install-folio.sh projects/my-folio.json`
 
 The configuration has settings for one or more JVMs and any given system could of course use other locations for Java
 than this example, so those settings must be adapted. See the property `jvms`. It's possible that the selected modules
@@ -67,7 +78,7 @@ amended to fit the directory structure on the given development box.
 
 Optionally, the installation configuration can be (lightly) checked using:
 
-`./modules/validate-config.sh modules/my-folio.json`
+`./modules/validate-config.sh projects/my-folio.json`
 
 ### Deselecting modules
 
@@ -91,8 +102,8 @@ If Okapi is ready, and the JVM paths are checked, it should be possible to run t
 ```
 cd ~/install-folio-backend ; clear; \
 ./postgresdb/drop-and-recreate-okapi-modules-database.sh;\
-./modules/validate-config.sh modules/my-folio.json; read;\
-./modules/install-a-folio.sh modules/my-folio.json
+./modules/validate-config.sh projects/my-folio.json; read;\
+./install-folio.sh projects/my-folio.json
 ```
 
 ## Other uses for the config JSON
@@ -109,7 +120,7 @@ jq -r '.moduleConfigs[] |
 "git clone --recurse-submodules " + .githost + "/"  + .name + ";
  cd " + .name + ";  
  mvn clean install -D skipTests ; 
- cd .." ' ../install-folio-backend/modules/my-folio.json  > clone-and-build.sh
+ cd .." ' ../install-folio-backend/projects/my-folio.json  > clone-and-build.sh
 
 ```
 
@@ -125,7 +136,7 @@ but it's a bit trickier to get out.
 #### Get rid of all static deployment descriptors
 
 Some modules need environment variables beyond the standard Postgres and Kafka ones. For those modules, static
-deployment descriptors are kept in the ./modules directory. They could preferably be included in the JSON config
+deployment descriptors are kept in the ./projects directory. They could preferably be included in the JSON config
 instead. Examples of this are added to the my-folio.json config for pubsub and circulation.
 
 #### Handle multiple tenants and users that could additionally be other than 'diku'
@@ -142,5 +153,9 @@ relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip
 #### Simplify main installation script with some bash functions around curl requests
 
 Perhaps.
+
+#### Improve validation of project configurations
+
+I.e. mandatory fields and combination requirements. 
 
 

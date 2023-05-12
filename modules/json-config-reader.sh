@@ -61,6 +61,10 @@ deploymentDescriptor() {
   moduleConfig $1 $2 $3 | jq -r '.deployment.descriptor'
 }
 
+env() {
+  moduleConfig $1 $2 $3 | jq -r '.deployment.env'
+}
+
 installParameters() {
   install=$(moduleConfig $1 $2 $3 | jq -r '.install')
   if [[ ! -z "$install" ]]; then

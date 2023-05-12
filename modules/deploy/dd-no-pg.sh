@@ -7,6 +7,7 @@ gitdir=$4
 jar=$5
 
 
+
 ddjson=$(jq --arg mod $mod \
    --arg version $version \
    --arg jvm $jvm \

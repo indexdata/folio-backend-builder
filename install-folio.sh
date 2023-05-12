@@ -7,18 +7,18 @@ workdir=$SCRIPT_DIR
 CONF=$1
 
 if [[ -z "$CONF" ]]; then
-  echo "Please provide JSON config file listing and configuring modules to be install:  ./install-a-folio.sh myconf.json"
+  echo "Please provide JSON config file listing and configuring modules to be install:  ./install-folio.sh projects/my-folio.json"
   exit
 else 
   echo "Installing a FOLIO using $CONF"
 fi
 
-started=`date`  
+started=$(date)
 
 # Path to utility scripts for deploying modules 
-DEPLOY=$workdir/deploy
-# Import jq functions for retrieving setting from the config file 
-source $workdir/json-config-reader.sh
+DEPLOY=$workdir/modules/deploy
+# Import jq functions for retrieving settings from the config file 
+source $workdir/modules/json-config-reader.sh
 
 tenants=$(tenants $CONF)
 curl -w '\n' -D - -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants
@@ -79,6 +79,7 @@ for mod in $selectedModules; do
   DEPLOY_TYPE=$(deploymentType $MOD $VERSION $CONF)
   DD_SCRIPT=$(deployScript $MOD $VERSION $CONF)
   DEPLOY_DESCRIPTOR=$(deploymentDescriptor $MOD $VERSION $CONF)
+  CUSTOM_ENV=$(env $MOD $VERSION $CONF)
   JAVA_PATH=$(javaHome $MOD $VERSION $CONF)
   PG_HOST=$(pgHost $MOD $VERSION $CONF)
   TENANT_PARAM=$(installParameters $MOD $VERSION $CONF)
@@ -88,16 +89,20 @@ for mod in $selectedModules; do
   echo "Deploy $MOD"
   if [[ "$DEPLOY_TYPE" == "DD-STATIC" ]]
     then
-      curl -w '\n' -D - -H "Content-type: application/json" -d @$workdir/$DEPLOY_DESCRIPTOR http://localhost:9130/_/discovery/modules
+      curl -w '\n' -D - -H "Content-type: application/json" -d @$workdir/projects/$DEPLOY_DESCRIPTOR http://localhost:9130/_/discovery/modules
+  elif [[ "$DEPLOY_TYPE" == "DD-CUSTOM" ]]
+    then
+      $DEPLOY/$DD_SCRIPT $MOD $VERSION $JAVA_PATH $BASE_DIR $JAR_PATH "$CUSTOM_ENV"
+      read
   elif [[ -z "$DD_SCRIPT" ]]; # Assume launch descriptor exists
     then
       curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
-  else 
+  else
     $DEPLOY/$DD_SCRIPT $MOD $VERSION $JAVA_PATH $BASE_DIR $JAR_PATH $PG_HOST
   fi
   if [[ "$MOD" != "mod-authtoken" && "$MOD" != "mod-users-bl" ]]  # Activation deferred until permissions assigned for all modules.
     then
-     if [[ ! -z "$TENANT_PARAM" ]]; then
+     if [[ -n "$TENANT_PARAM" ]]; then
        # Has tenant init parameters - send to 'install' end-point
        echo "Install $MOD for diku"
        curl -w '\n' -D -     -H "Content-type: application/json" -d '[{"id": "'$MOD'-'$VERSION'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=$TENANT_PARAM
@@ -121,8 +126,8 @@ usersVersion=$(moduleVersionByName  "mod-users-bl" $CONF)
 echo Assign mod-users-bl to DIKU
 curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "mod-users-bl-'$usersVersion'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 
-echo "Installatin of a FOLIO using '$CONF' was started at $started"
-echo "Ended at `date`"
+echo "Installation of a FOLIO using '$CONF' was started at $started"
+echo "Ended at $(date)"
 echo "Installed modules, diku:" 
 echo " "
 curl -s http://localhost:9130/_/proxy/tenants/diku/modules | jq -r '.[].id'

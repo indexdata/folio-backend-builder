@@ -1,0 +1,659 @@
+{
+    "description": "Template FOLIO configuration.",
+
+    "userModules" : [
+        { "name": "mod-permissions",       "version": "6.4.0-SNAPSHOT" },
+        { "name": "mod-users",             "version": "19.2.0-SNAPSHOT" },
+        { "name": "mod-login",             "version": "7.10.0-SNAPSHOT" }
+    ],
+    "selectedModules": [
+        { "name": "mod-shared-index-muted-apis", "version": "1.0-SNAPSHOT" },
+        { "name": "mod-inventory-storage",       "version": "26.1.0-SNAPSHOT" },
+        { "name": "mod-password-validator",      "version": "3.1.0-SNAPSHOT" },
+        { "name": "mod-authtoken",               "version": "2.14.0-SNAPSHOT" },
+        { "name": "mod-pubsub",                  "version": "2.10.0-SNAPSHOT" },
+        { "name": "mod-circulation-storage",     "version": "16.1.0-SNAPSHOT" },
+        { "name": "mod-event-config",            "version": "2.6.0-SNAPSHOT" },
+        { "name": "mod-configuration",           "version": "5.9.2-SNAPSHOT" },
+        { "name": "mod-users-bl",                "version": "7.6.0-SNAPSHOT"},
+        { "name": "mod-template-engine",         "version": "1.19.0-SNAPSHOT"},
+        { "name": "mod-email",                   "version": "1.15.4-SNAPSHOT"},
+        { "name": "mod-sender",                  "version": "1.11.0-SNAPSHOT"},
+        { "name": "mod-notify",                  "version": "3.0.1-SNAPSHOT"},
+        { "name": "mod-feesfines",               "version": "18.3.0-SNAPSHOT"},
+        { "name": "mod-patron-blocks",           "version": "1.9.0-SNAPSHOT"},
+        { "name": "mod-calendar",                "version": "2.4.3-SNAPSHOT"},
+        { "name": "mod-notes",                   "version": "5.1.0-SNAPSHOT"},
+        { "name": "mod-circulation",             "version": "23.6.0-SNAPSHOT"},
+        { "name": "mod-inventory",               "version": "20.1.0-SNAPSHOT"}
+    ],
+    "tenants": [
+        {
+            "id": "diku",
+            "name": "Datalogisk Institut",
+            "description": "Danish Library Technology Institute"
+        }
+    ],
+    "users": [
+        {
+            "user": {
+                "username" : "diku_admin",
+                "id" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
+                "active" : true,
+                "proxyFor" : [ ],
+                "personal" : {
+                    "lastName" : "ADMINISTRATOR",
+                    "firstName" : "DIKU",
+                    "email" : "admin@diku.example.org",
+                    "addresses" : [ ]
+                }
+            },
+            "credentials" : {
+                "userId":"1ad737b0-d847-11e6-bf26-cec0c932ce01",
+                "password":"admin" 
+            }
+        }
+    ],
+    "checkoutRoots": [
+        {
+            "symbol": "GIT-FOLIO",
+            "directory": "~/folio"
+        },
+        {
+            "symbol": "GIT-OLE",
+            "directory": "~/git-ole"
+        },
+        {
+            "symbol": "GIT-ID",
+            "directory": "~/gitprojects"
+        },
+        {
+            "symbol": "GIT-NE",
+            "directory": "~/gitne"
+        }
+    ],
+    "jvms": [
+        {
+            "symbol": "JAVA11",
+            "home": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java"
+        }
+    ],
+    "ddTypes": [
+        {
+            "symbol": "DD-PG",
+            "description": "Build deployment descriptor with default Postgres settings.",
+            "script": "dd-pg.sh"
+        },
+        {
+            "symbol": "DD-PG-KAFKA",
+            "description": "Build deployment descriptor with default Postgres and Kafka settings.",
+            "script": "dd-pg-kafka.sh"
+        },
+        {
+            "symbol": "DD-SIMPLE",
+            "description": "Build deployment descriptor without Postgres settings.",
+            "script": "dd-no-pg.sh"
+        },
+        {
+            "symbol": "DD-STATIC",
+            "description": "Used predefined deployment descriptor JSON file."
+        },
+        {
+            "symbol": "DOCKER",
+            "description": "Don't use or create deployment descriptor. Launch descriptor in module descriptor will be used."
+        }
+    ],
+    "moduleConfigs": [
+        {
+            "name": "mod-permissions",
+            "version": "6.4.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-users-bl", 
+                "mod-pubsub", 
+                "mod-authtoken"],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-permissions-fat.jar",
+                "pgHost": "localhost"
+            }
+        },
+        {
+            "name": "mod-users",
+            "version": "19.2.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "circulation", 
+                "inventory", 
+                "notes", 
+                "feesfines",
+                "mod-notify",
+                "mod-sender",
+                "mod-users-bl",       
+                "mod-pubsub",
+                "mod-authtoken",
+                "mod-login"
+            ],
+            "deployment" : {
+                "type": "DD-PG-KAFKA",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-users-fat.jar",
+                "pgHost": "localhost"
+            }
+        },
+        {
+            "name": "mod-login",
+            "version": "7.10.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-users-bl",
+                "mod-pubsub"
+            ],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-login-fat.jar",
+                "pgHost": "localhost"
+            }
+        },
+        {
+            "name": "mod-shared-index-muted-apis",
+            "version": "1.0-SNAPSHOT",
+            "checkedOutTo": "GIT-OLE",
+            "githost": "https://github.com/openlibraryenvironment",
+            "requiredBy": [],
+            "deployment": {
+                "type": "DD-SIMPLE",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-shared-index-muted-apis-fat.jar"
+            },
+            "permissions": []
+        },
+        {
+            "name": "mod-inventory-storage",
+            "version": "26.1.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-circulation",
+                "mod-inventory",
+                "mod-feesfines",
+                "mod-circulation-storage"
+            ],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-inventory-storage-fat.jar",
+                "pgHost": "localhost"
+            },
+            "install": {
+                "tenantParameters": "loadReference%3Dtrue%2CloadSample%3Dtrue"
+            },
+            "permissions": [
+                "inventory-storage.all"
+            ]
+        },
+        {
+            "name": "mod-password-validator",
+            "version": "3.1.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-users-bl"
+            ],
+            "deployment": {
+                "type": "DOCKER"
+            },
+            "permissions": []
+        },
+        {
+            "name": "mod-authtoken",
+            "version": "2.14.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-users-bl"
+            ],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm":"JAVA11",
+                "pathToJar": "target/mod-authtoken-fat.jar",
+                "pgHost": "localhost"
+            },
+            "permissions": []
+        },
+        { 
+            "name": "mod-pubsub",
+            "version": "2.10.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy":[
+                "mod-circulation",
+                "mod-feesfines",
+                "mod-circulation-storage"
+            ],
+            "deployment": {
+                "type": "DD-STATIC",
+                "descriptor": "DeploymentDescriptor-mod-pubsub.json",
+                "note": "Then 'env' property could be used instead of the descriptor file above",
+                "env": [
+                    {
+                      "name": "JAVA_OPTIONS",
+                      "value": "-XX:MaxRAMPercentage=66.0 -XX:+HeapDumpOnOutOfMemoryError"
+                    },
+                    {
+                      "name": "DB_HOST",
+                      "value": "localhost"
+                    },
+                    {
+                      "name": "DB_PORT",
+                      "value": "5432"
+                    },
+                    {
+                      "name": "DB_USERNAME",
+                      "value": "folio_admin"
+                    },
+                    {
+                      "name": "DB_PASSWORD",
+                      "value": "folio_admin"
+                    },
+                    {
+                      "name": "DB_DATABASE",
+                      "value": "okapi_modules"
+                    },
+                    {
+                      "name": "DB_QUERYTIMEOUT",
+                      "value": "60000"
+                    },
+                    {
+                      "name": "DB_CHARSET",
+                      "value": "UTF-8"
+                    },
+                    {
+                      "name": "DB_MAXPOOLSIZE",
+                      "value": "5"
+                    },
+                    {
+                      "name": "KAFKA_HOST",
+                      "value": "localhost"
+                    },
+                    {
+                      "name": "KAFKA_PORT",
+                      "value": "9092"
+                    },
+                    {
+                      "name": "OKAPI_URL",
+                      "value": "http://localhost:9130"
+                    },
+                    {
+                      "name": "SYSTEM_USER_NAME",
+                      "value": "pub-sub"
+                    },
+                    {
+                      "name": "SYSTEM_USER_PASSWORD",
+                      "value": "pubsub"
+                    }
+                  ]
+            },
+            "permissions": [
+                "pubsub.event-types.get", 
+                "pubsub.event-types.post", 
+                "pubsub.event-types.put", 
+                "pubsub.event-types.delete", 
+                "pubsub.publishers.post", 
+                "pubsub.publishers.delete", 
+                "pubsub.publishers.get", 
+                "pubsub.subscribers.post", 
+                "pubsub.subscribers.delete", 
+                "pubsub.subscribers.get", 
+                "pubsub.audit.history.get", 
+                "pubsub.audit.message.payload.get", 
+                "pubsub.publish.post", 
+                "pubsub.messaging-modules.delete", 
+                "pubsub.events.post" 
+            ]
+        },
+        { 
+            "name": "mod-circulation-storage",     
+            "version": "16.1.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-circulation",
+                "mod-inventory",
+                "mod-feesfines",
+                "mod-template-engine"
+            ],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-circulation-storage-fat.jar",
+                "pgHost": "localHost"
+            },
+            "permissions": [
+                "circulation-storage.all"
+            ]
+        },
+        { 
+            "name": "mod-event-config",
+            "version": "2.6.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-notify"
+            ],
+            "deployment": {
+                "type": "DOCKER"
+            },
+            "permissions": []
+        },
+        { 
+            "name": "mod-configuration",
+            "version": "5.9.2-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-circulation",
+                "mod-notes",
+                "mod-email",
+                "mod-template-engine",
+                "mod-users-bl"
+            ],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar",
+                "pgHost": "localHost"
+            },
+            "permissions": [
+               "configuration.all" 
+            ] 
+        },
+        {
+            "name": "mod-users-bl",
+            "version": "7.6.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-users-bl-fat.jar",
+                "pgHost": "localHost"
+            },
+            "permissions": []
+        },
+        {
+            "name": "mod-template-engine",
+            "version": "1.19.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-notify"
+            ],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-template-engine-fat.jar",
+                "pgHost": "localHost"
+            },
+            "permissions": [
+                "templates.all"
+            ]
+        },
+        {
+            "name": "mod-email",
+            "version": "1.15.4-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-sender"
+            ],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-email-fat.jar",
+                "pgHost": "localHost"
+            },
+            "permissions": [
+                "email.message.all",
+                "email.smtp-configuration.all"
+            ]
+        },
+        {
+            "name": "mod-sender",
+            "version": "1.11.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-notify"
+            ],
+            "deployment": {
+                "type": "DD-SIMPLE",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-sender-fat.jar"
+            },
+            "permissions": []
+        },
+        {
+            "name": "mod-notify",
+            "version": "3.0.1-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-feesfines"
+            ],
+            "deployment": {
+                "type": "DOCKER"
+            },
+            "permissions": [
+                "notify.all"
+            ]
+        },
+        {
+            "name": "mod-feesfines",
+            "version": "18.3.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-circulation"
+            ],
+            "deployment": {
+                "type": "DD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-feesfines-fat.jar",
+                "pgHost": "localHost"
+            },
+            "permissions": [
+                "feefines.collection.get",
+                "feefines.item.get",
+                "feefines.item.post",
+                "feefines.item.put", 
+                "feefines.item.delete", 
+                "owners.collection.get",
+                "owners.item.get",
+                "owners.item.post",
+                "owners.item.put",
+                "owners.item.delete",
+                "accounts.collection.get",
+                "accounts.item.get",
+                "accounts.item.post",
+                "accounts.item.put",
+                "accounts.item.delete",
+                "accounts.check-pay.post",
+                "accounts.check-waive.post",
+                "accounts.check-transfer.post",
+                "accounts.check-refund.post",
+                "accounts.pay.post", 
+                "accounts.waive.post", 
+                "accounts.transfer.post", 
+                "accounts.cancel.post", 
+                "accounts.refund.post", 
+                "feefineactions.collection.get", 
+                "feefineactions.item.get", 
+                "feefineactions.item.post", 
+                "feefineactions.item.put", 
+                "feefineactions.item.delete", 
+                "payments.collection.get", 
+                "payments.item.get payments.item.post", 
+                "accounts.pay.check.post", 
+                "payments.item.put", 
+                "payments.item.delete",
+                "waives.collection.get", 
+                "waives.item.get", 
+                "waives.item.post", 
+                "waives.item.put", 
+                "waives.item.delete", 
+                "refunds.collection.get", 
+                "refunds.item.get", 
+                "refunds.item.post", 
+                "refunds.item.put", 
+                "refunds.item.delete", 
+                "transfers.collection.get", 
+                "transfers.item.get", 
+                "transfers.item.post", 
+                "transfers.item.put", 
+                "transfers.item.delete", 
+                "comments.collection.get", 
+                "comments.item.get", 
+                "comments.item.post", 
+                "comments.item.put", 
+                "comments.item.delete", 
+                "transfer-criterias.collection.get", 
+                "transfer-criterias.item.get", 
+                "transfer-criterias.item.post", 
+                "transfer-criterias.item.put", 
+                "transfer-criterias.item.delete", 
+                "manualblocks.collection.get", 
+                "manualblocks.item.get", 
+                "manualblocks.item.post", 
+                "manualblocks.item.put", 
+                "manualblocks.item.delete", 
+                "overdue-fines-policies.collection.get", 
+                "overdue-fines-policies.item.get", 
+                "overdue-fines-policies.item.post", 
+                "overdue-fines-policies.item.put", 
+                "overdue-fines-policies.item.delete", 
+                "lost-item-fees-policies.collection.get", 
+                "lost-item-fees-policies.item.get", 
+                "lost-item-fees-policies.item.post", 
+                "lost-item-fees-policies.item.put", 
+                "lost-item-fees-policies.item.delete", 
+                "manual-block-templates.collection.get", 
+                "manual-block-templates.item.get", 
+                "manual-block-templates.item.post", 
+                "manual-block-templates.item.put", 
+                "manual-block-templates.item.delete", 
+                "modperms.feesfines.patron-notices.post", 
+                "feefine-reports.refund.post", 
+                "feefine-reports.cash-drawer-reconciliation.post", 
+                "feefine-reports.financial-transactions-detail.post", 
+                "actual-cost-fee-fine-cancel.post", 
+                "actual-cost-fee-fine-bill.post"
+            ]
+        },
+        {
+            "name": "mod-patron-blocks",
+            "version": "1.9.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-circulation"
+            ],
+            "deployment": {
+                "type": "DD-PG",
+                "pathToJar": "target/mod-patron-blocks-fat.jar",
+                "jvm": "JAVA11",
+                "pgHost": "localHost"
+            },
+            "permissions": [
+                "patron-block-conditions.collection.get", 
+                "patron-block-conditions.item.get", 
+                "patron-block-conditions.item.put", 
+                "patron-block-limits.collection.get", 
+                "patron-block-limits.item.get", 
+                "patron-block-limits.item.post", 
+                "patron-block-limits.item.put", 
+                "patron-block-limits.item.delete", 
+                "automated-patron-blocks.collection.get", 
+                "user-summary.item.get", 
+                "patron-blocks.synchronization.job.post", 
+                "patron-blocks.synchronization.job.get"
+            ]
+        },
+        {
+            "name": "mod-calendar",
+            "version": "2.4.3-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": ["mod-circulation"],
+            "deployment": {
+                "type": "DOCKER"
+            },
+            "permissions": [
+                "calendar.create",
+                "calendar.update",
+                "calendar.delete"
+            ]
+        },
+        {
+            "name": "mod-notes",
+            "version": "5.1.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-circulation"
+            ],
+            "deployment": {
+                "type": "DOCKER"
+            },
+            "permissions": [
+                "notes.all"
+            ]
+        },
+        {
+            "name": "mod-circulation",
+            "version": "23.6.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [],
+            "deployment": {
+                "type": "DD-STATIC",
+                "descriptor": "DeploymentDescriptor-mod-circulation.json",
+                "note": "Then 'env' could be used instead of the descriptor above",
+                "env": [
+                    { "name": "JAVA_OPTIONS",
+                      "value": "-XX:MaxRAMPercentage=66.0"
+                    },
+                    {
+                      "name": "SCHEDULED_ANONYMIZATION_NUMBER_OF_LOANS_TO_CHECK",
+                      "value": "50000"
+                    }
+                  ]
+            },
+            "permissions": [
+                "circulation.all"
+            ]
+        },
+        {
+            "name": "mod-inventory",
+            "version": "20.1.0-SNAPSHOT",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [],
+            "deployment": {
+                "type": "DD-PG-KAFKA",
+                "pathToJar": "target/mod-inventory.jar",
+                "jvm": "JAVA11",
+                "pgHost": "localHost"
+            },
+            "permissions": [
+                "inventory.all"
+            ]
+        }
+    ]
+}
