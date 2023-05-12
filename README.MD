@@ -63,7 +63,7 @@ Optionally, the install configuration can be (lightly) checked using:
 
 Modules can be de-selected by removing the entry from `selectedModules`. The module configuration can be retained in the config if desired.
 
-Alternatively, at module can be skipped by renaming the property `name`. Name it `skipped` instead for example:
+A module can also be skipped by renaming the property `name`. Name it `skipped` instead for example:
 
 ```
 { "name": "mod-patron-blocks",           "version": "1.9.0-SNAPSHOT"},
