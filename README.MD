@@ -2,7 +2,7 @@
 
 Scripts for installing a local FOLIO backend, built from directories of Git checkouts, and based on a project specific installation file written in JSON.
 
-Given the prerequisites described below, the scripts will configure a local PostgreSQL database, and initialize and start Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and enabling the modules with Okapi. The configuration also contains settings for tenants and users, though they are currently required to be 'diku' and 'diku_admin' respectively. See ./modules/folio-hebis-reminder-fees.json 
+Given the prerequisites described below, the scripts will configure a local PostgreSQL database, and initialize and start Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and enabling the modules with Okapi. The configuration also contains settings for tenants and users, though they are currently required to be 'diku' and 'diku_admin' respectively. See ./modules/my-folio.json 
 
 The order of operations off the main installation script is roughly:
 
@@ -86,7 +86,7 @@ export FOLIO=~/folio; cd ~/install-folio-backend ; clear; \
 ## Could-Dos
 
 #### Get rid of all static deployment descriptors
-Some modules need environment variables beyond the standard Postgres and Kafka ones. For those modules, static deployment descriptors are kept in the ./modules directory. They could preferably be included in the JSON config instead. Examples of this are added to the folio-hebis-reminder-fees.json config for pubsub and circulation.
+Some modules need environment variables beyond the standard Postgres and Kafka ones. For those modules, static deployment descriptors are kept in the ./modules directory. They could preferably be included in the JSON config instead. Examples of this are added to the my-folio.json config for pubsub and circulation.
 
 #### Handle multiple tenants and users that could additionally be other than 'diku'
 The script will only handle one tenant from the config and one user. Also, despite the tenant and user being configurable, the install script in it's current form will only work with 'diku' and 'diku_admin'. Both issues would be nice to resolve. 

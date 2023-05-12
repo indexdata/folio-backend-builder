@@ -1,8 +1,8 @@
 source ../modules/json-config-reader.sh
 
-CONF="../modules/folio-hebis-reminder-fees.json"
+CONF="../modules/my-folio.json"
 
-res=$(javaHome mod-notify "3.0.1-SNAPSHOT" ../modules/folio-hebis-reminder-fees.json)
+res=$(javaHome mod-notify "3.0.1-SNAPSHOT" ../modules/my-folio.json)
 
 echo "Res: $res"
 

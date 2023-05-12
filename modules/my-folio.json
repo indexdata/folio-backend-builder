@@ -1,5 +1,5 @@
 {
-    "description": "FOLIO configuration for Hebis reminder fees project.",
+    "description": "Template FOLIO configuration.",
 
     "userModules" : [
         { "name": "mod-permissions",       "version": "6.4.0-SNAPSHOT" },
