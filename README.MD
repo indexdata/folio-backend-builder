@@ -57,9 +57,15 @@ Then run the installation itself; pass in the project configuration JSON:
 
 `export FOLIO=~/folio; ./install-a-folio.sh modules/my-folio-config.json`
 
+The configuration has settings for one or more JVMs and any given system could of course use other locations for Java, so those settings must be adapted. See the property `jvms`. It's possible that the selected modules can be run with the default JVM on a system, making this setting obsolete in some cases. However, from time to time, the JVM requirements for different FOLIO modules have diverged. The checkout directories (`checkoutRoots`) should also be amended to fit the directory structure on the given development box. 
+
+### Checking the configuration 
+
 Optionally, the install configuration can be (lightly) checked using:
 
 `./modules/validate-config.sh modules/my-folio-config.json`
+
+### Deselecting modules 
 
 Modules can be de-selected by removing the entry from `selectedModules`. The module configuration can be retained in the config if desired.
 
@@ -74,7 +80,7 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 ```
 
 ## Install in one go
-If Okapi is ready, it should be possible to run the install configuration like this:
+If Okapi is ready, and the JVM paths are checked, it should be possible to run the install configuration like this:
 
 ```
 export FOLIO=~/folio; cd ~/install-folio-backend ; clear; \
@@ -82,6 +88,25 @@ export FOLIO=~/folio; cd ~/install-folio-backend ; clear; \
 ./modules/validate-config.sh modules/my-folio.json; read;\
 ./modules/install-a-folio.sh modules/my-folio.json
 ```
+
+## Other uses for the config JSON
+
+In `my-folio.json` there are settings for each module's remote Git repository. This is not used or required by the installation scripts, so it can be left out. However, it might provide some convenience when upgrading a system across the board. 
+
+Assuming the current arbitrarily chosen property name `githost` one could for example write a one-liner that will generate the commands for a complete `git clone` and `mvn install` of all configured modules into a given directory:
+
+```
+jq -r '.moduleConfigs[] | 
+"git clone --recurse-submodules " + .githost + "/"  + .name + ";
+ cd " + .name + ";  
+ mvn clean install -D skipTests ; 
+ cd .." ' ../install-folio-backend/modules/my-folio.json  > clone-and-build.sh
+
+```
+
+If tagged released were used throughout - rather than snapshots as in `my-folio.json`, the script could easily be extended to check out given tags after cloning. The script could of course also do git pulls across an existing check out directory of FOLIO modules. 
+
+The shown command doesn't account for diverging JVM requirements. The info needed to support that is in the JSON config but it's a bit trickier to get out. 
 
 ## Could-Dos
 
