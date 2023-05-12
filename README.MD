@@ -51,7 +51,7 @@ In root of this project, and assuming Okapi is checked out to `$HOME/folio` do
 
 To clean up the database schema first and start from scratch, do: 
 
-`./drop-and-recreate-okapi-modules-database.sh`
+`./postgresdb/drop-and-recreate-okapi-modules-database.sh`
 
 Then run the installation itself; pass in the project configuration JSON: 
 
