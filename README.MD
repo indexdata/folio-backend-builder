@@ -2,7 +2,7 @@
 
 Scripts for installing a local FOLIO backend, based on a project specific installation file written in JSON.
 
-Given the prerequisites described below, the scripts will configure a local PostgreSQL database, and initialize and start Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and enabling the modules. See ./modules/folio-hebis-reminder-fees.json 
+Given the prerequisites described below, the scripts will configure a local PostgreSQL database, and initialize and start Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and enabling the modules with Okapi. See ./modules/folio-hebis-reminder-fees.json 
 
 Some scripts here require that the environment var `FOLIO` is set to the main checkout directory for FOLIO components, for example
 
@@ -41,15 +41,15 @@ In root of this project, and assuming Okapi is checked out to `$HOME/folio` do
 
 ## Install modules for tenant diku
 
-To clean up the database schema first, and start from scratch, do: 
+To clean up the database schema first and start from scratch, do: 
 
 `./drop-and-recreate-okapi-modules-database.sh`
 
 Then run the installation itself; pass in the project configuration JSON: 
 
-`export FOLIO=~/folio; ./create-tenants-users-install-modules.sh`  modules/my-folio-config.json
+`export FOLIO=~/folio; ./create-tenants-users-install-modules.sh modules/my-folio-config.json`
 
-Before installing modules, the install configuration can be (lightly) checked with:
+Optionally, the install configuration can be (lightly) checked using:
 
 `./modules/validate-config.sh modules/my-folio-config.json`
 
