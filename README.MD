@@ -85,16 +85,16 @@ export FOLIO=~/folio; cd ~/install-folio-backend ; clear; \
 
 ## Could-Dos
 
-### Get rid of all static deployment descriptors
+#### Get rid of all static deployment descriptors
 Some modules need environment variables beyond the standard Postgres and Kafka ones. For those modules, static deployment descriptors are kept in the ./modules directory. They could preferably be included in the JSON config instead. Examples of this are added to the folio-hebis-reminder-fees.json config for pubsub and circulation.
 
-### Handle multiple tenants and users that could additionally be other than 'diku'
+#### Handle multiple tenants and users that could additionally be other than 'diku'
 The script will only handle one tenant from the config and one user. Also, despite the tenant and user being configurable, the install script in it's current form will only work with 'diku' and 'diku_admin'. Both issues would be nice to resolve. 
 
-### Only drop PG roles for modules that are being installed.
+#### Only drop PG roles for modules that are being installed.
 The script drop-pgdb-okapi_modules-and-roles.sh will drop any roles it knows of. I might just drop the currently relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip it. 
 
-### Simplify main install script with some bash functions around curl requests
+#### Simplify main install script with some bash functions around curl requests
 Perhaps. 
 
 ## Miscellaneous notes
