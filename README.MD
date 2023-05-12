@@ -133,11 +133,9 @@ but it's a bit trickier to get out.
 
 ## Could-Dos
 
-#### Get rid of all static deployment descriptors
+#### Improve validation of project configurations
 
-Some modules need environment variables beyond the standard Postgres and Kafka ones. For those modules, static
-deployment descriptors are kept in the ./projects directory. They could preferably be included in the JSON config
-instead. Examples of this are added to the my-folio.json config for pubsub and circulation.
+I.e. mandatory fields and combination requirements. 
 
 #### Handle multiple tenants and users that could additionally be other than 'diku'
 
@@ -153,9 +151,5 @@ relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip
 #### Simplify main installation script with some bash functions around curl requests
 
 Perhaps.
-
-#### Improve validation of project configurations
-
-I.e. mandatory fields and combination requirements. 
 
 

@@ -87,19 +87,16 @@ for mod in $selectedModules; do
   echo "Register $MOD"
   curl -w '\n' -D - -H "Content-type: application/json" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
   echo "Deploy $MOD"
-  if [[ "$DEPLOY_TYPE" == "DD-STATIC" ]]
-    then
-      curl -w '\n' -D - -H "Content-type: application/json" -d @$workdir/projects/$DEPLOY_DESCRIPTOR http://localhost:9130/_/discovery/modules
-  elif [[ "$DEPLOY_TYPE" == "DD-CUSTOM" ]]
+  if [[ "$DEPLOY_TYPE" == "DD-CUSTOM" ]]
     then
       $DEPLOY/$DD_SCRIPT $MOD $VERSION $JAVA_PATH $BASE_DIR $JAR_PATH "$CUSTOM_ENV"
-      read
   elif [[ -z "$DD_SCRIPT" ]]; # Assume launch descriptor exists
     then
       curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
   else
     $DEPLOY/$DD_SCRIPT $MOD $VERSION $JAVA_PATH $BASE_DIR $JAR_PATH $PG_HOST
   fi
+
   if [[ "$MOD" != "mod-authtoken" && "$MOD" != "mod-users-bl" ]]  # Activation deferred until permissions assigned for all modules.
     then
      if [[ -n "$TENANT_PARAM" ]]; then

@@ -81,22 +81,23 @@
     "ddTypes": [
         {
             "symbol": "DD-PG",
-            "description": "Build deployment descriptor with default Postgres settings.",
-            "script": "dd-pg.sh"
+            "description": "Build deployment descriptor with standard Postgres env.",
+            "script": "dd-pg-env.sh"
         },
         {
             "symbol": "DD-PG-KAFKA",
-            "description": "Build deployment descriptor with default Postgres and Kafka settings.",
-            "script": "dd-pg-kafka.sh"
+            "description": "Build deployment descriptor with standard Postgres and Kafka env.",
+            "script": "dd-pg-kafka-env.sh"
         },
         {
             "symbol": "DD-SIMPLE",
-            "description": "Build deployment descriptor without Postgres settings.",
-            "script": "dd-no-pg.sh"
+            "description": "Build deployment descriptor without env.",
+            "script": "dd-no-envvar.sh"
         },
         {
-            "symbol": "DD-STATIC",
-            "description": "Used predefined deployment descriptor JSON file."
+            "symbol": "DD-CUSTOM",
+            "description": "Use provided env vars",
+            "script": "dd-custom-env.sh"
         },
         {
             "symbol": "DOCKER",
@@ -237,9 +238,9 @@
                 "mod-circulation-storage"
             ],
             "deployment": {
-                "type": "DD-STATIC",
-                "descriptor": "DeploymentDescriptor-mod-pubsub.json",
-                "note": "Then 'env' property could be used instead of the descriptor file above",
+                "type": "DD-CUSTOM",
+                "jvm": "JAVA11",
+                "pathToJar": "mod-pubsub-server/target/mod-pubsub-server-fat.jar",
                 "env": [
                     {
                       "name": "JAVA_OPTIONS",
@@ -622,9 +623,9 @@
             "githost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
-                "type": "DD-STATIC",
-                "descriptor": "DeploymentDescriptor-mod-circulation.json",
-                "note": "Then 'env' could be used instead of the descriptor above",
+                "type": "DD-CUSTOM",
+                "pathToJar": "target/mod-circulation.jar",
+                "jvm": "JAVA11",
                 "env": [
                     { "name": "JAVA_OPTIONS",
                       "value": "-XX:MaxRAMPercentage=66.0"
