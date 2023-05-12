@@ -64,7 +64,7 @@ Optionally, the install configuration can be (lightly) checked using:
 ## Could-Dos
 
 ### Get rid of all static deployment descriptors
-Some modules need environment variables beyond the standard Postgres and Kafka ones. For those modules, static deployment descriptors are kept in the ./modules directory. They could preferably be included in the JSON config instead.
+Some modules need environment variables beyond the standard Postgres and Kafka ones. For those modules, static deployment descriptors are kept in the ./modules directory. They could preferably be included in the JSON config instead. Examples of this are added to the folio-hebis-reminder-fees.json config for pubsub and circulation.
 
 ### Handle multiple tenants and users that could additionally be other than 'diku'
 The script will only handle one tenant from the config and one user. Also, despite the tenant and user being configurable, the install script in it's current form will only work with 'diku' and 'diku_admin'. Both issues would be nice to resolve. 
