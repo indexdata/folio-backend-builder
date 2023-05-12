@@ -16,11 +16,6 @@ The order of operations of the main installation script is roughly:
 * Install selected FOLIO modules for 'diku' with permissions to 'diku_admin'
 * Lock down auth by enabling authtoken and users-bl for tenant diku
 
-Some scripts here require that the environment var `FOLIO` is set to the main checkout directory for FOLIO components,
-for example
-
-`export FOLIO=~/folio; ./script.sh`
-
 ## Prerequisites
 
 * Postgres installed and running.
@@ -60,7 +55,7 @@ To clean up the database schema first and start from scratch, do:
 
 Then run the installation itself; pass in the project configuration JSON:
 
-`export FOLIO=~/folio; ./install-a-folio.sh modules/my-folio.json`
+`./install-a-folio.sh modules/my-folio.json`
 
 The configuration has settings for one or more JVMs and any given system could of course use other locations for Java
 than this example, so those settings must be adapted. See the property `jvms`. It's possible that the selected modules
@@ -94,7 +89,7 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 If Okapi is ready, and the JVM paths are checked, it should be possible to run the installation configuration like this:
 
 ```
-export FOLIO=~/folio; cd ~/install-folio-backend ; clear; \
+cd ~/install-folio-backend ; clear; \
 ./postgresdb/drop-and-recreate-okapi-modules-database.sh;\
 ./modules/validate-config.sh modules/my-folio.json; read;\
 ./modules/install-a-folio.sh modules/my-folio.json
@@ -148,31 +143,4 @@ relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip
 
 Perhaps.
 
-## Miscellaneous notes
 
-#### Log in to Okapi modules' database
-
-`psql -U folio_admin -d okapi_modules -h localhost`
-
-(was once `psql -U folio_admin postgresql://localhost:5432 okapi_modules`)
-
-#### Size of databases on disk:
-
-```
-SELECT pg_database.datname,  
-       pg_size_pretty(pg_database_size(pg_database.datname)) AS size  
-  FROM pg_database;
-
-Biggest tables:
-
-SELECT nspname || '.' || relname AS "relation",
-    pg_size_pretty(pg_total_relation_size(C.oid)) AS "total_size"
-  FROM pg_class C
-  LEFT JOIN pg_namespace N ON (N.oid = C.relnamespace)
-  WHERE nspname NOT IN ('pg_catalog', 'information_schema')
-    AND C.relkind <> 'i'
-    AND nspname !~ '^pg_toast'
-  ORDER BY pg_total_relation_size(C.oid) DESC
-  LIMIT 20;
-  
-```
