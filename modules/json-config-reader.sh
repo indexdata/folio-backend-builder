@@ -1,5 +1,5 @@
 selectedModules() {
-  jq  '.selectedModules[]' $1 
+  jq -r '.selectedModules[]' $1 
 }
 
 moduleConfig() {
@@ -11,7 +11,7 @@ checkoutRoot() {
 }
 
 jvm() {
-  jq --arg jvm $1 '.jvms[] | select(.symbol == $jvm).home' $2
+  jq --arg jvm $1 -r '.jvms[] | select(.symbol == $jvm).home' $2
 }
 
 ddScript() {
@@ -30,7 +30,7 @@ baseDir() {
 }
 
 javaHome() {
-  symbol=$(moduleConfig $1 $2 $3 | jq '.deployment.jvm')
+  symbol=$(moduleConfig $1 $2 $3 | jq -r '.deployment.jvm')
   jvm $symbol $3
 }
 

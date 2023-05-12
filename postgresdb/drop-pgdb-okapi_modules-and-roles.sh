@@ -5,9 +5,6 @@ DROP_ROLE() {
 echo "Dropping database 'okapi_modules' and roles if exists."
 sudo -u postgres bash -c "PGPASSWORD=post psql -c \"DROP DATABASE okapi_modules;\""
 
-echo "Existing roles: "
-sudo -u postgres bash -c "PGPASSWORD=post psql -c \"SELECT rolname FROM pg_roles;\""
-
 DROP_ROLE diku_mod_permissions 
 DROP_ROLE diku_mod_permissions;
 DROP_ROLE diku_mod_template_engine;
