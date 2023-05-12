@@ -16,3 +16,5 @@ credentials ../modules/folio-hebis-reminder-fees.json
 tenants ../modules/folio-hebis-reminder-fees.json
 
 moduleVersionByName  "mod-authtoken" ../modules/folio-hebis-reminder-fees.json 
+
+javaHome mod-inventory-stor "26.1.0-SNAPSHOT" ../modules/folio-hebis-reminder-fees.json

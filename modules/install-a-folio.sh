@@ -89,16 +89,16 @@ for mod in $selectedModules; do
   if [[ "$DEPLOY_TYPE" == "DD-STATIC" ]]
     then
       curl -w '\n' -D - -H "Content-type: application/json" -d @$workdir/$DEPLOY_DESCRIPTOR http://localhost:9130/_/discovery/modules
-  elif [[ -z "$DD_SCRIPT" || "$DD_SCRIPT" == "null" ]]; 
+  elif [[ -z "$DD_SCRIPT" ]]; 
     then
       curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
   else 
     $DEPLOY/$DD_SCRIPT $MOD $VERSION $JAVA_PATH $BASE_DIR $JAR_PATH $PG_HOST
   fi
-  if [[ "$MOD" != "mod-authtoken" && "$MOD" != "mod-users-bl" ]]
+  if [[ "$MOD" != "mod-authtoken" && "$MOD" != "mod-users-bl" ]]  # Activation deferred until permissions assigned for all modules.
     then
      echo "Install $MOD for diku"
-     if [[ ! -z "$TENANT_PARAM" && ! "$TENANT_PARAME" == "null" ]]; then
+     if [[ ! -z "$TENANT_PARAM" ]]; then
        # Has tenant init parameters - send to 'install' end-point
        curl -w '\n' -D -     -H "Content-type: application/json" -d '[{"id": "'$MOD'-'$VERSION'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=$TENANT_PARAM
      else

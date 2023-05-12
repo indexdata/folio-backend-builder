@@ -25,17 +25,18 @@ ddScript() {
 baseDir() {
   symbol=$(moduleConfig $1 $2 $3 | jq -r '.checkedOutTo')
   dir=$(checkoutRoot $symbol $3)
-  if [[ "$dir" =~ ^\~\/.* ]]
+  if [[ "$dir" =~ ^\~.* ]]
     then
-      echo "$HOME/${dir:2:100}"
+      echo "$HOME${dir#\~}"
     else 
-      echo $dir
+      echo ${dir#null}
   fi
 }
 
 javaHome() {
   symbol=$(moduleConfig $1 $2 $3 | jq -r '.deployment.jvm')
-  jvm $symbol $3
+  found=$(jvm $symbol $3)
+  echo ${found#null}
 }
 
 pathToJar() {
@@ -52,7 +53,8 @@ deploymentType() {
 
 deployScript() {
   symbol=$(moduleConfig $1 $2 $3 | jq -r '.deployment.type')
-  ddScript $symbol $3  
+  found=$(ddScript $symbol $3)
+  echo ${found#null}  
 }
 
 deploymentDescriptor() {
@@ -62,7 +64,8 @@ deploymentDescriptor() {
 installParameters() {
   install=$(moduleConfig $1 $2 $3 | jq -r '.install')
   if [[ ! -z "$install" ]]; then
-     echo $install | jq -r '.tenantParameters'
+     found=$(echo $install | jq -r '.tenantParameters')
+     echo ${found#null}
   fi
 }
 
