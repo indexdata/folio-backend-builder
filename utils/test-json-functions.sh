@@ -14,3 +14,5 @@ users  ../modules/folio-hebis-reminder-fees.json
 credentials ../modules/folio-hebis-reminder-fees.json
 
 tenants ../modules/folio-hebis-reminder-fees.json
+
+moduleVersionByName  "mod-authtoken" ../modules/folio-hebis-reminder-fees.json 

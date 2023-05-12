@@ -4,6 +4,13 @@ Scripts for installing a local FOLIO backend, all built from source, based on a 
 
 Given the prerequisites described below, the scripts will configure a local PostgreSQL database, and initialize and start Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and enabling the modules with Okapi. See ./modules/folio-hebis-reminder-fees.json 
 
+The order of operations is roughly:
+* Create the tenant (currently fixed to 'diku' but that could be loosened) 
+* Install basic user infrasctructur modules
+* Create 'diku_admin' with credentials (currently supports this one user).
+* Install selected FOLIO modules for 'diku' with permissions to 'diku_admin' 
+* Lock down auth by enabling authtoken and users-bl for tenant diku
+
 Some scripts here require that the environment var `FOLIO` is set to the main checkout directory for FOLIO components, for example
 
 `export FOLIO=~/folio; ./script.sh`

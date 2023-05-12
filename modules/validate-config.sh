@@ -5,6 +5,8 @@ CFGJSON=$1
 if [[ -z "$CFGJSON" ]]; then
   echo "Please provide JSON config file to validate:  ./validate-config.sh myconf.json"
   exit
+else 
+  echo "Validation $CGFJSON"  
 fi
 
 error=""

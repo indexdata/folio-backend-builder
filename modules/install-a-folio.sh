@@ -9,9 +9,13 @@ workdir=$SCRIPT_DIR
 CONF=$1
 
 if [[ -z "$CONF" ]]; then
-  echo "Please provide JSON config file listing and configuring modules to be install:  ./create-diku-admin-install-modules.sh myconf.json"
+  echo "Please provide JSON config file listing and configuring modules to be install:  ./install-a-folio.sh myconf.json"
   exit
+else 
+  echo "Installing a FOLIO using $CONF"
 fi
+
+started=`date`  
 
 
 # Path to utility scripts for deploying modules 
@@ -57,7 +61,7 @@ PU_ID=$(curl -s -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d
     ]
 }' http://localhost:9130/perms/users | jq -r '.id')
 #echo Got puId $PU_ID; read
-read
+
 # Install selected modules
 selectedModules=$(jq -r '.selectedModules[] | .name + ":" + .version' $CONF)
 for mod in $selectedModules; do
@@ -110,3 +114,14 @@ for mod in $selectedModules; do
      done
   fi  
 done
+
+echo "Locks down module access to authenticated users"
+authVersion=$(moduleVersionByName  "mod-authtoken" $CONF)
+echo "Assign mod-authtoken to DIKU"
+curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "mod-authtoken-'$authVersion'"}' http://localhost:9130/_/proxy/tenants/diku/modules
+usersVersion=$(moduleVersionByName  "mod-users-bl" $CONF)
+echo Assign mod-users-bl to DIKU
+curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "mod-users-bl-'$usersVersion'"}' http://localhost:9130/_/proxy/tenants/diku/modules
+
+echo "Installatin of a FOLIO using '$CONF' was started at $started"
+echo "Ended at `date`"

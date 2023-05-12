@@ -6,6 +6,10 @@ moduleConfig() {
   jq --arg name $1 --arg version $2 -r '.moduleConfigs[] | select(.name == $name and .version == $version)' $3
 }
 
+moduleVersionByName() {
+  jq --arg name $1 -r '.selectedModules[] | select(.name == $name).version' $2
+}
+
 checkoutRoot() {
   jq --arg dir $1 -r '.checkoutRoots[] | select(.symbol == $dir).directory' $2
 }
