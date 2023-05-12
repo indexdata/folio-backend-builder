@@ -1,6 +1,6 @@
 # FOLIO installation scripts.
 
-Scripts for installing a local FOLIO backend, based on a project specific installation file written in JSON.
+Scripts for installing a local FOLIO backend, all built from source, based on a project specific installation file written in JSON.
 
 Given the prerequisites described below, the scripts will configure a local PostgreSQL database, and initialize and start Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and enabling the modules with Okapi. See ./modules/folio-hebis-reminder-fees.json 
 
@@ -13,9 +13,9 @@ Some scripts here require that the environment var `FOLIO` is set to the main ch
 * PostgreSQL installed and running.
 * Kafka installed and running.
 * Okapi checked out from folio-org at Github, together with all FOLIO modules to be installed.
-* Okapi and FOLIO modules are built, some perhaps dockerized.
+* Okapi and FOLIO modules are built (`mvn install`), some perhaps dockerized.
 * PostgreSQL has a user 'okapi' and a database 'okapi' created (see instructions next).
-* `curl` and `jq` are required for running the module installations scripts.
+* `curl` and `jq` will be needed for running the module installations scripts.
 
 #### Create Okapi user in PostgreSQL
 
