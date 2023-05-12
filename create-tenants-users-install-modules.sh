@@ -6,7 +6,7 @@ started=`date`
 
 ./tenants/create-tenants.sh
 
-./modules/create-diku-admin-install-modules.sh
+./modules/create-diku-admin-install-modules-v2.sh
 
 ./modules/auth-locking.sh
 

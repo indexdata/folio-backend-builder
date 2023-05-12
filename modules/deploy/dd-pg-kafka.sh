@@ -20,7 +20,7 @@ ddjson=$(jq --arg mod $mod \
                      { "name": "DB_USERNAME", "value": "folio_admin" },
                      { "name": "DB_PASSWORD", "value": "folio_admin" },
                      { "name": "DB_DATABASE", "value": "okapi_modules" },
-                     { "name": "KAFKA_HOST", "value": "192.168.1.188"},
+                     { "name": "KAFKA_HOST", "value": "localhost"},
                      { "name": "KAFKA_PORT", "value": "9092" }
                    ]' \
    -r '.descriptor.env = $env |

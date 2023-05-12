@@ -1,0 +1,20 @@
+If going to use config json: 
+
+- Make config validation script? 
+  - list from "selectedModules"
+    - look up each module in "modulesConfig"
+    - fail if config not found
+  - Go through configs from modulesConfig
+    Validate that
+    - It has "name", 
+             "version", 
+             "checkedOutTo", 
+             "requiredBy", 
+             "deployment", 
+             "deployment.type"
+      - if "deployment.type" is not "DOCKER", that is has "jvm", "pathToJar"
+        - if "deployment.type" is DD-PG or DD-PG-KAFKA, that it has "pgHost"
+    - "checkedOutTo" exist in "checkOutRoots"
+    - "deployment.jvm" (if any) exists in "jvms" 
+    - "deployment.type" exists in "ddTypes"
+    
