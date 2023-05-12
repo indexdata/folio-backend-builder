@@ -1,6 +1,6 @@
 # FOLIO installation scripts.
 
-Scripts for installing a local FOLIO backend, all built from source, based on a project specific installation file written in JSON.
+Scripts for installing a local FOLIO backend all built from source, based on a project specific installation file written in JSON.
 
 Given the prerequisites described below, the scripts will configure a local PostgreSQL database, and initialize and start Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and enabling the modules with Okapi. The configuration also contains settings for tenants and users, though they are currently required to be 'diku' and 'diku_admin' respectively. See ./modules/folio-hebis-reminder-fees.json 
 
