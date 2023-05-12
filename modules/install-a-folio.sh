@@ -89,7 +89,7 @@ for mod in $selectedModules; do
   if [[ "$DEPLOY_TYPE" == "DD-STATIC" ]]
     then
       curl -w '\n' -D - -H "Content-type: application/json" -d @$workdir/$DEPLOY_DESCRIPTOR http://localhost:9130/_/discovery/modules
-  elif [[ -z "$DD_SCRIPT" ]]; 
+  elif [[ -z "$DD_SCRIPT" ]]; # Assume launch descriptor exists
     then
       curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
   else 
@@ -97,11 +97,12 @@ for mod in $selectedModules; do
   fi
   if [[ "$MOD" != "mod-authtoken" && "$MOD" != "mod-users-bl" ]]  # Activation deferred until permissions assigned for all modules.
     then
-     echo "Install $MOD for diku"
      if [[ ! -z "$TENANT_PARAM" ]]; then
        # Has tenant init parameters - send to 'install' end-point
+       echo "Install $MOD for diku"
        curl -w '\n' -D -     -H "Content-type: application/json" -d '[{"id": "'$MOD'-'$VERSION'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=$TENANT_PARAM
      else
+       echo "Assign $MOD to diku"
        curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "'$MOD'-'$VERSION'", "action": "enable"}' http://localhost:9130/_/proxy/tenants/diku/modules
      fi
      PERMISSIONS=$(permissions $MOD $VERSION $CONF)
