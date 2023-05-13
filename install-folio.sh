@@ -18,31 +18,32 @@ started=$(date)
 source $workdir/configutils/json-config-reader.sh
 # Assembles DeploymentDescriptors from the JSON configuration using the config reader
 deploymentDescriptor() {
-  symbolType=$(deploymentType $1 $2 $3)
+  module="$1"
+  version="$2"
+  configFile="$3"
+  symbolType=$(deploymentType "$module" "$version" "$configFile")
   if [[ "$symbolType" == "USE-DD" ]]; then
-    symbolUseEnv=$(useEnv "$1" "$2" "$3")
-    name="$1"
-    version="$2"
-    jvm=$(javaHome "$1" "$2" "$3")
-    dir=$(baseDir "$1" "$2" "$3")
-    jar=$(pathToJar "$1" "$2" "$3")
+    symbolUseEnv=$(useEnv "$module" "$version" "$configFile")
+    jvm=$(javaHome "$module" "$version" "$configFile")
+    dir=$(baseDir "$module" "$version" "$configFile")
+    jar=$(pathToJar "$module" "$version" "$configFile")
     if [[ "$symbolUseEnv" == "CUSTOM" ]]; then
-      env=$(env "$1" "$2" "$3")
+      env=$(env "$module" "$version" "$configFile")
       echo '{
-        "srvcId": "'"$name"'-'"$version"'",
+        "srvcId": "'"$module"'-'"$version"'",
         "nodeId": "localhost",
         "descriptor": {
-          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$name"'/'"$jar"' -Dhttp.port=%p",
+          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$module"'/'"$jar"' -Dhttp.port=%p",
           "env": '"$env"'
         }
       }'
     else
       env=$(standardEnv "$symbolUseEnv" "$3")
       echo '{
-        "srvcId": "'"$name"'-'"$version"'",
+        "srvcId": "'"$module"'-'"$version"'",
         "nodeId": "localhost",
         "descriptor": {
-          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$name"'/'"$jar"' -Dhttp.port=%p",
+          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$module"'/'"$jar"' -Dhttp.port=%p",
           "env": '"$env"'
         }
       }'

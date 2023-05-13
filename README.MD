@@ -173,3 +173,5 @@ be nice to resolve.
 The script drop-pgdb-okapi_modules-and-roles.sh will drop any roles it knows of. I might just drop the currently
 relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip it.
 
+#### Support for re-deploy
+
