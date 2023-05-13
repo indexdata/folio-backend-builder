@@ -1,4 +1,4 @@
-source ../modules/json-config-reader.sh
+source ./json-config-reader.sh
 
 selectedModules ../projects/my-folio.json
 

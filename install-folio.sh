@@ -12,22 +12,53 @@ if [[ -z "$CONF" ]]; then
 else 
   echo "Installing a FOLIO using $CONF"
 fi
-
 started=$(date)
 
-# Path to utility scripts for deploying modules 
 # Import jq functions for retrieving settings from the config file
-source $workdir/modules/json-config-reader.sh
+source $workdir/configutils/json-config-reader.sh
+# Assembles DeploymentDescriptors from the JSON configuration using the config reader
+deploymentDescriptor() {
+  symbolType=$(deploymentType $1 $2 $3)
+  if [[ "$symbolType" == "USE-DD" ]]; then
+    symbolUseEnv=$(useEnv "$1" "$2" "$3")
+    name="$1"
+    version="$2"
+    jvm=$(javaHome "$1" "$2" "$3")
+    dir=$(baseDir "$1" "$2" "$3")
+    jar=$(pathToJar "$1" "$2" "$3")
+    if [[ "$symbolUseEnv" == "CUSTOM" ]]; then
+      env=$(env "$1" "$2" "$3")
+      echo '{
+        "srvcId": "'"$name"'-'"$version"'",
+        "nodeId": "localhost",
+        "descriptor": {
+          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$name"'/'"$jar"' -Dhttp.port=%p",
+          "env": '"$env"'
+        }
+      }'
+    else
+      env=$(standardEnv "$symbolUseEnv" "$3")
+      echo '{
+        "srvcId": "'"$name"'-'"$version"'",
+        "nodeId": "localhost",
+        "descriptor": {
+          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$name"'/'"$jar"' -Dhttp.port=%p",
+          "env": '"$env"'
+        }
+      }'
+    fi
+  fi
+}
 
 tenants=$(tenants $CONF)
 curl -w '\n' -D - -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants
 
-# Basic infrastructure to create users
+# Basic infrastructure to be able to create users with credentials
 userModules=$(jq -r '.userModules[] | .name + ":" + .version' $CONF)
 for mod in $userModules; do
-  nv=("${mod//:/ }")
-  MOD="${nv[0]}"
-  VERSION="${nv[1]}"
+  nv=(${mod//:/ })
+  MOD=${nv[0]}
+  VERSION=${nv[1]}
   BASE_DIR=$(baseDir $MOD $VERSION $CONF)
 
   DEPLOY_TYPE=$(deploymentType $MOD $VERSION $CONF)
@@ -45,6 +76,7 @@ for mod in $userModules; do
   curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "'$MOD'-'$VERSION'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 done
 
+# Creating a user with credentials and initial permissions
 users=$(users $CONF)
 curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d "$users" http://localhost:9130/users
 credentials=$(credentials $CONF)
@@ -64,9 +96,9 @@ PU_ID=$(curl -s -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d
 # Install selected modules
 selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name + ":" + .version' $CONF)
 for mod in $selectedModules; do
-  nv=("${mod//:/ }")
-  MOD="${nv[0]}"
-  VERSION="${nv[1]}"
+  nv=(${mod//:/ })
+  MOD=${nv[0]}
+  VERSION=${nv[1]}
 
   CFG=$(moduleConfig $MOD $VERSION $CONF)
   if [[ -z "$CFG" ]]; then

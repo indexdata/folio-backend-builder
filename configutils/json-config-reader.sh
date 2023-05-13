@@ -51,41 +51,6 @@ useEnv() {
   moduleConfig "$1" "$2" "$3" | jq -r '.deployment.useEnv'
 }
 
-deploymentDescriptor() {
-  symbolType=$(deploymentType $1 $2 $3)
-  if [[ "$symbolType" == "USE-DD" ]]; then
-    symbolUseEnv=$(useEnv "$1" "$2" "$3")
-    name="$1"
-    version="$2"
-    jvm=$(javaHome "$1" "$2" "$3")
-    dir=$(baseDir "$1" "$2" "$3")
-    jar=$(pathToJar "$1" "$2" "$3")
-    if [[ "$symbolUseEnv" == "CUSTOM" ]]; then
-      env=$(env "$1" "$2" "$3")
-      echo '{
-        "srvcId": "'"$name"'-'"$version"'",
-        "nodeId": "localhost",
-        "descriptor": {
-          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$name"'/'"$jar"' -Dhttp.port=%p",
-          "env": '"$env"'
-        }
-      }
-      '
-    else
-      env=$(standardEnv "$symbolUseEnv" "$3")
-      echo '{
-        "srvcId": "'"$name"'-'"$version"'",
-        "nodeId": "localhost",
-        "descriptor": {
-          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$name"'/'"$jar"' -Dhttp.port=%p",
-          "env": '"$env"'
-        }
-      }
-      '
-    fi
-  fi
-}
-
 env() {
   moduleConfig $1 $2 $3 | jq -r '.deployment.env'
 }
