@@ -68,17 +68,42 @@ Then run the installation script; pass in the project configuration JSON:
 
 `./install-folio.sh projects/my-folio.json`
 
-The configuration has settings for one or more JVMs and any given system could of course use other locations for Java
-than this example, so those settings must be adapted. See the property `jvms`. It's possible that the selected modules
-can be run with the default JVM on a system, making this setting obsolete in some cases. However, from time to time, the
-JVM requirements for different FOLIO modules have diverged. The checkout directories (`checkoutRoots`) likewise must be
-amended to fit the directory structure on the given development box.
+## The configuration file
+
+### Host dependent settings
+The JSON configuration contains settings describing where to find the checked out modules, `checkoutRoots`, and where to find the runtim JVM to use, `jvms`. These settings must be reviewed and adapted locally. 
+
+### Deployment 
+Okapi support multiple ways of deploying and modules have different requirements for environment variables, Java versions etc. 
+
+The `moduleConfigs[].deployment` section is used for specifying those details per module. 
+
+#### Method of deployment
+For modules that are deployed using a deployment descriptor, the `deployment.type' should be "USE-DD". Otherwise the install script will assume that the module descriptor has a launch descriptor, like is usually the case for Docker based deployment.
+
+#### Finding the JAR
+The path to the JAR must be provided, relative to the module's check out directory. 
+
+#### Select a runtime JVM
+The JVM to use must also be specified. The configuration has a section for assigning a short symbol to each JVM path, and that JVM is then referenced in the module config by that symbol. At the time of writing most projects can be deployed using Java 11, and in the sample JSON the symbol for that is "JAVA11". The path itself might very well have to be changed to match the system the script is running on.
+
+#### Select or provide environment variables
+Finally environment variables may have to be set. There are currently three predefined standard settings to choose from:
+
+* Standard Postgres  (see `mod-permissions` config in sample JSON)
+* Standard Postgres and Kafka (see `mod-users` in sample)
+* No environment variables needed (see `mod-sender`)
+
+A few modules have specific extra parameters though. For that the `deployment.env` property can be populated with the exact parameters the module needs. See `mod-pubsub` in the sample config. 
+
 
 ### Checking the configuration
 
 Optionally, the installation configuration can be (lightly) checked using:
 
 `./modules/validate-config.sh projects/my-folio.json`
+
+Creating a JSON schema for it is work-in-progress.
 
 ### Deselecting modules
 
@@ -147,9 +172,4 @@ be nice to resolve.
 
 The script drop-pgdb-okapi_modules-and-roles.sh will drop any roles it knows of. I might just drop the currently
 relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip it.
-
-#### Simplify main installation script with some bash functions around curl requests
-
-Perhaps.
-
 
