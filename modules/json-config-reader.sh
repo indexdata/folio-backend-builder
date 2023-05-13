@@ -14,12 +14,12 @@ checkoutRoot() {
   jq --arg dir $1 -r '.checkoutRoots[] | select(.symbol == $dir).directory' $2
 }
 
-jvm() {
-  jq --arg jvm $1 -r '.jvms[] | select(.symbol == $jvm).home' $2
+standardEnv() {
+  jq --arg symbol $1 -r '.envVars[] | select(.symbol == $symbol).env' $2
 }
 
-ddScript() {
-  jq --arg ddType $1 -r '.ddTypes[] | select(.symbol == $ddType).script' $2
+jvm() {
+  jq --arg jvm $1 -r '.jvms[] | select(.symbol == $jvm).home' $2
 }
 
 baseDir() {
@@ -29,36 +29,61 @@ baseDir() {
     then
       echo "$HOME${dir#\~}"
     else 
-      echo ${dir#null}
+      echo "${dir#null}"
   fi
 }
 
 javaHome() {
   symbol=$(moduleConfig $1 $2 $3 | jq -r '.deployment.jvm')
-  found=$(jvm $symbol $3)
-  echo ${found#null}
+  found=$(jvm "$symbol" "$3")
+  echo "${found#null}"
 }
 
 pathToJar() {
   moduleConfig $1 $2 $3 | jq -r '.deployment.pathToJar'  
 }
 
-pgHost() {
-  moduleConfig $1 $2 $3 | jq -r '.deployment.pgHost'  
-}
-
 deploymentType() {
-  moduleConfig $1 $2 $3 | jq -r '.deployment.type'
+  moduleConfig "$1" "$2" "$3" | jq -r '.deployment.type'
 }
 
-deployScript() {
-  symbol=$(moduleConfig $1 $2 $3 | jq -r '.deployment.type')
-  found=$(ddScript $symbol $3)
-  echo ${found#null}  
+useEnv() {
+  moduleConfig "$1" "$2" "$3" | jq -r '.deployment.useEnv'
 }
 
 deploymentDescriptor() {
-  moduleConfig $1 $2 $3 | jq -r '.deployment.descriptor'
+  symbolType=$(deploymentType $1 $2 $3)
+  if [[ "$symbolType" == "USE-DD" ]]; then
+    symbolUseEnv=$(useEnv "$1" "$2" "$3")
+    name="$1"
+    version="$2"
+    jvm=$(javaHome "$1" "$2" "$3")
+    dir=$(baseDir "$1" "$2" "$3")
+    jar=$(pathToJar "$1" "$2" "$3")
+    if [[ "$symbolUseEnv" == "CUSTOM" ]]; then
+      env=$(env "$1" "$2" "$3")
+      echo '{
+        "srvcId": "'"$name"'-'"$version"'",
+        "nodeId": "localhost",
+        "descriptor": {
+          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$name"'/'"$jar"' -Dhttp.port=%p",
+          "env": '"$env"'
+        }
+      }
+      '
+    else
+      env=$(standardEnv "$symbolUseEnv" "$3")
+      echo '{
+        "srvcId": "'"$name"'-'"$version"'",
+        "nodeId": "localhost",
+        "descriptor": {
+          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$name"'/'"$jar"' -Dhttp.port=%p",
+          "env": '"$env"'
+        }
+      }
+      '
+    fi
+  fi
 }
 
 env() {
@@ -69,7 +94,7 @@ installParameters() {
   install=$(moduleConfig $1 $2 $3 | jq -r '.install')
   if [[ ! -z "$install" ]]; then
      found=$(echo $install | jq -r '.tenantParameters')
-     echo ${found#null}
+     echo "${found#null}"
   fi
 }
 

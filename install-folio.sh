@@ -16,8 +16,7 @@ fi
 started=$(date)
 
 # Path to utility scripts for deploying modules 
-DEPLOY=$workdir/modules/deploy
-# Import jq functions for retrieving settings from the config file 
+# Import jq functions for retrieving settings from the config file
 source $workdir/modules/json-config-reader.sh
 
 tenants=$(tenants $CONF)
@@ -26,18 +25,22 @@ curl -w '\n' -D - -H "Content-type: application/json" -d "$tenants" http://local
 # Basic infrastructure to create users
 userModules=$(jq -r '.userModules[] | .name + ":" + .version' $CONF)
 for mod in $userModules; do
-  nv=(${mod//:/ })
+  nv=("${mod//:/ }")
   MOD="${nv[0]}"
   VERSION="${nv[1]}"
   BASE_DIR=$(baseDir $MOD $VERSION $CONF)
-  JAR_PATH=$(pathToJar $MOD $VERSION $CONF)
-  DD_SCRIPT=$(deployScript $MOD $VERSION $CONF)
-  JAVA_PATH=$(javaHome $MOD $VERSION $CONF)
-  PG_HOST=$(pgHost $MOD $VERSION $CONF)
+
+  DEPLOY_TYPE=$(deploymentType $MOD $VERSION $CONF)
   echo "Register $MOD"
   curl -w '\n' -D - -s  -H \"Content-type: application/json\" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
   echo "Deploy $MOD"
-  $DEPLOY/$DD_SCRIPT $MOD $VERSION $JAVA_PATH $BASE_DIR $JAR_PATH $PG_HOST
+  if [[ "$DEPLOY_TYPE" == "USE-DD" ]]
+    then
+      deploymentDescriptor=$(deploymentDescriptor $MOD $VERSION $CONF)
+      curl -w '\n' -D - -s -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
+  else
+      curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
+  fi
   echo "Install $MOD for diku"
   curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "'$MOD'-'$VERSION'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 done
@@ -57,44 +60,33 @@ PU_ID=$(curl -s -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d
       "users.all"
     ]
 }' http://localhost:9130/perms/users | jq -r '.id')
-#echo Got puId $PU_ID; read
 
 # Install selected modules
 selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name + ":" + .version' $CONF)
 for mod in $selectedModules; do
-  nv=(${mod//:/ })
+  nv=("${mod//:/ }")
   MOD="${nv[0]}"
   VERSION="${nv[1]}"
 
   CFG=$(moduleConfig $MOD $VERSION $CONF)
   if [[ -z "$CFG" ]]; then
-    echo "
-    ERROR: No configuration found for $MOD-$VERSION
-    "
+    echo "ERROR: No configuration found for $MOD-$VERSION"
     exit
   fi
 
   BASE_DIR=$(baseDir $MOD $VERSION $CONF)
-  JAR_PATH=$(pathToJar $MOD $VERSION $CONF)
-  DEPLOY_TYPE=$(deploymentType $MOD $VERSION $CONF)
-  DD_SCRIPT=$(deployScript $MOD $VERSION $CONF)
-  DEPLOY_DESCRIPTOR=$(deploymentDescriptor $MOD $VERSION $CONF)
-  CUSTOM_ENV=$(env $MOD $VERSION $CONF)
-  JAVA_PATH=$(javaHome $MOD $VERSION $CONF)
-  PG_HOST=$(pgHost $MOD $VERSION $CONF)
   TENANT_PARAM=$(installParameters $MOD $VERSION $CONF)
+  DEPLOY_TYPE=$(deploymentType $MOD $VERSION $CONF)
 
   echo "Register $MOD"
   curl -w '\n' -D - -H "Content-type: application/json" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
   echo "Deploy $MOD"
-  if [[ "$DEPLOY_TYPE" == "DD-CUSTOM" ]]
+  if [[ "$DEPLOY_TYPE" == "USE-DD" ]]
     then
-      $DEPLOY/$DD_SCRIPT $MOD $VERSION $JAVA_PATH $BASE_DIR $JAR_PATH "$CUSTOM_ENV"
-  elif [[ -z "$DD_SCRIPT" ]]; # Assume launch descriptor exists
-    then
-      curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
+      deploymentDescriptor=$(deploymentDescriptor $MOD $VERSION $CONF)
+      curl -w '\n' -D - -s -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
   else
-    $DEPLOY/$DD_SCRIPT $MOD $VERSION $JAVA_PATH $BASE_DIR $JAR_PATH $PG_HOST
+      curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
   fi
 
   if [[ "$MOD" != "mod-authtoken" && "$MOD" != "mod-users-bl" ]]  # Activation deferred until permissions assigned for all modules.

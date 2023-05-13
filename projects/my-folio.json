@@ -78,30 +78,43 @@
             "home": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java"
         }
     ],
+    "envVars": [
+        {
+            "symbol": "STANDARD-PG",
+            "env": [
+                { "name": "DB_HOST", "value": "localhost"},
+                { "name": "DB_PORT", "value": 5432},
+                { "name": "DB_USERNAME", "value": "folio_admin" },
+                { "name": "DB_PASSWORD", "value": "folio_admin" },
+                { "name": "DB_DATABASE", "value": "okapi_modules" }
+            ]
+        },
+        {
+            "symbol": "STANDARD-PG-KAFKA",
+            "env": [
+                { "name": "DB_HOST", "value": "localhost"},
+                { "name": "DB_PORT", "value": 5432},
+                { "name": "DB_USERNAME", "value": "folio_admin" },
+                { "name": "DB_PASSWORD", "value": "folio_admin" },
+                { "name": "DB_DATABASE", "value": "okapi_modules" },
+                { "name": "KAFKA_HOST", "value": "localhost"},
+                { "name": "KAFKA_PORT", "value": "9092" }
+            ]
+        },
+        {
+            "symbol": "NO-ENV-VARS",
+            "env": []
+        }
+    ],
     "ddTypes": [
         {
-            "symbol": "DD-PG",
-            "description": "Build deployment descriptor with standard Postgres env.",
-            "script": "dd-pg-env.sh"
+            "symbol": "USE-DD"
         },
         {
-            "symbol": "DD-PG-KAFKA",
-            "description": "Build deployment descriptor with standard Postgres and Kafka env.",
-            "script": "dd-pg-kafka-env.sh"
+            "symbol": "USE-MD"
         },
         {
-            "symbol": "DD-SIMPLE",
-            "description": "Build deployment descriptor without env.",
-            "script": "dd-no-envvar.sh"
-        },
-        {
-            "symbol": "DD-CUSTOM",
-            "description": "Use provided env vars",
-            "script": "dd-custom-env.sh"
-        },
-        {
-            "symbol": "DOCKER",
-            "description": "Don't use or create deployment descriptor. Launch descriptor in module descriptor will be used."
+            "symbol": "DOCKER"
         }
     ],
     "moduleConfigs": [
@@ -115,10 +128,10 @@
                 "mod-pubsub", 
                 "mod-authtoken"],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm": "JAVA11",
-                "pathToJar": "target/mod-permissions-fat.jar",
-                "pgHost": "localhost"
+                "pathToJar": "target/mod-permissions-fat.jar"
             }
         },
         {
@@ -139,10 +152,10 @@
                 "mod-login"
             ],
             "deployment" : {
-                "type": "DD-PG-KAFKA",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG-KAFKA",
                 "jvm": "JAVA11",
-                "pathToJar": "target/mod-users-fat.jar",
-                "pgHost": "localhost"
+                "pathToJar": "target/mod-users-fat.jar"
             }
         },
         {
@@ -155,10 +168,10 @@
                 "mod-pubsub"
             ],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm": "JAVA11",
-                "pathToJar": "target/mod-login-fat.jar",
-                "pgHost": "localhost"
+                "pathToJar": "target/mod-login-fat.jar"
             }
         },
         {
@@ -168,7 +181,8 @@
             "githost": "https://github.com/openlibraryenvironment",
             "requiredBy": [],
             "deployment": {
-                "type": "DD-SIMPLE",
+                "type": "USE-DD",
+                "useEnv": "NO-ENV-VARS",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-shared-index-muted-apis-fat.jar"
             },
@@ -186,10 +200,10 @@
                 "mod-circulation-storage"
             ],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm": "JAVA11",
-                "pathToJar": "target/mod-inventory-storage-fat.jar",
-                "pgHost": "localhost"
+                "pathToJar": "target/mod-inventory-storage-fat.jar"
             },
             "install": {
                 "tenantParameters": "loadReference%3Dtrue%2CloadSample%3Dtrue"
@@ -220,10 +234,10 @@
                 "mod-users-bl"
             ],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm":"JAVA11",
-                "pathToJar": "target/mod-authtoken-fat.jar",
-                "pgHost": "localhost"
+                "pathToJar": "target/mod-authtoken-fat.jar"
             },
             "permissions": []
         },
@@ -238,7 +252,8 @@
                 "mod-circulation-storage"
             ],
             "deployment": {
-                "type": "DD-CUSTOM",
+                "type": "USE-DD",
+                "useEnv": "CUSTOM",
                 "jvm": "JAVA11",
                 "pathToJar": "mod-pubsub-server/target/mod-pubsub-server-fat.jar",
                 "env": [
@@ -330,10 +345,10 @@
                 "mod-template-engine"
             ],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm": "JAVA11",
-                "pathToJar": "target/mod-circulation-storage-fat.jar",
-                "pgHost": "localHost"
+                "pathToJar": "target/mod-circulation-storage-fat.jar"
             },
             "permissions": [
                 "circulation-storage.all"
@@ -365,10 +380,10 @@
                 "mod-users-bl"
             ],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm": "JAVA11",
-                "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar",
-                "pgHost": "localHost"
+                "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar"
             },
             "permissions": [
                "configuration.all" 
@@ -381,10 +396,10 @@
             "githost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm": "JAVA11",
-                "pathToJar": "target/mod-users-bl-fat.jar",
-                "pgHost": "localHost"
+                "pathToJar": "target/mod-users-bl-fat.jar"
             },
             "permissions": []
         },
@@ -397,10 +412,10 @@
                 "mod-notify"
             ],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm": "JAVA11",
-                "pathToJar": "target/mod-template-engine-fat.jar",
-                "pgHost": "localHost"
+                "pathToJar": "target/mod-template-engine-fat.jar"
             },
             "permissions": [
                 "templates.all"
@@ -415,10 +430,10 @@
                 "mod-sender"
             ],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm": "JAVA11",
-                "pathToJar": "target/mod-email-fat.jar",
-                "pgHost": "localHost"
+                "pathToJar": "target/mod-email-fat.jar"
             },
             "permissions": [
                 "email.message.all",
@@ -434,7 +449,8 @@
                 "mod-notify"
             ],
             "deployment": {
-                "type": "DD-SIMPLE",
+                "type": "USE-DD",
+                "useEnv": "NO-ENV-VARS",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-sender-fat.jar"
             },
@@ -464,10 +480,10 @@
                 "mod-circulation"
             ],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "jvm": "JAVA11",
-                "pathToJar": "target/mod-feesfines-fat.jar",
-                "pgHost": "localHost"
+                "pathToJar": "target/mod-feesfines-fat.jar"
             },
             "permissions": [
                 "feefines.collection.get",
@@ -566,10 +582,10 @@
                 "mod-circulation"
             ],
             "deployment": {
-                "type": "DD-PG",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG",
                 "pathToJar": "target/mod-patron-blocks-fat.jar",
-                "jvm": "JAVA11",
-                "pgHost": "localHost"
+                "jvm": "JAVA11"
             },
             "permissions": [
                 "patron-block-conditions.collection.get", 
@@ -623,7 +639,8 @@
             "githost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
-                "type": "DD-CUSTOM",
+                "type": "USE-DD",
+                "useEnv": "CUSTOM",
                 "pathToJar": "target/mod-circulation.jar",
                 "jvm": "JAVA11",
                 "env": [
@@ -647,10 +664,10 @@
             "githost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
-                "type": "DD-PG-KAFKA",
+                "type": "USE-DD",
+                "useEnv": "STANDARD-PG-KAFKA",
                 "pathToJar": "target/mod-inventory.jar",
-                "jvm": "JAVA11",
-                "pgHost": "localHost"
+                "jvm": "JAVA11"
             },
             "permissions": [
                 "inventory.all"
