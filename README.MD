@@ -101,7 +101,7 @@ A few modules have specific extra parameters though. For that the `deployment.en
 
 Optionally, the installation configuration can be (lightly) checked using:
 
-`./modules/validate-config.sh projects/my-folio.json`
+`./configutils/validate-config.sh projects/my-folio.json`
 
 Creating a JSON schema for it is work-in-progress.
 
@@ -127,7 +127,7 @@ If Okapi is ready, and the JVM paths are checked, it should be possible to run t
 ```
 cd ~/install-folio-backend ; clear; \
 ./postgresdb/drop-and-recreate-okapi-modules-database.sh;\
-./modules/validate-config.sh projects/my-folio.json; read;\
+./configutils/validate-config.sh projects/my-folio.json; read;\
 ./install-folio.sh projects/my-folio.json
 ```
 
