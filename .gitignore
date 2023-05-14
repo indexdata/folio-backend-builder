@@ -1,4 +1,4 @@
 *.log
 .idea/
-install-folio-backend.code-workspace
+folio-backend-builder.code-workspace
 ignore/
