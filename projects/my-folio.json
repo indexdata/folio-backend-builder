@@ -106,17 +106,6 @@
             "env": []
         }
     ],
-    "ddTypes": [
-        {
-            "symbol": "USE-DD"
-        },
-        {
-            "symbol": "USE-MD"
-        },
-        {
-            "symbol": "DOCKER"
-        }
-    ],
     "moduleConfigs": [
         {
             "name": "mod-permissions",
@@ -128,7 +117,7 @@
                 "mod-pubsub", 
                 "mod-authtoken"],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-permissions-fat.jar"
@@ -152,7 +141,7 @@
                 "mod-login"
             ],
             "deployment" : {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG-KAFKA",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-users-fat.jar"
@@ -168,7 +157,7 @@
                 "mod-pubsub"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-login-fat.jar"
@@ -181,7 +170,7 @@
             "githost": "https://github.com/openlibraryenvironment",
             "requiredBy": [],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "NO-ENV-VARS",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-shared-index-muted-apis-fat.jar"
@@ -200,7 +189,7 @@
                 "mod-circulation-storage"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-inventory-storage-fat.jar"
@@ -221,7 +210,7 @@
                 "mod-users-bl"
             ],
             "deployment": {
-                "type": "DOCKER"
+                "method": "DOCKER"
             },
             "permissions": []
         },
@@ -234,7 +223,7 @@
                 "mod-users-bl"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm":"JAVA11",
                 "pathToJar": "target/mod-authtoken-fat.jar"
@@ -252,7 +241,7 @@
                 "mod-circulation-storage"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "jvm": "JAVA11",
                 "pathToJar": "mod-pubsub-server/target/mod-pubsub-server-fat.jar",
                 "env": [
@@ -344,7 +333,7 @@
                 "mod-template-engine"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-circulation-storage-fat.jar"
@@ -362,7 +351,7 @@
                 "mod-notify"
             ],
             "deployment": {
-                "type": "DOCKER"
+                "method": "DOCKER"
             },
             "permissions": []
         },
@@ -379,7 +368,7 @@
                 "mod-users-bl"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar"
@@ -395,7 +384,7 @@
             "githost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-users-bl-fat.jar"
@@ -411,7 +400,7 @@
                 "mod-notify"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-template-engine-fat.jar"
@@ -429,7 +418,7 @@
                 "mod-sender"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-email-fat.jar"
@@ -448,7 +437,7 @@
                 "mod-notify"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "NO-ENV-VARS",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-sender-fat.jar"
@@ -464,7 +453,7 @@
                 "mod-feesfines"
             ],
             "deployment": {
-                "type": "DOCKER"
+                "method": "DOCKER"
             },
             "permissions": [
                 "notify.all"
@@ -479,7 +468,7 @@
                 "mod-circulation"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-feesfines-fat.jar"
@@ -581,7 +570,7 @@
                 "mod-circulation"
             ],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG",
                 "pathToJar": "target/mod-patron-blocks-fat.jar",
                 "jvm": "JAVA11"
@@ -608,7 +597,7 @@
             "githost": "https://github.com/folio-org",
             "requiredBy": ["mod-circulation"],
             "deployment": {
-                "type": "DOCKER"
+                "method": "DOCKER"
             },
             "permissions": [
                 "calendar.create",
@@ -625,7 +614,7 @@
                 "mod-circulation"
             ],
             "deployment": {
-                "type": "DOCKER"
+                "method": "DOCKER"
             },
             "permissions": [
                 "notes.all"
@@ -638,7 +627,7 @@
             "githost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "pathToJar": "target/mod-circulation.jar",
                 "jvm": "JAVA11",
                 "env": [
@@ -662,7 +651,7 @@
             "githost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
-                "type": "USE-DD",
+                "method": "DD",
                 "env": "STANDARD-PG-KAFKA",
                 "pathToJar": "target/mod-inventory.jar",
                 "jvm": "JAVA11"

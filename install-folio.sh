@@ -21,8 +21,8 @@ deploymentDescriptor() {
   module="$1"
   version="$2"
   configFile="$3"
-  symbolType=$(deploymentType "$module" "$version" "$configFile")
-  if [[ "$symbolType" == "USE-DD" ]]; then
+  method=$(deploymentMethod "$module" "$version" "$configFile")
+  if [[ "$method" == "DD" ]]; then
     jvm=$(javaHome "$module" "$version" "$configFile")
     dir=$(baseDir "$module" "$version" "$configFile")
     jar=$(pathToJar "$module" "$version" "$configFile")
@@ -49,11 +49,11 @@ for mod in $userModules; do
   VERSION=${nv[1]}
   BASE_DIR=$(baseDir $MOD $VERSION $CONF)
 
-  DEPLOY_TYPE=$(deploymentType $MOD $VERSION $CONF)
+  METHOD=$(deploymentMethod $MOD $VERSION $CONF)
   echo "Register $MOD"
   curl -w '\n' -D - -s  -H \"Content-type: application/json\" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
   echo "Deploy $MOD"
-  if [[ "$DEPLOY_TYPE" == "USE-DD" ]]
+  if [[ "$METHOD" == "DD" ]]
     then
       deploymentDescriptor=$(deploymentDescriptor $MOD $VERSION $CONF)
       curl -w '\n' -D - -s -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
@@ -96,12 +96,12 @@ for mod in $selectedModules; do
 
   BASE_DIR=$(baseDir $MOD $VERSION $CONF)
   TENANT_PARAM=$(installParameters $MOD $VERSION $CONF)
-  DEPLOY_TYPE=$(deploymentType $MOD $VERSION $CONF)
+  METHOD=$(deploymentMethod $MOD $VERSION $CONF)
 
   echo "Register $MOD"
   curl -w '\n' -D - -H "Content-type: application/json" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
   echo "Deploy $MOD"
-  if [[ "$DEPLOY_TYPE" == "USE-DD" ]]
+  if [[ "$METHOD" == "DD" ]]
     then
       deploymentDescriptor=$(deploymentDescriptor $MOD $VERSION $CONF)
       curl -w '\n' -D - -s -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules

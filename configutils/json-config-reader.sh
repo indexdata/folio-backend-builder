@@ -39,8 +39,8 @@ pathToJar() {
   moduleConfig $1 $2 $3 | jq -r '.deployment.pathToJar'  
 }
 
-deploymentType() {
-  moduleConfig "$1" "$2" "$3" | jq -r '.deployment.type'
+deploymentMethod() {
+  moduleConfig "$1" "$2" "$3" | jq -r '.deployment.method'
 }
 
 env() {

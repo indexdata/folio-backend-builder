@@ -79,7 +79,7 @@ Okapi support multiple ways of deploying and modules have different requirements
 The `moduleConfigs[].deployment` section is used for specifying those details per module. 
 
 #### Method of deployment
-For modules that are deployed using a deployment descriptor, the `deployment.type' should be "USE-DD". Otherwise the install script will assume that the module descriptor has a launch descriptor, like is usually the case for Docker based deployment.
+For modules that are deployed using a deployment descriptor, the `deployment.method' should be "DD". Otherwise the install script will assume that the module descriptor has a launch descriptor, like is usually the case for Docker based deployment.
 
 #### Finding the JAR
 The path to the JAR must be provided, relative to the module's check out directory. 

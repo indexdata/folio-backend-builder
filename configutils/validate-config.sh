@@ -48,16 +48,6 @@ for dir in $requestedCheckoutDirs; do
   fi
 done
 
-### 
-echo "Checking that all deployment types specified by modules are defined."
-requestedDeployTypes=$(jq -r '.moduleConfigs[].deployment.type' $CFGJSON)
-for ddtype in $requestedDeployTypes; do
-  found=$(jq --arg ddtype $ddtype -r '.ddTypes | any(.symbol == $ddtype)' $CFGJSON)
-  if [[ "$found" != "true" ]]; then 
-     error="$error\nDeployment type $ddtype is specified by a module but is not defined in 'ddTypes'"
-  fi
-done
-
 ### Report
 if [[ -z "$error" ]]; then
   echo "Configuration OK"
@@ -72,8 +62,8 @@ fi
 #             "checkedOutTo", 
 #             "requiredBy", 
 #             "deployment", 
-#             "deployment.type"
-#      - if "deployment.type" is not "DOCKER", that is has "jvm", "pathToJar"
-#        - if "deployment.type" is DD-PG or DD-PG-KAFKA, that it has "pgHost"
+#             "deployment.method"
+#      - if "deployment.method" is not "DOCKER", that is has "jvm", "pathToJar"
+#        - if "deployment.method" is DD-PG or DD-PG-KAFKA, that it has "pgHost"
 #      - the jar file exists 
 #      - the descriptor JSONs exist

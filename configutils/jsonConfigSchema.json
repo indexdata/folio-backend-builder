@@ -7,27 +7,6 @@
     "description": {
       "type": "string",
       "description": "Describes the FOLIO project"
-    },
-    "ddTypes": {
-      "type": "array",
-      "description": "List of deployment descriptor types",
-      "items": {
-        "type": "object",
-        "description": "A type of deployment descriptor",
-        "properties": {
-          "symbol": {
-            "type": "string",
-            "enum": ["DD-PG", "DD-PG-KAFKA", "DD-SIMPLE", "DD-CUSTOM", "DOCKER"]
-          },
-          "description": {
-            "type": "string"
-          },
-          "script": {
-            "type": "string",
-            "enum": ["dd-pg-env.sh", "dd-pg-kafka-env.sh", "dd-no-envvar.sh", "dd-custom-env.sh", ""]
-          }
-        }
-      }
     }
   },
   "required": [
@@ -38,6 +17,5 @@
     "users",
     "checkoutRoots",
     "jvms",
-    "ddTypes",
     "moduleConfigs"]
 }
