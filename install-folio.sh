@@ -23,31 +23,18 @@ deploymentDescriptor() {
   configFile="$3"
   symbolType=$(deploymentType "$module" "$version" "$configFile")
   if [[ "$symbolType" == "USE-DD" ]]; then
-    symbolUseEnv=$(useEnv "$module" "$version" "$configFile")
     jvm=$(javaHome "$module" "$version" "$configFile")
     dir=$(baseDir "$module" "$version" "$configFile")
     jar=$(pathToJar "$module" "$version" "$configFile")
-    if [[ "$symbolUseEnv" == "CUSTOM" ]]; then
-      env=$(env "$module" "$version" "$configFile")
-      echo '{
-        "srvcId": "'"$module"'-'"$version"'",
-        "nodeId": "localhost",
-        "descriptor": {
-          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$module"'/'"$jar"' -Dhttp.port=%p",
-          "env": '"$env"'
-        }
-      }'
-    else
-      env=$(standardEnv "$symbolUseEnv" "$3")
-      echo '{
-        "srvcId": "'"$module"'-'"$version"'",
-        "nodeId": "localhost",
-        "descriptor": {
-          "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$module"'/'"$jar"' -Dhttp.port=%p",
-          "env": '"$env"'
-        }
-      }'
-    fi
+    env=$(env "$module" "$version" "$configFile")
+    echo '{
+      "srvcId": "'"$module"'-'"$version"'",
+      "nodeId": "localhost",
+      "descriptor": {
+        "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$module"'/'"$jar"' -Dhttp.port=%p",
+        "env": '"$env"'
+      }
+    }'
   fi
 }
 

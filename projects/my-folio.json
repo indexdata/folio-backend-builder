@@ -129,7 +129,7 @@
                 "mod-authtoken"],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-permissions-fat.jar"
             }
@@ -153,7 +153,7 @@
             ],
             "deployment" : {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG-KAFKA",
+                "env": "STANDARD-PG-KAFKA",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-users-fat.jar"
             }
@@ -169,7 +169,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-login-fat.jar"
             }
@@ -182,7 +182,7 @@
             "requiredBy": [],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "NO-ENV-VARS",
+                "env": "NO-ENV-VARS",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-shared-index-muted-apis-fat.jar"
             },
@@ -201,7 +201,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-inventory-storage-fat.jar"
             },
@@ -235,7 +235,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm":"JAVA11",
                 "pathToJar": "target/mod-authtoken-fat.jar"
             },
@@ -253,7 +253,6 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "CUSTOM",
                 "jvm": "JAVA11",
                 "pathToJar": "mod-pubsub-server/target/mod-pubsub-server-fat.jar",
                 "env": [
@@ -346,7 +345,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-circulation-storage-fat.jar"
             },
@@ -381,7 +380,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar"
             },
@@ -397,7 +396,7 @@
             "requiredBy": [],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-users-bl-fat.jar"
             },
@@ -413,7 +412,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-template-engine-fat.jar"
             },
@@ -431,7 +430,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-email-fat.jar"
             },
@@ -450,7 +449,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "NO-ENV-VARS",
+                "env": "NO-ENV-VARS",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-sender-fat.jar"
             },
@@ -481,7 +480,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-feesfines-fat.jar"
             },
@@ -583,7 +582,7 @@
             ],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG",
+                "env": "STANDARD-PG",
                 "pathToJar": "target/mod-patron-blocks-fat.jar",
                 "jvm": "JAVA11"
             },
@@ -640,7 +639,6 @@
             "requiredBy": [],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "CUSTOM",
                 "pathToJar": "target/mod-circulation.jar",
                 "jvm": "JAVA11",
                 "env": [
@@ -665,7 +663,7 @@
             "requiredBy": [],
             "deployment": {
                 "type": "USE-DD",
-                "useEnv": "STANDARD-PG-KAFKA",
+                "env": "STANDARD-PG-KAFKA",
                 "pathToJar": "target/mod-inventory.jar",
                 "jvm": "JAVA11"
             },

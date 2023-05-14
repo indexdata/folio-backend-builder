@@ -14,10 +14,6 @@ checkoutRoot() {
   jq --arg dir $1 -r '.checkoutRoots[] | select(.symbol == $dir).directory' $2
 }
 
-standardEnv() {
-  jq --arg symbol $1 -r '.envVars[] | select(.symbol == $symbol).env' $2
-}
-
 jvm() {
   jq --arg jvm $1 -r '.jvms[] | select(.symbol == $jvm).home' $2
 }
@@ -47,12 +43,14 @@ deploymentType() {
   moduleConfig "$1" "$2" "$3" | jq -r '.deployment.type'
 }
 
-useEnv() {
-  moduleConfig "$1" "$2" "$3" | jq -r '.deployment.useEnv'
-}
-
 env() {
-  moduleConfig $1 $2 $3 | jq -r '.deployment.env'
+  jq --arg name $1 --arg version $2 -r ' 
+    if (.moduleConfigs[] | select(.name == $name and .version == $version).deployment.env | type) == "array" then
+      .moduleConfigs[] | select(.name == $name and .version == $version).deployment.env
+    else
+      (.moduleConfigs[] | select(.name == $name and .version == $version).deployment.env) as $symbol 
+      | .envVars[] | select(.symbol == $symbol).env 
+    end' $3
 }
 
 installParameters() {
