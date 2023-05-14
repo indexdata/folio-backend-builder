@@ -125,7 +125,7 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 If Okapi is ready, and the JVM paths are checked, it should be possible to run the installation configuration like this:
 
 ```
-cd ~/install-folio-backend ; clear; \
+cd ~/folio-backend-builder ; clear; \
 ./postgresdb/drop-and-recreate-okapi-modules-database.sh;\
 ./configutils/validate-config.sh projects/my-folio.json; read;\
 ./install-folio.sh projects/my-folio.json
@@ -145,7 +145,7 @@ jq -r '.moduleConfigs[] |
 "git clone --recurse-submodules " + .githost + "/"  + .name + ";
  cd " + .name + ";  
  mvn clean install -D skipTests ; 
- cd .." ' ../install-folio-backend/projects/my-folio.json  > clone-and-build.sh
+ cd .." ' ../folio-backend-builder/projects/my-folio.json  > clone-and-build.sh
 
 ```
 
