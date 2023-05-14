@@ -38,28 +38,43 @@ deploymentDescriptor() {
   fi
 }
 
+registerAndDeploy() {
+  mod_version=$1
+  configfile=$2
+  nv=(${mod_version//:/ })
+  MOD=${nv[0]}
+  VERSION=${nv[1]}
+  BASE_DIR=$(baseDir $MOD $VERSION $configfile)
+  METHOD=$(deploymentMethod $MOD $VERSION $configfile)
+
+  CFG=$(moduleConfig $MOD $VERSION $configfile)
+  if [[ -z "$CFG" ]]; then
+    echo "ERROR: No configuration found for $MOD-$VERSION"
+    exit
+  fi
+
+  BASE_DIR=$(baseDir $MOD $VERSION $configfile)
+  METHOD=$(deploymentMethod $MOD $VERSION $configfile)
+
+  echo "Register $MOD"
+  curl -w '\n' -D - -H "Content-type: application/json" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
+  echo "Deploy $MOD"
+  if [[ "$METHOD" == "DD" ]]
+    then
+      deploymentDescriptor=$(deploymentDescriptor $MOD $VERSION $configfile)
+      curl -w '\n' -D - -s -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
+  else
+      curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
+  fi
+}
+
 tenants=$(tenants $CONF)
 curl -w '\n' -D - -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants
 
 # Basic infrastructure to be able to create users with credentials
 userModules=$(jq -r '.userModules[] | .name + ":" + .version' $CONF)
 for mod in $userModules; do
-  nv=(${mod//:/ })
-  MOD=${nv[0]}
-  VERSION=${nv[1]}
-  BASE_DIR=$(baseDir $MOD $VERSION $CONF)
-
-  METHOD=$(deploymentMethod $MOD $VERSION $CONF)
-  echo "Register $MOD"
-  curl -w '\n' -D - -s  -H \"Content-type: application/json\" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-  echo "Deploy $MOD"
-  if [[ "$METHOD" == "DD" ]]
-    then
-      deploymentDescriptor=$(deploymentDescriptor $MOD $VERSION $CONF)
-      curl -w '\n' -D - -s -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
-  else
-      curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
-  fi
+  registerAndDeploy $mod $CONF
   echo "Install $MOD for diku"
   curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "'$MOD'-'$VERSION'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 done
@@ -84,33 +99,11 @@ PU_ID=$(curl -s -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d
 # Install selected modules
 selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name + ":" + .version' $CONF)
 for mod in $selectedModules; do
-  nv=(${mod//:/ })
-  MOD=${nv[0]}
-  VERSION=${nv[1]}
-
-  CFG=$(moduleConfig $MOD $VERSION $CONF)
-  if [[ -z "$CFG" ]]; then
-    echo "ERROR: No configuration found for $MOD-$VERSION"
-    exit
-  fi
-
-  BASE_DIR=$(baseDir $MOD $VERSION $CONF)
-  TENANT_PARAM=$(installParameters $MOD $VERSION $CONF)
-  METHOD=$(deploymentMethod $MOD $VERSION $CONF)
-
-  echo "Register $MOD"
-  curl -w '\n' -D - -H "Content-type: application/json" -d @$BASE_DIR/$MOD/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
-  echo "Deploy $MOD"
-  if [[ "$METHOD" == "DD" ]]
-    then
-      deploymentDescriptor=$(deploymentDescriptor $MOD $VERSION $CONF)
-      curl -w '\n' -D - -s -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
-  else
-      curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'$MOD'-'$VERSION'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
-  fi
+  registerAndDeploy $mod $CONF
 
   if [[ "$MOD" != "mod-authtoken" && "$MOD" != "mod-users-bl" ]]  # Activation deferred until permissions assigned for all modules.
     then
+     TENANT_PARAM=$(installParameters $MOD $VERSION $CONF)
      if [[ -n "$TENANT_PARAM" ]]; then
        # Has tenant init parameters - send to 'install' end-point
        echo "Install $MOD for diku"
