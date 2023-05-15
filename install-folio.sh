@@ -17,7 +17,7 @@ started=$(date)
 # Import jq functions for retrieving settings from the config file
 source $workdir/configutils/json-config-reader.sh
 # Assembles DeploymentDescriptors from the JSON configuration using the config reader
-deploymentDescriptor() {
+function deploymentDescriptor() {
   module="$1"
   version="$2"
   configFile="$3"
@@ -38,7 +38,7 @@ deploymentDescriptor() {
   fi
 }
 
-registerAndDeploy() {
+function registerAndDeploy() {
   mod_version=$1
   configfile=$2
   nv=(${mod_version//:/ })

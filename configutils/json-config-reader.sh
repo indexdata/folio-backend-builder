@@ -7,7 +7,7 @@ moduleConfig() {
 }
 
 moduleVersionByName() {
-  jq --arg name $1 -r '.selectedModules[] | select(.name == $name).version' $2
+  jq --arg name $1 -r '.moduleConfigs[] | select(.name == $name).version' $2
 }
 
 checkoutRoot() {
