@@ -1,25 +1,21 @@
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+CONFIG_FILE=$1
 
-CFGJSON=$1
-
-if [[ -z "$CFGJSON" ]]; then
+if [[ -z "$CONFIG_FILE" ]]; then
   echo "Please provide JSON config file to validate:  ./validate-config.sh myconf.json"
   exit
 else 
-  echo "Validation $CGFJSON"  
+  echo "Validating $CONFIG_FILE"
 fi
 
 error=""
 
 ###
 echo "Checking that configurations exist for all selected modules"
-selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name + ":" + .version' $CFGJSON)
+selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name ' "$CONFIG_FILE")
 for mod in $selectedModules; do
-  arr=(${mod//:/ })
-  found=$(jq --arg mod ${arr[0]} \
-   --arg version ${arr[1]} \
-   -r '.moduleConfigs[] | select(.name == $mod and .version == $version)' \
-       $CFGJSON)
+  found=$(jq --arg mod "$mod" \
+   -r '.moduleConfigs[] | select(.name == $mod)' \
+       "$CONFIG_FILE")
   if [[ -z "$found" ]]
     then
       error="$error\nNo configuration found for selected module: $mod"
@@ -28,10 +24,10 @@ done
 
 ###
 echo "Checking that the JVMs requested by modules are defined"
-requestedJvms=$(jq -r '.moduleConfigs[].deployment.jvm' $CFGJSON)
+requestedJvms=$(jq -r '.moduleConfigs[].deployment.jvm' "$CONFIG_FILE")
 for jvm in $requestedJvms; do
   if [[ ! "$jvm" == "null" ]]; then
-    found=$(jq --arg jvm $jvm -r '.jvms | any(.symbol == $jvm)' $CFGJSON)
+    found=$(jq --arg jvm $jvm -r '.jvms | any(.symbol == $jvm)' "$CONFIG_FILE")
     if [[ "$found" != "true" ]]; then 
       error="$error\nJVM $jvm is requested by a module but is not defined in 'jvms'"
     fi
@@ -40,9 +36,9 @@ done
 
 ###
 echo "Checking that all Git checkout directories referenced by modules are defined."
-requestedCheckoutDirs=$(jq -r '.moduleConfigs[].checkedOutTo' $CFGJSON)
+requestedCheckoutDirs=$(jq -r '.moduleConfigs[].checkedOutTo' "$CONFIG_FILE")
 for dir in $requestedCheckoutDirs; do
-  found=$(jq --arg dir $dir -r '.checkoutRoots | any(.symbol == $dir)' $CFGJSON)
+  found=$(jq --arg dir "$dir" -r '.checkoutRoots | any(.symbol == $dir)' "$CONFIG_FILE")
   if [[ "$found" != "true" ]]; then 
      error="$error\nCheckout directory $dir is requested by a module but is not defined in 'checkoutRoots'"
   fi

@@ -162,7 +162,6 @@ With those basic system dependent settings defined, each module to install can b
 ``` 
  { 
     "name": "mod-circulation-storage",     
-    "version": "16.1.0-SNAPSHOT",
     "checkedOutTo": "GIT-FOLIO",
     "githost": "https://github.com/folio-org",
     "requiredBy": [
@@ -233,6 +232,8 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 { "skipped": "mod-inventory",               "version": "20.1.0-SNAPSHOT"}
 ```
 
+The `version` is informational and optional. It might eventually be used for flagging if a checked out version is not the specified version.
+
 ## Run the installation script.
 
 It should be possible to run the installation configuration. In this sample command module databases and cleaned up and recreated before running the installation.
@@ -273,7 +274,7 @@ but it's a bit trickier to get out.
 
 #### Handle Docker deployment
 
-Currently the Postgres host env var `PG_HOST` can be changed from 'postgres' to the IP of localhost in the ModuleDescriptor for a Docker based deployment so that Postgres can be accessed from the container. There must be a better way? Anyways, obtaining that IP could be scripted (on Unix) with `hostname  -I | cut -f1 -d' '`
+Currently, the Postgres host env var `PG_HOST` can be changed from 'postgres' to the IP of localhost in the ModuleDescriptor for a Docker based deployment so that Postgres can be accessed from the container. There must be a better way? Anyways, obtaining that IP could be scripted (on Unix) with `hostname  -I | cut -f1 -d' '`
 
 #### Improve validation of project configurations
 

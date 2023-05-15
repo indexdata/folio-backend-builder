@@ -96,7 +96,6 @@
   "moduleConfigs": [
     {
       "name": "mod-permissions",
-      "version": "6.4.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -112,7 +111,6 @@
     },
     {
       "name": "mod-users",
-      "version": "19.2.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -136,7 +134,6 @@
     },
     {
       "name": "mod-login",
-      "version": "7.10.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -152,7 +149,6 @@
     },
     {
       "name": "mod-shared-index-muted-apis",
-      "version": "1.0-SNAPSHOT",
       "checkedOutTo": "GIT-OLE",
       "githost": "https://github.com/openlibraryenvironment",
       "requiredBy": [],
@@ -166,7 +162,6 @@
     },
     {
       "name": "mod-inventory-storage",
-      "version": "26.1.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -190,7 +185,6 @@
     },
     {
       "name": "mod-password-validator",
-      "version": "3.1.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -203,7 +197,6 @@
     },
     {
       "name": "mod-authtoken",
-      "version": "2.14.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -219,7 +212,6 @@
     },
     {
       "name": "mod-pubsub",
-      "version": "2.10.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy":[
@@ -310,7 +302,6 @@
     },
     {
       "name": "mod-circulation-storage",
-      "version": "16.1.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -331,7 +322,6 @@
     },
     {
       "name": "mod-event-config",
-      "version": "2.6.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -344,7 +334,6 @@
     },
     {
       "name": "mod-configuration",
-      "version": "5.9.2-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -366,7 +355,6 @@
     },
     {
       "name": "mod-users-bl",
-      "version": "7.6.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [],
@@ -380,7 +368,6 @@
     },
     {
       "name": "mod-template-engine",
-      "version": "1.19.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -398,7 +385,6 @@
     },
     {
       "name": "mod-email",
-      "version": "1.15.4-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -417,7 +403,6 @@
     },
     {
       "name": "mod-sender",
-      "version": "1.11.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -433,7 +418,6 @@
     },
     {
       "name": "mod-notify",
-      "version": "3.0.1-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -448,7 +432,6 @@
     },
     {
       "name": "mod-feesfines",
-      "version": "18.3.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -550,7 +533,6 @@
     },
     {
       "name": "mod-patron-blocks",
-      "version": "1.9.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -579,7 +561,6 @@
     },
     {
       "name": "mod-calendar",
-      "version": "2.4.3-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": ["mod-circulation"],
@@ -594,7 +575,6 @@
     },
     {
       "name": "mod-notes",
-      "version": "5.1.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [
@@ -609,7 +589,6 @@
     },
     {
       "name": "mod-circulation",
-      "version": "23.6.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [],
@@ -633,7 +612,6 @@
     },
     {
       "name": "mod-inventory",
-      "version": "20.1.0-SNAPSHOT",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [],
@@ -649,7 +627,6 @@
     },
     {
       "name": "mod-inventory-update",
-      "version": "3.1.0",
       "checkedOutTo": "GIT-FOLIO",
       "githost": "https://github.com/folio-org",
       "requiredBy": [],
