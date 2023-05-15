@@ -1,4 +1,4 @@
-# FOLIO installation scripts.
+# FOLIO back-end builder for module development projects.
 
 Scripts for installing a local, single server FOLIO backend, entirely built from local directories of Git checkouts. The installation script is and based on a project specific
 installation file written in JSON.
