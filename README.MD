@@ -153,8 +153,6 @@ Many modules use one of a few standard sets of environment variables. The module
         }
     ],
 ```
-### Configure tenant and user, though not really
-The tenant and user are configurable using the properties `tenants` and `users`. However, the scripts are currently hard-coded to expect the tenant to be `diku` and the user to be `diku_admin`
 
 ### Module configurations
 
