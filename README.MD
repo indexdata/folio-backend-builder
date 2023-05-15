@@ -1,8 +1,8 @@
 # FOLIO back-end builder
 
-Scripts for installing a local, single server FOLIO backend, entirely built from local directories of Git checkouts. 
+Scripts for installing a local, single server, FOLIO backend, entirely built from local directories of Git checkouts. 
 
-The installation script `install-folio.sh` is based on a single given project specific installation file written in JSON.
+The installation script `install-folio.sh` is based on a given project specific installation file written in JSON.
 
 The order of operations of the `install-folio.sh` is roughly:
 
