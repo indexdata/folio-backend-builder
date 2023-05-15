@@ -76,7 +76,9 @@ Now run the installation script while passing in a selected project configuratio
 
 `./install-folio.sh projects/my-folio.json`
 
-This will create `diku` and `diku_admin` and install all modules with permissions assigned to diku_admin.
+This will create `diku` and `diku_admin` and install all modules with permissions assigned to diku_admin. 
+
+`my-folio.json` will install a fair amount of modules, around 20+. For a smaller installation with the most basic user infrastructure module and Inventory Storage, use `simple-inventory.json`. 
 
 ## The configuration file
 
