@@ -19,8 +19,8 @@ Before the script can be run, following environment must be in place. There are 
 * Postgres installed and running.
 * Kafka installed and running.
 * Docker (if any modules should be deployed as Docker containers)
-* Postgres has the user `okapi` and a database `okapi` (instructions from Okapi guide below)
-* Postgres has the user `folio-admin` and the database `okapi-modules` (helper scripts in ./postgresdb)
+* Postgres has the user `okapi` and database `okapi` (instructions from Okapi guide below)
+* Postgres has the user `folio_admin` and database `okapi_modules` (helper scripts in ./postgresdb)
 * Okapi is checked out from folio-org at GitHub.
 * All FOLIO modules to be installed are checked out from their respective source repositories, i.e. folio-org at GitHub.
 * Okapi and FOLIO modules are built (`mvn install`), some perhaps dockerized.
