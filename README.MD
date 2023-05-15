@@ -16,14 +16,15 @@ The order of operations of the main installation script is roughly:
 * Install selected FOLIO modules for 'diku' with permissions to 'diku_admin'
 * Lock down auth by enabling authtoken and users-bl for tenant diku
 
-## Prerequisites
+## Prerequisites for running `install-folio.sh`
 
 * Postgres installed and running.
 * Kafka installed and running.
 * Docker (if any modules should be deployed as Docker containers)
-* Okapi checked out from folio-org at GitHub, together with all FOLIO modules to be installed.
+* Postgres has the user `okapi` and a database `okapi` (instructions from Okapi guide below)
+* Postgres has the user `folio-admin` and the database `okapi-modules` (helper scripts in ./posgresdb)
+* Okapi is checked out from folio-org at GitHub, as well as all FOLIO modules to be installed.
 * Okapi and FOLIO modules are built (`mvn install`), some perhaps dockerized.
-* Postgres has a user 'okapi' and a database 'okapi' created (see instructions next).
 * `curl` and `jq` will be needed for running the module installations scripts.
 
 ## Create the Postgres databases, users and roles and start Okapi
@@ -50,30 +51,28 @@ Creates the Postgres user that modules will use for creating their database sche
 
 `./postgresdb/create-pg-superuser-folio-admin.sh`
 
-#### Initialize database if desired
+#### Initialize Okapi database and start Okapi
 
-`java -Dport=8600 -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar initdatabase`
+Assuming Okapi is checked out to ~/folio, do:
 
-#### Start Okapi
+`java -Dport=8600 -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar initdatabase` (if needed/desired before start - see Okapi guide)
 
-`java -Dstorage=postgres -jar $FOLIO/okapi/okapi-core/target/okapi-core-fat.jar dev`
+`java -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar dev`
 
-#### Or, use this script instead to both initialize the database and start Okapi
-
-In root of this project, and assuming Okapi is checked out to `$HOME/folio` do
-
-`export FOLIO=~/folio; ./okapi/init-db-start-okapi.sh`
+Alternatively use  `export FOLIO=~/folio; ./okapi/init-db-start-okapi.sh`  
 
 #### Create the modules database, potentially removing previously installed modules first
 
-To clean up the database schema after previous installations to start from scratch, do:
+`./postgresdb/create-pg-okapi_modules.sh`
+
+or 
 
 `./postgresdb/drop-and-recreate-okapi-modules-database.sh`
 
 
 ## Install all modules
 
-Run the installation script; pass in the project configuration JSON:
+Now run the installation script while passing in a selected project configuration JSON:
 
 `./install-folio.sh projects/my-folio.json`
 
