@@ -71,11 +71,13 @@ To clean up the database schema after previous installations to start from scrat
 `./postgresdb/drop-and-recreate-okapi-modules-database.sh`
 
 
-## Create a tenant and a user and install all modules according to a provided configuration file
+## Install all modules
 
 Run the installation script; pass in the project configuration JSON:
 
 `./install-folio.sh projects/my-folio.json`
+
+This will create `diku` and `diku_admin` and install all modules with permissions assigned to diku_admin.
 
 ## The configuration file
 
@@ -158,23 +160,28 @@ Many modules use one of a few standard sets of environment variables. The module
 
 With those basic system dependent settings defined, each module to install can be configured. For example: 
 
-```
- {
-            "name": "mod-permissions",
-            "version": "6.4.0-SNAPSHOT",
-            "checkedOutTo": "GIT-FOLIO",
-            "githost": "https://github.com/folio-org",
-            "requiredBy": [
-                "mod-users-bl", 
-                "mod-pubsub", 
-                "mod-authtoken"],
-            "deployment": {
-                "method": "DD",
-                "env": "STANDARD-PG",
-                "jvm": "JAVA11",
-                "pathToJar": "target/mod-permissions-fat.jar"
-            }
-        }
+``` 
+ { 
+    "name": "mod-circulation-storage",     
+    "version": "16.1.0-SNAPSHOT",
+    "checkedOutTo": "GIT-FOLIO",
+    "githost": "https://github.com/folio-org",
+    "requiredBy": [
+        "mod-circulation",
+        "mod-inventory",
+        "mod-feesfines",
+        "mod-template-engine"
+    ],
+    "deployment": {
+        "method": "DD",
+        "env": "STANDARD-PG",
+        "jvm": "JAVA11",
+        "pathToJar": "target/mod-circulation-storage-fat.jar"
+    },
+    "permissions": [
+        "circulation-storage.all"
+    ]
+}
 ```
 The properties `githost` and `requiredBy` are optional/informational. 
 
@@ -198,6 +205,9 @@ Finally, environment variables may have to be set. There are currently three pre
 
 A few modules have specific extra parameters though. For that the `deployment.env` property can be populated with the exact parameters the module needs. See `mod-pubsub` in the sample config. 
 
+#### Setting permissions
+
+In `permissions`, provide a list of permissions to assign to `diku_admin` for the module. 
 
 ### Checking the configuration
 
