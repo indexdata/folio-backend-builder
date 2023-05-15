@@ -26,7 +26,7 @@ Before the script can be run, following environment must be in place. There are 
 * Okapi and FOLIO modules are built (`mvn install`), some perhaps dockerized.
 * `curl` and `jq` will be needed for running the module installations scripts.
 
-## Create the Postgres databases, users and roles and start Okapi
+## Create the Postgres databases and database users and start Okapi
 
 The following instructions for getting Okapi ready and running are much better described in the main Folio guides, especially in the Okapi README and Okapi guide, see for example
 
@@ -36,7 +36,7 @@ The following instructions for getting Okapi ready and running are much better d
 
 What follows is thus the bare minimum extract from those guides for one way to get Okapi ready for the module installation script.
 
-#### Create Okapi user in Postgres (once)
+#### Create Okapi user and database in Postgres (once)
 
 ```
 sudo -u postgres -i
@@ -71,13 +71,11 @@ or
 
 ## Install all modules
 
-Now run the installation script while passing in a selected project configuration JSON:
+Now run the installation script while passing in a selected project configuration JSON, for example:
 
 `./install-folio.sh projects/simple-inventory.json`  for a minimal install
 
 `./install-folio.sh projects/my-folio.json` for a larger - though by no means complete - FOLIO. It contains 20+ modules.
-
-Running install-folio.sh will create `diku` and `diku_admin` and install all modules, with permissions assigned to diku_admin. 
 
 
 ## The configuration file
