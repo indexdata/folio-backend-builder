@@ -1,14 +1,10 @@
-# FOLIO back-end builder for module development projects.
+# FOLIO back-end builder
 
-Scripts for installing a local, single server FOLIO backend, entirely built from local directories of Git checkouts. The installation script is and based on a project specific
-installation file written in JSON.
+Scripts for installing a local, single server FOLIO backend, entirely built from local directories of Git checkouts. 
 
-Given the prerequisites described below, the scripts will configure a local Postgres database, and initialize and start
-Okapi. Next, a JSON configuration file that lists the modules to install will be used for declaring, deploying and
-enabling the modules with Okapi. The configuration also contains settings for tenants and users, though they are
-currently required to be 'diku' and 'diku_admin' respectively. See [sample configuration](./projects/my-folio.json)
+The installation script `install-folio.sh` is based on a single given project specific installation file written in JSON.
 
-The order of operations of the main installation script is roughly:
+The order of operations of the `install-folio.sh` is roughly:
 
 * Create tenant diku
 * Install basic modules for the user infrastructure
@@ -18,12 +14,15 @@ The order of operations of the main installation script is roughly:
 
 ## Prerequisites for running `install-folio.sh`
 
+Before the script can be run, following environment must be in place. There are helper scripts in this project for some of these tasks.
+
 * Postgres installed and running.
 * Kafka installed and running.
 * Docker (if any modules should be deployed as Docker containers)
 * Postgres has the user `okapi` and a database `okapi` (instructions from Okapi guide below)
 * Postgres has the user `folio-admin` and the database `okapi-modules` (helper scripts in ./posgresdb)
-* Okapi is checked out from folio-org at GitHub, as well as all FOLIO modules to be installed.
+* Okapi is checked out from folio-org at GitHub.
+* All FOLIO modules to be installed are checked out from their respective source repositories, i.e. folio-org at GitHub.
 * Okapi and FOLIO modules are built (`mvn install`), some perhaps dockerized.
 * `curl` and `jq` will be needed for running the module installations scripts.
 
@@ -74,11 +73,12 @@ or
 
 Now run the installation script while passing in a selected project configuration JSON:
 
-`./install-folio.sh projects/my-folio.json`
+`./install-folio.sh projects/simple-inventory.json`  for a minimal install
 
-This will create `diku` and `diku_admin` and install all modules with permissions assigned to diku_admin. 
+`./install-folio.sh projects/my-folio.json` for a larger - though by no means complete - FOLIO. It contains 20+ modules.
 
-`my-folio.json` will install a fair amount of modules, around 20+. For a smaller installation with the most basic user infrastructure module and Inventory Storage, use `simple-inventory.json`. 
+Running install-folio.sh will create `diku` and `diku_admin` and install all modules, with permissions assigned to diku_admin. 
+
 
 ## The configuration file
 
