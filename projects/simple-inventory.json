@@ -8,7 +8,7 @@
   ],
   "selectedModules": [
     { "name": "mod-inventory-storage",       "version": "26.1.0-SNAPSHOT" },
-    { "skipped": "mod-inventory-update",        "version": "3.1.0"},
+    { "name": "mod-inventory-update",        "version": "3.1.0"},
     { "name": "mod-password-validator",      "version": "3.1.0-SNAPSHOT" },
     { "name": "mod-authtoken",               "version": "2.14.0-SNAPSHOT" },
     { "name": "mod-configuration",           "version": "5.9.2-SNAPSHOT" },
