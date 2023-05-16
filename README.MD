@@ -19,16 +19,18 @@ Before the script can be run, following environment must be in place. There are 
 * Postgres installed and running.
 * Kafka installed and running.
 * Docker (if any modules should be deployed as Docker containers)
-* Postgres has the user `okapi` and database `okapi` (instructions from Okapi guide below)
-* Postgres has the user `folio_admin` and database `okapi_modules` (helper scripts in ./postgresdb)
+* Postgres has the user `okapi` and database `okapi` (see below)
+* Postgres has the user `folio_admin` and database `okapi_modules` (see below)
 * Okapi is checked out from folio-org at GitHub.
-* All FOLIO modules to be installed are checked out from their respective source repositories, i.e. folio-org at GitHub.
-* Okapi and FOLIO modules are built (`mvn install`), some perhaps dockerized.
-* `curl` and `jq` will be needed for running the module installations scripts.
+* All FOLIO modules to be installed are checked out, for example from folio-org at GitHub.
+* Okapi and FOLIO modules are built. Some perhaps dockerized.
+* Okapi is started (see below)
+
+Finally, `curl` and `jq` are required for the module installation script.
 
 ## Create the Postgres databases and database users and start Okapi
 
-The following instructions for getting Okapi ready and running are much better described in the main Folio guides, especially in the Okapi README and Okapi guide, see for example
+The main Folio guides, and especially the Okapi guide have the best descriptions of software required, how to set up the databases etc, and optioons for building and starting Okapi. 
 
 * [Okapi READE](https://github.com/folio-org/okapi/blob/master/README.md)
 * [Compiling and running Okapi](https://github.com/folio-org/okapi/blob/master/doc/guide.md#compiling-and-running)
@@ -78,7 +80,7 @@ Now run the installation script while passing in a selected project configuratio
 `./install-folio.sh projects/my-folio.json` for a larger - though by no means complete - FOLIO. It contains 20+ modules.
 
 
-## The configuration file
+## Configuration details
 
 The configuration files holds some basic information about the local environment, like the locations of check-out directories and JVMs as well as configurations for all modules to install.  
 
@@ -191,8 +193,8 @@ For modules that are deployed using a deployment descriptor, the `deployment.met
 #### Finding the JAR
 The path to the JAR must be provided, relative to the module's check out directory, using `checkedOutTo`, `name` and `pathToJar` 
 
-#### Select a runtime JVM `deplayment.jvm`
-The JVM to use must also be specified. The configuration has a section for assigning a short symbol to each JVM path, and that JVM is then referenced in the module config by that symbol. At the time of writing most projects can be deployed using Java 11, and in the sample JSON the symbol for that is "JAVA11". The path itself might very well have to be changed to match the system the script is running on.
+#### Select a runtime JVM 
+The JVM to use must also be specified in `deployment.jvm`. The property takes a short symbol to each JVM path, and that JVM is then referenced in the module config by that symbol. At the time of writing most projects can be deployed using Java 11, and in the sample JSON the symbol for that is "JAVA11". The path itself might very well have to be changed to match the system the script is running on.
 
 #### Select or provide environment variables  
 Finally, environment variables may have to be set. There are currently three predefined standard settings to choose from:
@@ -204,11 +206,9 @@ Finally, environment variables may have to be set. There are currently three pre
 A few modules have specific extra parameters though. For that the `deployment.env` property can be populated with the exact parameters the module needs. See `mod-pubsub` in the sample config. 
 
 #### Setting permissions
-
 In `permissions`, provide a list of permissions to assign to `diku_admin` for the module. 
 
 ### Checking the configuration
-
 Optionally, the installation configuration can be checked using:
 
 `./configutils/validate-config.sh projects/my-folio.json`
@@ -221,7 +221,6 @@ This includes
 (Creating a JSON schema for the configuration JSON is work-in-progress.)
 
 ### Selecting and deselecting modules
-
 Modules to install must be listed in `selectedModules`
 
 Modules can be de-selected by removing the entry from `selectedModules`. The module configuration can be retained in the
@@ -240,7 +239,6 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 The `version` is informational and optional. It might eventually be used for flagging if a checked out version is not the specified version.
 
 ## Run the installation script.
-
 It should be possible to run the installation configuration. In this sample command module databases and cleaned up and recreated before running the installation.
 
 ```
@@ -251,7 +249,6 @@ cd ~/folio-backend-builder ; clear; \
 ```
 
 ## Other uses for the config JSON
-
 In `my-folio.json` there are settings for each module's remote Git repository. This is not used or required by the
 installation scripts, so it can be left out. However, it might provide some convenience when upgrading a system across
 the board.
@@ -278,19 +275,16 @@ but it's a bit trickier to get out.
 ## Could-Dos
 
 #### Handle Docker deployment
-
 Currently, the Postgres host env var `PG_HOST` can be changed from 'postgres' to the IP of localhost in the ModuleDescriptor for a Docker based deployment so that Postgres can be accessed from the container. There must be a better way? Anyways, obtaining that IP could be scripted (on Unix) with `hostname  -I | cut -f1 -d' '`
 
 #### Schema for the configuration JSONs
 
 #### Handle multiple tenants and users that could additionally be other than 'diku'
-
 The script will only handle one tenant from the config and one user. Also, despite the tenant and user being
 configurable, the installation script in its current form will only work with 'diku' and 'diku_admin'. Both issues would
 be nice to resolve.
 
 #### Only drop PG roles for modules that are being installed.
-
 The script drop-pgdb-okapi_modules-and-roles.sh will drop any roles it knows of. I might just drop the currently
 relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip it.
 
