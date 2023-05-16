@@ -20,6 +20,8 @@ function deploymentDescriptor() {
   method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
   if [[ "$method" == "DD" ]]; then
     jvm=$(javaHome "$moduleName" "$CONFIG_FILE")
+    jvm="${jvm%java}"
+    jvm="${jvm%/}/java"
     dir=$(baseDir "$moduleName" "$CONFIG_FILE")
     jar=$(pathToJar "$moduleName" "$CONFIG_FILE")
     env=$(env "$moduleName" "$CONFIG_FILE")
@@ -36,6 +38,16 @@ function idFromModuleDescriptor() {
   jq -r '.id' "$baseDir/$moduleName/target/ModuleDescriptor.json"
 }
 
+# For docker based deployment, PG_HOST is changed from the common 'postgres' to the IP of this host
+# It's not known if the method for obtaining the host IP below is cross-platform.
+function setPgHostInModuleDescriptor() {
+  moduleName=$1
+  thisHost=$(hostname -I | { read first rest ; echo $first ; })
+  baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
+  newMd=$(jq --arg pgHost $thisHost -r '(.launchDescriptor.env[] | select(.name == "DB_HOST")).value=$pgHost ' "$baseDir/$moduleName/target/ModuleDescriptor.json") 
+  echo "$newMd" > "$baseDir/$moduleName/target/ModuleDescriptor.json" 
+}
+
 function registerAndDeploy() {
   moduleName=$1
   if [[ -z $(moduleConfig "$moduleName" "$CONFIG_FILE") ]]; then
@@ -45,7 +57,9 @@ function registerAndDeploy() {
   baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
   method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
   moduleId=$(idFromModuleDescriptor "$moduleName" "$CONFIG_FILE")
-
+  if [[ "$method" == "DOCKER" ]]; then
+      setPgHostInModuleDescriptor $moduleName
+  fi
   echo "Register $moduleId"
   curl -w '\n' -D - -H "Content-type: application/json" -d @"$baseDir"/"$moduleName"/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
   echo "Deploy $moduleId"

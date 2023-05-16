@@ -62,7 +62,11 @@
   "jvms": [
     {
       "symbol": "JAVA11",
-      "home": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java"
+      "home": "/usr/lib/jvm/java-11-openjdk-amd64/bin"
+    },
+    {
+      "symbol": "JAVA17",
+      "home": "/usr/lib/jvm/java-17-openjdk-amd64/bin"
     }
   ],
   "envVars": [

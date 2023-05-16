@@ -23,7 +23,7 @@ Before the script can be run, following environment must be in place. There are 
 * Postgres has the user `folio_admin` and database `okapi_modules` (see below)
 * Okapi is checked out from folio-org at GitHub.
 * All FOLIO modules to be installed are checked out, for example from folio-org at GitHub.
-* Okapi and FOLIO modules are built. Some perhaps dockerized.
+* Okapi and FOLIO modules are compiled. Some perhaps dockerized.
 * Okapi is started (see below)
 
 Finally, `curl` and `jq` are required for the module installation script.
@@ -92,7 +92,7 @@ The validation script will
  * Check references between module configs and general settings internally in the config file
  * Check for required properties
  * Check that declared JVM paths and check-out directories exist in the file system. 
- * Check that basic as well as selected modules are checked out, built and have required artifacts present in the file system
+ * Check that basic as well as selected modules are checked out and compiled, with required artifacts present in the file system
 
 Creating a JSON schema for the configuration JSON is work-in-progress.
 
@@ -256,7 +256,7 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 
 The `version` is informational and optional. It might eventually be used for flagging if a checked out version is not the specified version.
 
-## A one liner for cleaning up, validating and installing
+## A one liner for cleaning up the database, validating the config, and installing the modules
 ```
 cd ~/folio-backend-builder ; clear; \
 ./postgresdb/drop-and-recreate-okapi-modules-database.sh;\
@@ -264,34 +264,20 @@ cd ~/folio-backend-builder ; clear; \
 ./install-folio.sh projects/my-folio.json
 ```
 
-## Other uses for the config JSON
-In `my-folio.json` there are settings for each module's remote Git repository. This is not used or required by the
-installation scripts, so it can be left out. However, it might provide some convenience when upgrading a system across
-the board.
+## Automating cloning, compiling and installation of modules.
 
-Assuming the current arbitrarily chosen property name `githost` one could for example write a one-liner that will
-generate the commands for a complete `git clone` and `mvn install` of all configured modules into a given directory:
+The script `clone-and-compile.sh` can be run on a configuration file to check out all the basic and selected modules from Git, and compile (mvn install) them. Subsequently the compiled modules can be installed to a running Okapi using install-folio.sh against the same configuration files. This is expected to work because the configuration file knows where to put the artififacts, and with what JVM to compile them, and subsequently still knows where to find them for deployment to Okapi. 
 
-```
-jq -r '.moduleConfigs[] | 
-"git clone --recurse-submodules " + .githost + "/"  + .name + ";
- cd " + .name + ";  
- mvn clean install -D skipTests ; 
- cd .." ' ../folio-backend-builder/projects/my-folio.json  > clone-and-build.sh
+For exampl, create an empty directory, like ~/tmp/folio-clone. Define the check-out directories in the configuration file to point to that base directory.
 
-```
+Then run  `./clone-and-compile.sh  projects/cloned-install.json`   This is a small install with just the seven base modules and two selected modules. 
 
-If tagged released were used throughout - rather than snapshots as in `my-folio.json`, the script could easily be
-extended to check out given tags after cloning. The script could of course also do git pulls across an existing
-check-out directory of FOLIO modules.
+When complete, the configuration can be checked with `./configutils/validate-config.sh   projects/cloned-install.json` 
 
-The shown command doesn't account for diverging JVM requirements. The info needed to support that is in the JSON config,
-but it's a bit trickier to get out.
+Finally the install can be run against a ready Okapi with `./install-folio.sh   projects/cloned-install.json` 
+
 
 ## Could-Dos
-
-#### Handle Docker deployment
-Currently, the Postgres host env var `PG_HOST` can be changed from 'postgres' to the IP of localhost in the ModuleDescriptor for a Docker based deployment so that Postgres can be accessed from the container. There must be a better way? Anyways, obtaining that IP could be scripted (on Unix) with `hostname  -I | cut -f1 -d' '`
 
 #### Schema for the configuration JSONs
 
@@ -304,5 +290,5 @@ be nice to resolve.
 The script drop-pgdb-okapi_modules-and-roles.sh will drop any roles it knows of. I might just drop the currently
 relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip it.
 
-#### Support for re-deploy
+#### Script for easy re-deploy
 
