@@ -24,23 +24,33 @@ done
 
 ###
 echo "Checking that the JVMs requested by modules are defined"
-requestedJvms=$(jq -r '.moduleConfigs[].deployment.jvm' "$CONFIG_FILE")
+requestedJvms=$(jq -r '.moduleConfigs | unique_by(.deployment.jvm)[].deployment.jvm' "$CONFIG_FILE")
 for jvm in $requestedJvms; do
   if [[ ! "$jvm" == "null" ]]; then
     found=$(jq --arg jvm $jvm -r '.jvms | any(.symbol == $jvm)' "$CONFIG_FILE")
     if [[ "$found" != "true" ]]; then 
       error="$error\nJVM $jvm is requested by a module but is not defined in 'jvms'"
+    else   
+     java=$(jq --arg jvm $jvm -r '.jvms[] | select(.symbol == $jvm).home' "$CONFIG_FILE") 
+     if [ ! -f "$java" ]; then
+       error="$error\nSpecified path to Java [$java] not found on this file system"
+     fi
     fi
   fi
 done
 
 ###
-echo "Checking that all Git checkout directories referenced by modules are defined."
-requestedCheckoutDirs=$(jq -r '.moduleConfigs[].checkedOutTo' "$CONFIG_FILE")
+echo "Checking that all Git checkout directories referenced by modules are defined and exist."
+requestedCheckoutDirs=$(jq -r '.moduleConfigs | unique_by(.checkedOutTo)[].checkedOutTo' "$CONFIG_FILE")
 for dir in $requestedCheckoutDirs; do
   found=$(jq --arg dir "$dir" -r '.checkoutRoots | any(.symbol == $dir)' "$CONFIG_FILE")
   if [[ "$found" != "true" ]]; then 
      error="$error\nCheckout directory $dir is requested by a module but is not defined in 'checkoutRoots'"
+  else 
+     directory=$(jq --arg dir $dir --arg home $HOME -r '.checkoutRoots[] | select(.symbol == $dir).directory | sub("~";$home)' "$CONFIG_FILE") 
+     if [ ! -d $directory ]; then
+       error="$error\nSpecified check-out directory [$directory] not found on this file system"
+     fi
   fi
 done
 

@@ -15,7 +15,6 @@ credentials ../projects/my-folio.json
 
 tenants ../projects/my-folio.json
 
-moduleVersionByName  "mod-authtoken" ../projects/my-folio.json
 
 javaHome mod-inventory-storage  ../projects/my-folio.json
 

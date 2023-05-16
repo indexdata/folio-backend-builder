@@ -52,7 +52,7 @@ function registerAndDeploy() {
   if [[ "$method" == "DD" ]]
     then
       deploymentDescriptor=$(deploymentDescriptor "$moduleName" "$moduleId" "$CONFIG_FILE")
-      curl -w '\n' -D - -s -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
+      curl -w '\n' -D - -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
   else
       curl -w '\n' -D - -H "Content-type: application/json" -d '{"srvcId": "'"$moduleId"'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules
   fi
@@ -66,7 +66,7 @@ for name in $userModules; do
   registerAndDeploy "$name" "$CONFIG_FILE"
   moduleId=$(idFromModuleDescriptor "$name" "$CONFIG_FILE")
   echo "Install $moduleId for diku"
-  curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules
+  curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules
 done
 
 # Creating a user with credentials and initial permissions
@@ -88,16 +88,16 @@ for name in $selectedModules; do
      tenantParams=$(installParameters "$name" "$CONFIG_FILE")
      if [[ -n "$tenantParams" ]]; then
        # Has tenant init parameters - send to 'install' end-point
-       echo "Install $name for diku"
-       curl -w '\n' -D -     -H "Content-type: application/json" -d '[{"id": "'"$moduleId"'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters=$TENANT_PARAM
+       echo "Install $name for diku with parameters $tenantParams"
+       curl -w '\n' -D - -H "Content-type: application/json" -d '[{"id": "'"$moduleId"'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters="$tenantParams"
      else
-       echo "Assign $MOD to diku"
-       curl -w '\n' -D -     -H "Content-type: application/json" -d '{"id": "'"$moduleId"'", "action": "enable"}' http://localhost:9130/_/proxy/tenants/diku/modules
+       echo "Assign $name to diku"
+       curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "'"$moduleId"'", "action": "enable"}' http://localhost:9130/_/proxy/tenants/diku/modules
      fi
      userPermissions=$(permissions "$name" "$CONFIG_FILE")
      for permission in $userPermissions; do
           curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" \
-          -d '{"permissionName": "'"$permission"'"}' http://localhost:9130/perms/users/$PU_ID/permissions
+          -d '{"permissionName": "'"$permission"'"}' http://localhost:9130/perms/users/"$PU_ID"/permissions
      done
   fi  
 done
