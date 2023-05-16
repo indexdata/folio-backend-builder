@@ -61,12 +61,14 @@ function registerAndDeploy() {
 # Basic infrastructure to be able to create a user with credentials
 tenants=$(tenants "$CONFIG_FILE")
 curl -w '\n' -D - -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants
-userModules=$(jq -r '.userModules[] | .name' "$CONFIG_FILE")
-for name in $userModules; do
+basicModules=$(jq -r '.basicModules[] | .name' "$CONFIG_FILE")
+for name in $basicModules; do
   registerAndDeploy "$name" "$CONFIG_FILE"
-  moduleId=$(idFromModuleDescriptor "$name" "$CONFIG_FILE")
-  echo "Install $moduleId for diku"
-  curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules
+  if [[ "$name" != "mod-authtoken" && "$name" != "mod-users-bl" ]]; then  # Activation deferred until permissions assigned for all modules.
+    moduleId=$(idFromModuleDescriptor "$name" "$CONFIG_FILE")
+    echo "Install $moduleId for diku"
+    curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules
+  fi
 done
 
 # Creating a user with credentials and initial permissions
@@ -76,30 +78,27 @@ credentials=$(credentials "$CONFIG_FILE")
 curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d "$credentials" http://localhost:9130/authn/credentials
 PU_ID=$(curl -s -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d '{
     "userId" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
-    "permissions" : ["perms.all", "login.all", "users.all"]}' http://localhost:9130/perms/users | jq -r '.id')
+    "permissions" : ["perms.all", "login.all", "users.all", "configuration.all"]}' http://localhost:9130/perms/users | jq -r '.id')
 
 # Install selected modules
 selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name' "$CONFIG_FILE")
 for name in $selectedModules; do
   registerAndDeploy "$name"
   moduleId=$(idFromModuleDescriptor "$name" )
-  if [[ "$name" != "mod-authtoken" && "$name" != "mod-users-bl" ]]  # Activation deferred until permissions assigned for all modules.
-    then
-     tenantParams=$(installParameters "$name" "$CONFIG_FILE")
-     if [[ -n "$tenantParams" ]]; then
-       # Has tenant init parameters - send to 'install' end-point
-       echo "Install $name for diku with parameters $tenantParams"
-       curl -w '\n' -D - -H "Content-type: application/json" -d '[{"id": "'"$moduleId"'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters="$tenantParams"
-     else
-       echo "Assign $name to diku"
-       curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "'"$moduleId"'", "action": "enable"}' http://localhost:9130/_/proxy/tenants/diku/modules
-     fi
-     userPermissions=$(permissions "$name" "$CONFIG_FILE")
-     for permission in $userPermissions; do
-          curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" \
-          -d '{"permissionName": "'"$permission"'"}' http://localhost:9130/perms/users/"$PU_ID"/permissions
-     done
-  fi  
+  tenantParams=$(installParameters "$name" "$CONFIG_FILE")
+  if [[ -n "$tenantParams" ]]; then
+    # Has tenant init parameters - send to 'install' end-point
+    echo "Install $name for diku with parameters $tenantParams"
+    curl -w '\n' -D - -H "Content-type: application/json" -d '[{"id": "'"$moduleId"'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters="$tenantParams"
+  else
+    echo "Assign $name to diku"
+    curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "'"$moduleId"'", "action": "enable"}' http://localhost:9130/_/proxy/tenants/diku/modules
+  fi
+  userPermissions=$(permissions "$name" "$CONFIG_FILE")
+  for permission in $userPermissions; do
+      curl -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" \
+      -d '{"permissionName": "'"$permission"'"}' http://localhost:9130/perms/users/"$PU_ID"/permissions
+  done
 done
 
 echo "Locks down module access to authenticated users"

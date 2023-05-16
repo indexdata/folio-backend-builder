@@ -79,22 +79,40 @@ Now run the installation script while passing in a selected project configuratio
 
 `./install-folio.sh projects/my-folio.json` for a larger - though by no means complete - FOLIO. It contains 20+ modules.
 
+The installation process requires at least seven basic modules to be installed. These are modules making it possible to create users and give them credentials and permissions. All other modules are optional, though often inter-dependencies will require one to be present for another to work.
+
 
 ## Configuration details
 
-The configuration files holds basic information about the local environment, like the locations of check-out directories and JVMs, as well as installation instructions for all modules to install.  
+It's possible to validate a given configuration file using [validate-config.sh](configutils/validate-config.sh)
 
-It's possible to validate the given configuration file using [validate-config.sh](configutils/validate-config.sh)
+The validation script will 
 
-The validation script will for example 
-
+ * Check that all seven modules requried for the basic users and authentication handling are present in `basicModules`
  * Check references between module configs and general settings internally in the config file
  * Check for required properties
- * Check that selected modules are checked out, built and have required artifacts for deployment in the file system
+ * Check that declared JVM paths and check-out directories exist in the file system. 
+ * Check that basic as well as selected modules are checked out, built and have required artifacts present in the file system
 
 Creating a JSON schema for the configuration JSON is work-in-progress.
 
 Here follows a walk-through of the sections in the configuration file.
+
+### Basic modules
+
+`basicModules`  holds the list modules required by the installation script, though not necessarily in particular versions. 
+
+```
+"basicModules" : [
+        { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
+        { "name": "mod-users",              "version": "19.2.0-SNAPSHOT"},
+        { "name": "mod-login",              "version": "7.10.0-SNAPSHOT"},
+        { "name": "mod-password-validator", "version": "3.1.1-SNAPSHOT"},
+        { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT"},
+        { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT"},
+        { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
+]
+```
 
 ### Host dependent settings
 
@@ -135,7 +153,7 @@ Here follows a walk-through of the sections in the configuration file.
         },
     ]
 ```
-#### Environment variables
+#### Standard environment variables
 Many modules use one of a few standard sets of environment variables. The module configuration can reference one of them or supply a specific set of variables of its own. Here is a sample of standard sets:
 
 ```
@@ -171,7 +189,7 @@ Many modules use one of a few standard sets of environment variables. The module
 
 ### Module configurations
 
-With those basic system dependent settings defined, each module to install can be configured. For example: 
+With the above, basic system dependent settings defined, each module to install can be configured. For example: 
 
 ``` 
  { 

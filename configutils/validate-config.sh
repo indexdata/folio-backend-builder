@@ -14,9 +14,23 @@ fi
 
 errors=""
 
+### 
+echo "* Checking that seven basic user modules are configured"
+basicModules=$(jq '.basicModules' "$CONFIG_FILE")
+if [[ "$basicModules" == "null" ]]; then 
+  errors="$errors\nArray basicModules is missing"
+else 
+  for name in mod-permissions mod-users mod-login mod-password-validator mod-authtoken mod-configuration mod-users-bl ; do
+    found=$(jq --arg name "$name" -r ' .basicModules | any(.name == $name) ' "$CONFIG_FILE")
+    if [[ "$found"  != "true" ]]; then
+      errors="$errors\nBasic module $name is missing. Users and authentication will not work without it"  
+    fi
+  done
+fi
+
 ###
-echo "* Checking that configurations exist for all selected modules"
-selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name ' "$CONFIG_FILE")
+echo "* Checking that configurations exist for all basic modules and optional (selected) modules"
+selectedModules=$(jq -r '(.basicModules, .selectedModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
 for mod in $selectedModules; do
   found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
   if [[ -z "$found" ]]
@@ -60,12 +74,11 @@ for dir in $requestedCheckoutDirs; do
 done
 
 ###
-echo "* Checking that selected modules are checked out and built"
-selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name ' "$CONFIG_FILE")
-for mod in $selectedModules; do
-  found=$(jq --arg mod "$mod" \
-   -r '.moduleConfigs[] | select(.name == $mod)' \
-       "$CONFIG_FILE")
+echo "* Checking that basic and selected modules are checked out and built"
+modules=$(jq -r ' (.selectedModules, .basicModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
+for mod in $modules ; do
+  printf "\n  - $mod"
+  found=$(jq --arg mod $mod -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
   if [[ -n "$found" ]]; then
     checkedOutToSymbol=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).checkedOutTo' "$CONFIG_FILE")
     methodSymbol=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.method' "$CONFIG_FILE")
@@ -106,11 +119,11 @@ for mod in $selectedModules; do
           fi
         fi
       fi
-      specifiedVersion=$(jq --arg name "$mod" -r '.selectedModules[] | select(.name == $name) | .version ' "$CONFIG_FILE")
+      specifiedVersion=$(jq --arg name "$mod" -r '(.basicModules, .selectedModules)[] | select(.name == $name) | .version ' "$CONFIG_FILE")
       if [[ -d "$checkedOutTo/$mod" &&  "$specifiedVersion" != "null" ]]; then
         installedVersion=$(jq -r '.id' "$checkedOutTo/$mod/target/ModuleDescriptor.json")
         if [ "$installedVersion" != "$mod-$specifiedVersion" ]; then
-          printf "\n* INFO: A module version is not as specified : Config said '%s-%s' -> Got '%s'\n" "$mod" "$specifiedVersion" "$installedVersion"
+          printf "  (config:%s-%s != installed:%s)"  "$mod"  "$specifiedVersion" "$installedVersion" 
         fi
       fi  
     fi
@@ -123,7 +136,7 @@ done
 
 ### Report
 if [[ -z "$errors" ]]; then
-  printf "\nConfiguration [%s] looks good!\n\n" "$CONFIG_FILE"
+  printf "\n\nConfiguration [%s] looks good!\n\n" "$CONFIG_FILE"
 else 
   printf "\n\nERROR: %s\n" "$errors"
 fi  

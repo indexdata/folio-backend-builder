@@ -1,21 +1,21 @@
 {
     "description": "Template FOLIO configuration.",
 
-    "userModules" : [
-        { "name": "mod-permissions",       "version": "6.4.0-SNAPSHOT" },
-        { "name": "mod-users",             "version": "19.2.0-SNAPSHOT" },
-        { "name": "mod-login",             "version": "7.10.0-SNAPSHOT" }
+    "basicModules" : [
+        { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
+        { "name": "mod-users",              "version": "19.2.0-SNAPSHOT"},
+        { "name": "mod-login",              "version": "7.10.0-SNAPSHOT"},
+        { "name": "mod-password-validator", "version": "3.1.1-SNAPSHOT"},
+        { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT"},
+        { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT"},
+        { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
     ],
     "selectedModules": [
         { "name": "mod-shared-index-muted-apis", "version": "1.0-SNAPSHOT" },
         { "name": "mod-inventory-storage",       "version": "26.1.0-SNAPSHOT" },
-        { "name": "mod-password-validator",      "version": "3.1.1-SNAPSHOT" },
-        { "name": "mod-authtoken",               "version": "2.14.0-SNAPSHOT" },
         { "name": "mod-pubsub",                  "version": "2.10.0-SNAPSHOT" },
         { "name": "mod-circulation-storage",     "version": "16.1.0-SNAPSHOT" },
         { "name": "mod-event-config",            "version": "2.6.0-SNAPSHOT" },
-        { "name": "mod-configuration",           "version": "5.9.2-SNAPSHOT" },
-        { "name": "mod-users-bl",                "version": "7.6.0-SNAPSHOT"},
         { "name": "mod-template-engine",         "version": "1.19.0-SNAPSHOT"},
         { "name": "mod-email",                   "version": "1.15.4-SNAPSHOT"},
         { "name": "mod-sender",                  "version": "1.11.0-SNAPSHOT"},
@@ -120,7 +120,8 @@
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-permissions-fat.jar"
-            }
+            },
+            "permissions": []
         },
         {
             "name": "mod-users",
@@ -143,7 +144,8 @@
                 "env": "STANDARD-PG-KAFKA",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-users-fat.jar"
-            }
+            },
+            "permissions": []
         },
         {
             "name": "mod-login",
@@ -158,7 +160,69 @@
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-login-fat.jar"
-            }
+            },
+            "permissions": []
+        },
+        {
+            "name": "mod-password-validator",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-users-bl"
+            ],
+            "deployment": {
+                "method": "DOCKER"
+            },
+            "permissions": []
+        },
+        {
+            "name": "mod-authtoken",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-users-bl"
+            ],
+            "deployment": {
+                "method": "DD",
+                "env": "STANDARD-PG",
+                "jvm":"JAVA11",
+                "pathToJar": "target/mod-authtoken-fat.jar"
+            },
+            "permissions": []
+        },
+        { 
+            "name": "mod-configuration",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [
+                "mod-circulation",
+                "mod-notes",
+                "mod-email",
+                "mod-template-engine",
+                "mod-users-bl"
+            ],
+            "deployment": {
+                "method": "DD",
+                "env": "STANDARD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar"
+            },
+            "permissions": [
+               "configuration.all" 
+            ] 
+        },
+        {
+            "name": "mod-users-bl",
+            "checkedOutTo": "GIT-FOLIO",
+            "githost": "https://github.com/folio-org",
+            "requiredBy": [],
+            "deployment": {
+                "method": "DD",
+                "env": "STANDARD-PG",
+                "jvm": "JAVA11",
+                "pathToJar": "target/mod-users-bl-fat.jar"
+            },
+            "permissions": []
         },
         {
             "name": "mod-shared-index-muted-apis",
@@ -195,33 +259,6 @@
             "permissions": [
                 "inventory-storage.all"
             ]
-        },
-        {
-            "name": "mod-password-validator",
-            "checkedOutTo": "GIT-FOLIO",
-            "githost": "https://github.com/folio-org",
-            "requiredBy": [
-                "mod-users-bl"
-            ],
-            "deployment": {
-                "method": "DOCKER"
-            },
-            "permissions": []
-        },
-        {
-            "name": "mod-authtoken",
-            "checkedOutTo": "GIT-FOLIO",
-            "githost": "https://github.com/folio-org",
-            "requiredBy": [
-                "mod-users-bl"
-            ],
-            "deployment": {
-                "method": "DD",
-                "env": "STANDARD-PG",
-                "jvm":"JAVA11",
-                "pathToJar": "target/mod-authtoken-fat.jar"
-            },
-            "permissions": []
         },
         { 
             "name": "mod-pubsub",
@@ -342,40 +379,6 @@
             ],
             "deployment": {
                 "method": "DOCKER"
-            },
-            "permissions": []
-        },
-        { 
-            "name": "mod-configuration",
-            "checkedOutTo": "GIT-FOLIO",
-            "githost": "https://github.com/folio-org",
-            "requiredBy": [
-                "mod-circulation",
-                "mod-notes",
-                "mod-email",
-                "mod-template-engine",
-                "mod-users-bl"
-            ],
-            "deployment": {
-                "method": "DD",
-                "env": "STANDARD-PG",
-                "jvm": "JAVA11",
-                "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar"
-            },
-            "permissions": [
-               "configuration.all" 
-            ] 
-        },
-        {
-            "name": "mod-users-bl",
-            "checkedOutTo": "GIT-FOLIO",
-            "githost": "https://github.com/folio-org",
-            "requiredBy": [],
-            "deployment": {
-                "method": "DD",
-                "env": "STANDARD-PG",
-                "jvm": "JAVA11",
-                "pathToJar": "target/mod-users-bl-fat.jar"
             },
             "permissions": []
         },

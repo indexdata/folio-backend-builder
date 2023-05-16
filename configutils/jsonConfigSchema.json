@@ -11,7 +11,7 @@
   },
   "required": [
     "description",
-    "userModules",
+    "basicModules",
     "selectedModules",
     "tenants",
     "users",
