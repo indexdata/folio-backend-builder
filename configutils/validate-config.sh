@@ -15,18 +15,28 @@ fi
 errors=""
 
 ### 
-echo "* Checking that seven basic user modules are configured"
-basicModules=$(jq '.basicModules' "$CONFIG_FILE")
-if [[ "$basicModules" == "null" ]]; then 
-  errors="$errors\nArray basicModules is missing"
-else 
-  for name in mod-permissions mod-users mod-login mod-password-validator mod-authtoken mod-configuration mod-users-bl ; do
-    found=$(jq --arg name "$name" -r ' .basicModules | any(.name == $name) ' "$CONFIG_FILE")
-    if [[ "$found"  != "true" ]]; then
-      errors="$errors\nBasic module $name is missing. Users and authentication will not work without it"  
-    fi
-  done
-fi
+echo "* Checking that major properties are present"
+basicModules=$(jq -r '.basicModules' "$CONFIG_FILE")
+selectModules=$(jq -r '.selectedModules' "$CONFIG_FILE")
+jvm=$(jq -r '.jvms' "$CONFIG_FILE")
+checkoutRoots=$(jq -r '.checkoutRoots' "$CONFIG_FILE")
+envVars=$(jq -r '.envVars' "$CONFIG_FILE")
+tenants=$(jq -r '.jvms' "$CONFIG_FILE")
+users=$(jq -r '.jvms' "$CONFIG_FILE")
+moduleConfigs=$(jq -r '.jvms' "$CONFIG_FILE")
+
+if [[ "$basicModules" == "null" || "$selectedModules" == "null" || "$jvms" == "null" || "$checkoutRoots" == "null" 
+      || "$envVars" == "null" || "$tenants" == "null" || "$users" == "null" || "$moduleConfigs" == "null" ]]; then 
+  printf "\n! Could not validate [%s] because one or more basic configuration elements are missing.\n" "$CONFIG_FILE"
+  exit
+fi  
+
+for name in mod-permissions mod-users mod-login mod-password-validator mod-authtoken mod-configuration mod-users-bl ; do
+  found=$(jq --arg name "$name" -r ' .basicModules | any(.name == $name) ' "$CONFIG_FILE")
+  if [[ "$found"  != "true" ]]; then
+    errors="$errors\nBasic module $name is missing. Users and authentication will not work without it"  
+  fi
+done
 
 ###
 echo "* Checking that configurations exist for all basic modules and optional (selected) modules"
