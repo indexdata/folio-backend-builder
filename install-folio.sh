@@ -58,7 +58,7 @@ function registerAndDeploy() {
   fi
 }
 
-# Basic infrastructure to be able to create a user with credentials
+# Basic infrastructure to be able to create a user with credentials and permissions
 tenants=$(tenants "$CONFIG_FILE")
 curl -w '\n' -D - -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants
 basicModules=$(jq -r '.basicModules[] | .name' "$CONFIG_FILE")
