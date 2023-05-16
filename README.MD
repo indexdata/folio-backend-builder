@@ -209,9 +209,14 @@ In `permissions`, provide a list of permissions to assign to `diku_admin` for th
 
 ### Checking the configuration
 
-Optionally, the installation configuration can be (lightly) checked using:
+Optionally, the installation configuration can be checked using:
 
 `./configutils/validate-config.sh projects/my-folio.json`
+
+This includes 
+ * Checking internal references between module configs and general settings
+ * Checking for mandatory properties
+ * Checking that select modules are checked out, built and have required artifacts for deployment
 
 (Creating a JSON schema for the configuration JSON is work-in-progress.)
 
