@@ -9,7 +9,7 @@
     "selectedModules": [
         { "name": "mod-shared-index-muted-apis", "version": "1.0-SNAPSHOT" },
         { "name": "mod-inventory-storage",       "version": "26.1.0-SNAPSHOT" },
-        { "name": "mod-password-validator",      "version": "3.1.0-SNAPSHOT" },
+        { "name": "mod-password-validator",      "version": "3.1.1-SNAPSHOT" },
         { "name": "mod-authtoken",               "version": "2.14.0-SNAPSHOT" },
         { "name": "mod-pubsub",                  "version": "2.10.0-SNAPSHOT" },
         { "name": "mod-circulation-storage",     "version": "16.1.0-SNAPSHOT" },

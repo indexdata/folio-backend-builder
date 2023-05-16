@@ -276,9 +276,7 @@ but it's a bit trickier to get out.
 
 Currently, the Postgres host env var `PG_HOST` can be changed from 'postgres' to the IP of localhost in the ModuleDescriptor for a Docker based deployment so that Postgres can be accessed from the container. There must be a better way? Anyways, obtaining that IP could be scripted (on Unix) with `hostname  -I | cut -f1 -d' '`
 
-#### Improve validation of project configurations
-
-I.e. mandatory fields and combination requirements. 
+#### Schema for the configuration JSONs
 
 #### Handle multiple tenants and users that could additionally be other than 'diku'
 
