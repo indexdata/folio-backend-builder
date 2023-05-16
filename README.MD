@@ -82,7 +82,19 @@ Now run the installation script while passing in a selected project configuratio
 
 ## Configuration details
 
-The configuration files holds some basic information about the local environment, like the locations of check-out directories and JVMs as well as configurations for all modules to install.  
+The configuration files holds basic information about the local environment, like the locations of check-out directories and JVMs, as well as installation instructions for all modules to install.  
+
+It's possible to validate the given configuration file using [validate-config.sh](configutils/validate-config.sh)
+
+The validation script will for example 
+
+ * Check references between module configs and general settings internally in the config file
+ * Check for required properties
+ * Check that selected modules are checked out, built and have required artifacts for deployment in the file system
+
+Creating a JSON schema for the configuration JSON is work-in-progress.
+
+Here follows a walk-through of the sections in the configuration file.
 
 ### Host dependent settings
 
@@ -208,18 +220,6 @@ A few modules have specific extra parameters though. For that the `deployment.en
 #### Setting permissions
 In `permissions`, provide a list of permissions to assign to `diku_admin` for the module. 
 
-### Checking the configuration
-Optionally, the installation configuration can be checked using:
-
-`./configutils/validate-config.sh projects/my-folio.json`
-
-This includes 
- * Checking internal references between module configs and general settings
- * Checking for mandatory properties
- * Checking that select modules are checked out, built and have required artifacts for deployment
-
-(Creating a JSON schema for the configuration JSON is work-in-progress.)
-
 ### Selecting and deselecting modules
 Modules to install must be listed in `selectedModules`
 
@@ -238,9 +238,7 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 
 The `version` is informational and optional. It might eventually be used for flagging if a checked out version is not the specified version.
 
-## Run the installation script.
-It should be possible to run the installation configuration. In this sample command module databases and cleaned up and recreated before running the installation.
-
+## A one liner for cleaning up, validating and installing
 ```
 cd ~/folio-backend-builder ; clear; \
 ./postgresdb/drop-and-recreate-okapi-modules-database.sh;\
