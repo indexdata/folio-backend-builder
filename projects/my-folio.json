@@ -57,7 +57,7 @@
     "checkoutRoots": [
         {
             "symbol": "GIT-FOLIO",
-            "directory": "~/tmp/folio-clone-2"
+            "directory": "~/folio"
         },
         {
             "symbol": "GIT-OLE",
@@ -66,10 +66,6 @@
         {
             "symbol": "GIT-ID",
             "directory": "~/gitprojects"
-        },
-        {
-            "symbol": "GIT-NE",
-            "directory": "~/gitne"
         }
     ],
     "jvms": [
@@ -83,7 +79,7 @@
         },
         {
             "symbol": "JAVA18",
-            "home": "/home/nielserik/.jdks/openjdk-18.0.2.1/"
+            "home": "~/.jdks/openjdk-18.0.2.1/"
         }
     ],
     "envVars": [
@@ -118,7 +114,6 @@
         {
             "name": "mod-permissions",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-users-bl", 
                 "mod-pubsub", 
@@ -134,7 +129,6 @@
         {
             "name": "mod-users",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "circulation", 
                 "inventory", 
@@ -158,7 +152,6 @@
         {
             "name": "mod-login",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-users-bl",
                 "mod-pubsub"
@@ -174,7 +167,6 @@
         {
             "name": "mod-password-validator",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-users-bl"
             ],
@@ -187,7 +179,6 @@
         {
             "name": "mod-authtoken",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-users-bl"
             ],
@@ -202,7 +193,6 @@
         { 
             "name": "mod-configuration",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-circulation",
                 "mod-notes",
@@ -223,7 +213,6 @@
         {
             "name": "mod-users-bl",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
                 "method": "DD",
@@ -249,7 +238,6 @@
         {
             "name": "mod-inventory-storage",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-circulation",
                 "mod-inventory",
@@ -272,7 +260,6 @@
         { 
             "name": "mod-pubsub",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy":[
                 "mod-circulation",
                 "mod-feesfines",
@@ -362,7 +349,6 @@
         { 
             "name": "mod-circulation-storage",     
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-circulation",
                 "mod-inventory",
@@ -382,7 +368,6 @@
         { 
             "name": "mod-event-config",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-notify"
             ],
@@ -395,7 +380,6 @@
         {
             "name": "mod-template-engine",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-notify"
             ],
@@ -412,7 +396,6 @@
         {
             "name": "mod-email",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-sender"
             ],
@@ -430,7 +413,6 @@
         {
             "name": "mod-sender",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-notify"
             ],
@@ -445,12 +427,12 @@
         {
             "name": "mod-notify",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-feesfines"
             ],
             "deployment": {
-                "method": "DOCKER"
+                "method": "DOCKER",
+                "jvm": "JAVA11"
             },
             "permissions": [
                 "notify.all"
@@ -459,7 +441,6 @@
         {
             "name": "mod-feesfines",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-circulation"
             ],
@@ -560,7 +541,6 @@
         {
             "name": "mod-patron-blocks",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-circulation"
             ],
@@ -588,7 +568,6 @@
         {
             "name": "mod-calendar",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": ["mod-circulation"],
             "deployment": {
                 "method": "DOCKER",
@@ -603,7 +582,6 @@
         {
             "name": "mod-notes",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [
                 "mod-circulation"
             ],
@@ -618,7 +596,6 @@
         {
             "name": "mod-circulation",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
                 "method": "DD",
@@ -641,7 +618,6 @@
         {
             "name": "mod-inventory",
             "checkedOutTo": "GIT-FOLIO",
-            "gitHost": "https://github.com/folio-org",
             "requiredBy": [],
             "deployment": {
                 "method": "DD",

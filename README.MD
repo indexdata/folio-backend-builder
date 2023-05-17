@@ -266,15 +266,43 @@ cd ~/folio-backend-builder ; clear; \
 
 ## Automating cloning, compiling and installation of modules.
 
-The script `clone-and-compile.sh` can be run on a configuration file to check out all the basic and selected modules from Git, and compile (mvn install) them. Subsequently the compiled modules can be installed to a running Okapi using install-folio.sh against the same configuration files. This is expected to work because the configuration file knows where to put the artififacts, and with what JVM to compile them, and subsequently still knows where to find them for deployment to Okapi. 
+The script `clone-and-compile.sh` can be run on a configuration file to check out all the basic and selected modules from Git, and compile (mvn install) them. Subsequently the compiled modules can be installed to a running Okapi using install-folio.sh against the same configuration files.
 
-For exampl, create an empty directory, like ~/tmp/folio-clone. Define the check-out directories in the configuration file to point to that base directory.
+For example, create an empty directory, like ~/tmp/folio-clone. Define the check-out directories in the configuration file to point to that base directory.
 
-Then run  `./clone-and-compile.sh  projects/cloned-install.json`   This is a small install with just the seven base modules and two selected modules. 
+Then run  `./clone-and-compile.sh  projects/clone-and-compile-demo.json`   This is a small install with just the seven base modules and two selected modules. 
 
-When complete, the configuration can be checked with `./configutils/validate-config.sh   projects/cloned-install.json` 
+When complete, the configuration can be checked with `./configutils/validate-config.sh   projects/clone-and-compile-demo.json` 
 
-Finally the install can be run against a ready Okapi with `./install-folio.sh   projects/cloned-install.json` 
+Finally the install can be run against a ready Okapi with `./install-folio.sh   projects/clone-and-compile-demo.json` 
+
+
+## All in one
+
+
+Create empty directory `~/tmp/folio-clone`
+
+Clone modules from git and compile them
+
+`./clone-and-compile.sh   folio-backend-builder/projects/clone-and-compile-demo.json`
+
+Clean up previous installations
+
+`./postgresdb/drop-pgdb-okapi_modules-and-roles.sh`
+`./postgresdb/create-pgdb-okapi_modules.sh`
+
+Initialize Okapi's database and start Okapi
+
+`java -Dport=8600 -Dstorage=postgres -jar /path/to/okapi/okapi-core/target/okapi-core-fat.jar initdatabase`
+`java -Dport_start=9152 -Dport_end=9199 -Dstorage=postgres -jar /path/to/okapi/okapi-core/target/okapi-core-fat.jar dev`
+
+Validate the modules configuration in clone-and-compile-demo.json
+
+`./configutils/validate-config.sh projects/clone-and-compile-demo.json`
+
+Install modules to Okapi
+
+`./install-folio.sh projects/clone-and-compile-demo.json`
 
 
 ## Could-Dos
