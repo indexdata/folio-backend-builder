@@ -70,6 +70,7 @@ for moduleName in $moduleNames ; do
       printf "`date` Compiling %s in %s\n" "$moduleName" "$modulePath"
       javaHome=$(javaHome "$moduleName" "$CONFIG_FILE")
       javaHome=${javaHome#null/""}
+      javaHome=${javaHome/#~/$HOME}
       printf "Using JAVA_HOME: %s\n" "$javaHome"
       dir=`pwd`
       cd $modulePath

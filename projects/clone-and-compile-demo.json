@@ -55,6 +55,10 @@
       {
         "symbol": "JAVA17",
         "home": "/usr/lib/jvm/java-17-openjdk-amd64"
+      },
+      {
+        "symbol": "JAVA18",
+        "home": "~/.jdks/openjdk-18.0.2.1/"
       }
     ],
     "envVars": [
@@ -180,7 +184,8 @@
           "mod-users-bl"
         ],
         "deployment": {
-          "method": "DOCKER"
+          "method": "DOCKER",
+          "jvm": "JAVA18"
         },
         "permissions": []
       },

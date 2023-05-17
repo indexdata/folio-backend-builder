@@ -277,23 +277,31 @@ When complete, the configuration can be checked with `./configutils/validate-con
 Finally the install can be run against a ready Okapi with `./install-folio.sh   projects/clone-and-compile-demo.json` 
 
 
-## All in one
+## All-in-one
 
 
 Create empty directory `~/tmp/folio-clone`
 
-Clone modules from git and compile them
+Clone modules from git and compile them (the demo config file is set up for that directory)
 
-`./clone-and-compile.sh   folio-backend-builder/projects/clone-and-compile-demo.json`
+`./clone-and-compile.sh   projects/clone-and-compile-demo.json`
 
-Clean up previous installations
+Clean up previous installations from Postgres for good measure
 
 `./postgresdb/drop-pgdb-okapi_modules-and-roles.sh`
+
 `./postgresdb/create-pgdb-okapi_modules.sh`
+
+Start Kafka 
+`./bin/zookeeper-server-start.sh config/zookeeper.properties`
+
+`./bin/kafka-server-start.sh config/server.properties` 
+
 
 Initialize Okapi's database and start Okapi
 
 `java -Dport=8600 -Dstorage=postgres -jar /path/to/okapi/okapi-core/target/okapi-core-fat.jar initdatabase`
+
 `java -Dport_start=9152 -Dport_end=9199 -Dstorage=postgres -jar /path/to/okapi/okapi-core/target/okapi-core-fat.jar dev`
 
 Validate the modules configuration in clone-and-compile-demo.json
@@ -304,6 +312,8 @@ Install modules to Okapi
 
 `./install-folio.sh projects/clone-and-compile-demo.json`
 
+
+It should now be possible to log in as `diku_admin/admin` and GET some instances from `/instance-storage/instances`.
 
 ## Could-Dos
 

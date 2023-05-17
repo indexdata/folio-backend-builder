@@ -58,7 +58,7 @@ for jvm in $requestedJvms; do
     if [[ "$found" != "true" ]]; then 
       errors="$errors\nJVM $jvm is requested by a module but is not defined in 'jvms'"
     else   
-     javaHome=$(jq --arg jvm "$jvm" -r '.jvms[] | select(.symbol == $jvm).home' "$CONFIG_FILE")
+     javaHome=$(jq --arg jvm "$jvm" --arg home "$HOME" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";$home)' "$CONFIG_FILE")
      if [ ! -d "$javaHome" ]; then
        errors="$errors\nSpecified path to Java [$javaHome] not found on this file system"
      fi
