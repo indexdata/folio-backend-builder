@@ -20,14 +20,12 @@ function deploymentDescriptor() {
   method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
   if [[ "$method" == "DD" ]]; then
     jvm=$(javaHome "$moduleName" "$CONFIG_FILE")
-    jvm="${jvm%java}"
-    jvm="${jvm%/}/java"
     dir=$(baseDir "$moduleName" "$CONFIG_FILE")
     jar=$(pathToJar "$moduleName" "$CONFIG_FILE")
     env=$(env "$moduleName" "$CONFIG_FILE")
     echo '{ "srvcId": "'"$id"'",  "nodeId": "localhost",
             "descriptor": {
-              "exec": "'"$jvm"' -Dport=%p -jar '"$dir"'/'"$moduleName"'/'"$jar"' -Dhttp.port=%p",
+              "exec": "'"$jvm"/bin/java' -Dport=%p -jar '"$dir"'/'"$moduleName"'/'"$jar"' -Dhttp.port=%p",
               "env": '"$env"' }}'
   fi
 }

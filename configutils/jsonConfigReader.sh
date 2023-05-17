@@ -31,6 +31,10 @@ javaHome() {
   echo "${found#null}"
 }
 
+gitHost() {
+  symbol=$(moduleConfig "$1" "$2"  | jq -r '.gitHost')
+}
+
 pathToJar() {
   moduleConfig "$1" "$2" | jq -r '.deployment.pathToJar'
 }

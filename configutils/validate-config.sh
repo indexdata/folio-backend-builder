@@ -59,10 +59,8 @@ for jvm in $requestedJvms; do
       errors="$errors\nJVM $jvm is requested by a module but is not defined in 'jvms'"
     else   
      javaHome=$(jq --arg jvm "$jvm" -r '.jvms[] | select(.symbol == $jvm).home' "$CONFIG_FILE")
-     javaHome=${javaHome%java}
-     javaHome=${javaHome%/}/java
-     if [ ! -f "$javaHome" ]; then
-       errors="$errors\nSpecified path to Java [$javaHome/java] not found on this file system"
+     if [ ! -d "$javaHome" ]; then
+       errors="$errors\nSpecified path to Java [$javaHome] not found on this file system"
      fi
     fi
   fi
@@ -89,7 +87,6 @@ done
 echo "* Checking that basic and selected modules are checked out and built"
 modules=$(jq -r ' (.selectedModules, .basicModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
 for mod in $modules ; do
-  printf "\n  - $mod"
   found=$(jq --arg mod $mod -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
   if [[ -n "$found" ]]; then
     checkedOutToSymbol=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).checkedOutTo' "$CONFIG_FILE")
@@ -131,11 +128,13 @@ for mod in $modules ; do
           fi
         fi
       fi
+
       specifiedVersion=$(jq --arg name "$mod" -r '(.basicModules, .selectedModules)[] | select(.name == $name) | .version ' "$CONFIG_FILE")
-      if [[ -d "$checkedOutTo/$mod" &&  "$specifiedVersion" != "null" ]]; then
+      if [[ -d "$checkedOutTo/$mod" ]]; then
         installedVersion=$(jq -r '.id' "$checkedOutTo/$mod/target/ModuleDescriptor.json")
-        if [ "$installedVersion" != "$mod-$specifiedVersion" ]; then
-          printf "  (config:%s-%s != installed:%s)"  "$mod"  "$specifiedVersion" "$installedVersion" 
+        printf "\n  - %-40s" "$installedVersion"
+        if [[ "$specifiedVersion" != "null" && "$installedVersion" != "$mod-$specifiedVersion" ]]; then
+          printf " (config declared: %s-%s)"  "$mod"  "$specifiedVersion" 
         fi
       fi  
     fi
