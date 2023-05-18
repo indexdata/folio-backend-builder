@@ -2,3 +2,4 @@
 .idea/
 folio-backend-builder.code-workspace
 ignore/
+/.vscode/settings.json
