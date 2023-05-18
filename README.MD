@@ -32,7 +32,7 @@ For compiling and running the modules, multiple versions of Java may be required
 
 Finally, `curl` and `jq` are required for the module installation script.
 
-The main Folio guides describes in details the software versions required, how to set up the databases etc, and options for building and starting Okapi. 
+The main Folio guides describe much better the software versions required, how to set up the databases etc, and options for building and starting Okapi. 
 
 * [Developer Setup](https://dev.folio.org/guides/developer-setup/)
 * [Compiling and running Okapi](https://github.com/folio-org/okapi/blob/master/doc/guide.md#compiling-and-running)
@@ -60,7 +60,7 @@ Create folio_admin user that modules will use for access their database schema i
 
 ## Recurring preparations of the database and Okapi
 
-Following actions can be performed before each new run of the modules installation script. 
+Following actions can be performed before each new run of the modules installation script to clean up previous installations.
 
 ### Create the modules database, potentially removing previously installed modules first
 
@@ -77,7 +77,7 @@ Assuming Okapi is checked out to (and installed in) ~/folio, do:
 
 `java -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar dev`
 
-### Script for the above (clean up database, start Okapi)and start Okapi
+### Script for the above (clean up database, start Okapi)
 
 `./clean-db-start-okapi.sh`
 
