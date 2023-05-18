@@ -53,9 +53,11 @@ createuser -P okapi   # When it asks for a password, enter okapi25
 createdb -O okapi okapi
 ```
 
-Create folio_admin user that modules will use for access their database schema in the `okapi_modules` database.
-
-`./postgresdb/create-pg-superuser-folio-admin.sh`
+Create folio_admin user that modules will use for access to their database schema in the `okapi_modules` database.
+```
+sudo -u postgres -i
+createuser -P --superuser folio_admin   # When it asks for a password, enter folio_admin
+```
 
 
 ## Recurring preparations of the database and Okapi
