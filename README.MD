@@ -82,7 +82,7 @@ Assuming Okapi is checked out to (and installed in) ~/folio, do:
 
 #### A script for all of the above (clean up database, start Okapi)
 
-`./clean-db-start-okapi.sh`
+`./clean-db-start-okapi.sh ~/folio`
 
 ## Install the modules
 
