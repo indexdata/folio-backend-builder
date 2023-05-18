@@ -66,7 +66,8 @@ Following actions can be performed before each new run of the modules installati
 
 Clean up first: 
 `./postgresdb/drop-pgdb-okapi_modules-and-roles.sh`
-Create: 
+
+Create the database (again): 
 `./postgresdb/create-pg-okapi_modules.sh`
 
 ### Initialize Okapi database and start Okapi
