@@ -11,7 +11,6 @@
         { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
     ],
     "selectedModules": [
-        { "name": "mod-shared-index-muted-apis", "version": "1.0-SNAPSHOT" },
         { "name": "mod-inventory-storage",       "version": "26.1.0-SNAPSHOT" },
         { "name": "mod-pubsub",                  "version": "2.10.0-SNAPSHOT" },
         { "name": "mod-circulation-storage",     "version": "16.1.0-SNAPSHOT" },
@@ -60,10 +59,6 @@
             "directory": "~/folio"
         },
         {
-            "symbol": "GIT-OLE",
-            "directory": "~/git-ole"
-        },
-        {
             "symbol": "GIT-ID",
             "directory": "~/gitprojects"
         }
@@ -110,6 +105,18 @@
             "env": []
         }
     ],
+    "fakeApis": {
+        "provides": [
+            {
+                "id": "source-storage-records",
+                "version": "3.0"
+            },
+            {
+                "id": "instance-authority-links",
+                "version": "2.0"
+            }
+        ]
+    },
     "moduleConfigs": [
         {
             "name": "mod-permissions",
@@ -219,19 +226,6 @@
                 "env": "STANDARD-PG",
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-users-bl-fat.jar"
-            },
-            "permissions": []
-        },
-        {
-            "name": "mod-shared-index-muted-apis",
-            "checkedOutTo": "GIT-OLE",
-            "gitHost": "https://github.com/openlibraryenvironment",
-            "requiredBy": [],
-            "deployment": {
-                "method": "DD",
-                "env": "NO-ENV-VARS",
-                "jvm": "JAVA11",
-                "pathToJar": "target/mod-shared-index-muted-apis-fat.jar"
             },
             "permissions": []
         },

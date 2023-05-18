@@ -1,0 +1,7 @@
+{
+    "id": "mod-fake-1.0.0",
+    "name": "Compatibility Emulator",
+    "provides": [],
+    "requires": [],
+    "permissionSets": []
+  }

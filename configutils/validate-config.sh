@@ -17,8 +17,8 @@ errors=""
 ### 
 echo "* Checking that major properties are present"
 basicModules=$(jq -r '.basicModules' "$CONFIG_FILE")
-selectModules=$(jq -r '.selectedModules' "$CONFIG_FILE")
-jvm=$(jq -r '.jvms' "$CONFIG_FILE")
+selectedModules=$(jq -r '.selectedModules' "$CONFIG_FILE")
+jvms=$(jq -r '.jvms' "$CONFIG_FILE")
 checkoutRoots=$(jq -r '.checkoutRoots' "$CONFIG_FILE")
 envVars=$(jq -r '.envVars' "$CONFIG_FILE")
 tenants=$(jq -r '.jvms' "$CONFIG_FILE")
@@ -58,7 +58,7 @@ for jvm in $requestedJvms; do
     if [[ "$found" != "true" ]]; then 
       errors="$errors\nJVM $jvm is requested by a module but is not defined in 'jvms'"
     else   
-     javaHome=$(jq --arg jvm "$jvm" --arg home "$HOME" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";$home)' "$CONFIG_FILE")
+     javaHome=$(jq --arg jvm "$jvm" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$CONFIG_FILE")
      if [ ! -d "$javaHome" ]; then
        errors="$errors\nSpecified path to Java [$javaHome] not found on this file system"
      fi
@@ -75,7 +75,7 @@ for dir in $requestedCheckoutDirs; do
     if [[ "$found" != "true" ]]; then 
       errors="$errors\nCheckout directory $dir is requested by a module but is not defined in 'checkoutRoots'"
     else 
-      directory=$(jq --arg dir "$dir" --arg home "$HOME" -r '.checkoutRoots[] | select(.symbol == $dir).directory | sub("~";$home)' "$CONFIG_FILE")
+      directory=$(jq --arg dir "$dir" -r '.checkoutRoots[] | select(.symbol == $dir).directory | sub("~";env.HOME)' "$CONFIG_FILE")
       if [ ! -d "$directory" ]; then
         errors="$errors\nSpecified check-out directory [$directory] not found on this file system"
       fi
@@ -99,7 +99,7 @@ for mod in $modules ; do
         errors="$errors\nMissing configuration for $mod: 'deployment.method'.\n"
       fi
     else 
-      checkedOutTo=$(jq --arg symbol "$checkedOutToSymbol" --arg home "$HOME" -r '.checkoutRoots[] | select(.symbol == $symbol).directory | sub("~";$home)' "$CONFIG_FILE")
+      checkedOutTo=$(jq --arg symbol "$checkedOutToSymbol" -r '.checkoutRoots[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$CONFIG_FILE")
       if [[ ! -d "$checkedOutTo/$mod" ]]; then
         errors="$errors\nNo check-out of $mod found at $checkedOutTo/$mod\n"
       fi

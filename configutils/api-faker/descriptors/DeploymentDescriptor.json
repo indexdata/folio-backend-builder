@@ -1,0 +1,7 @@
+{
+    "srvcId": "mod-fake-1.0.0",
+    "nodeId": "localhost",
+    "descriptor": { 
+      "exec": "" 
+    }
+}

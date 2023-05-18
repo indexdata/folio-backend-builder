@@ -7,22 +7,17 @@ moduleConfig() {
 }
 
 checkoutRoot() {
-  jq --arg dir "$1" -r '.checkoutRoots[] | select(.symbol == $dir).directory' "$2"
+  jq --arg dir "$1" -r '.checkoutRoots[] | select(.symbol == $dir).directory | sub("~";env.HOME)' "$2"
 }
 
 jvm() {
-  jq --arg jvm "$1" -r '.jvms[] | select(.symbol == $jvm).home' "$2"
+  jq --arg jvm "$1" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$2"
 }
 
 baseDir() {
   symbol=$(moduleConfig "$1" "$2" | jq -r '.checkedOutTo')
   dir=$(checkoutRoot "$symbol" "$2")
-  if [[ "$dir" =~ ^\~.* ]]
-    then
-      echo "$HOME${dir#\~}"
-    else 
-      echo "${dir#null}"
-  fi
+  echo "${dir/#null}"
 }
 
 javaHome() {

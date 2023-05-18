@@ -42,7 +42,7 @@ function setPgHostInModuleDescriptor() {
   moduleName=$1
   thisHost=$(hostname -I | { read first rest ; echo $first ; })
   baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
-  newMd=$(jq --arg pgHost $thisHost -r '(.launchDescriptor.env[] | select(.name == "DB_HOST")).value=$pgHost ' "$baseDir/$moduleName/target/ModuleDescriptor.json") 
+  newMd=$(jq --arg pgHost "$thisHost" -r '(.launchDescriptor.env[] | select(.name == "DB_HOST")).value=$pgHost ' "$baseDir/$moduleName/target/ModuleDescriptor.json")
   echo "$newMd" > "$baseDir/$moduleName/target/ModuleDescriptor.json" 
 }
 
@@ -56,7 +56,7 @@ function registerAndDeploy() {
   method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
   moduleId=$(idFromModuleDescriptor "$moduleName" "$CONFIG_FILE")
   if [[ "$method" == "DOCKER" ]]; then
-      setPgHostInModuleDescriptor $moduleName
+      setPgHostInModuleDescriptor "$moduleName"
   fi
   echo "Register $moduleId"
   curl -w '\n' -D - -H "Content-type: application/json" -d @"$baseDir"/"$moduleName"/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules
@@ -73,6 +73,22 @@ function registerAndDeploy() {
 # Basic infrastructure to be able to create a user with credentials and permissions
 tenants=$(tenants "$CONFIG_FILE")
 curl -w '\n' -D - -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants
+
+# Deploy fake APIs if any
+if [[ "null" != "$(jq -r '.fakeApis.provides' "$CONFIG_FILE")" ]]; then
+  pathToFaker="$workdir/configutils/api-faker"
+  provides="$(jq -r '.fakeApis.provides' "$CONFIG_FILE")"
+  if [ ! -f "$pathToFaker/target/mod-fake-fat.jar" ];  then
+    mvn clean install -f "$pathToFaker"
+  fi
+  moduleDescriptor=$(jq --argjson provides "$provides" '.provides=$provides' "$pathToFaker/descriptors/ModuleDescriptor.json")
+  curl -w '\n' -D - -H "Content-type: application/json" -d "$moduleDescriptor" http://localhost:9130/_/proxy/modules
+  deploymentDescriptor=$(jq --arg jarPath "$pathToFaker/target" -r '(.descriptor.exec)="java -Dport=%p -DlogLevel=INFO -jar "+$jarPath+"/mod-fake-fat.jar"' "$pathToFaker/descriptors/DeploymentDescriptor.json")
+  curl -w '\n' -D - -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
+  curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "mod-fake-1.0.0"}' http://localhost:9130/_/proxy/tenants/diku/modules
+fi
+printf "Press enter "; read -r
+
 basicModules=$(jq -r '.basicModules[] | .name' "$CONFIG_FILE")
 for name in $basicModules; do
   registerAndDeploy "$name" "$CONFIG_FILE"
@@ -82,6 +98,8 @@ for name in $basicModules; do
     curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules
   fi
 done
+
+
 
 # Creating a user with credentials and initial permissions
 users=$(users "$CONFIG_FILE")

@@ -47,10 +47,6 @@
       "directory": "~/folio"
     },
     {
-      "symbol": "GIT-OLE",
-      "directory": "~/git-ole"
-    },
-    {
       "symbol": "GIT-ID",
       "directory": "~/gitprojects"
     }
@@ -93,6 +89,18 @@
       "env": []
     }
   ],
+  "fakeApis": {
+    "provides": [
+      {
+        "id": "source-storage-records",
+        "version": "3.0"
+      },
+      {
+        "id": "instance-authority-links",
+        "version": "2.0"
+      }  
+    ]
+  },
   "moduleConfigs": [
     {
       "name": "mod-permissions",
