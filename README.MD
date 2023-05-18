@@ -310,7 +310,7 @@ In separate windows: Start Kafka
 ```   
 In a separate window: Clean up past installations from the database and start Okapi
 ```
-./clean-db-start-okapi.sh ~/folio
+./clean-db-start-okapi.sh ~/folio    # <- use actual location of the Okapi checkout directory
 ```
 Then, create the target directory for the module check-outs, and, in `/.../folio-backend-builder`, run the clone-compile, validate, and install scripts:
 ```
