@@ -296,14 +296,11 @@ When complete, the configuration can be checked with
 
 `./configutils/validate-config.sh   projects/clone-and-compile-demo.json` 
 
-The clone and compile script can be pointed to an existing directory. If a given check-out directory already exists, the script will not Git clone that module, and if the directory contains the build directory, `/target`, the script will not `mvn install`.  
+The clone and compile script can be pointed to an existing directory with module check-outs in it already. If a given module check-out directory already exists, the script will not `git clone` that module, and if the directory contains the build directory, `/target`, the script will not `mvn install`.  
 
-This also means that a clone-and-compile job can be resumed after an interruption, or it can add new modules to the directory later. 
-
+This also means that a clone-and-compile job can be resumed after an interruption, or it can add new modules to the directory later without touching the existing ones. 
 
 ## All-in-one
-
-
 In separate windows: Start Kafka
 ```
 .[kafka-install]/bin/zookeeper-server-start.sh config/zookeeper.properties`
