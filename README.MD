@@ -64,7 +64,7 @@ createuser -P --superuser folio_admin   # When it asks for a password, enter fol
 
 Following actions can be performed before each new run of the modules installation script to clean up previous installations.
 
-### Create the modules database, potentially removing previously installed modules first
+#### Create the modules database, potentially removing previously installed modules first
 
 Clean up first: 
 `./postgresdb/drop-pgdb-okapi_modules-and-roles.sh`
@@ -72,7 +72,7 @@ Clean up first:
 Create the database (again): 
 `./postgresdb/create-pg-okapi_modules.sh`
 
-### Initialize Okapi database and start Okapi
+#### Initialize Okapi database and start Okapi
 
 Assuming Okapi is checked out to (and installed in) ~/folio, do:
 
@@ -80,7 +80,7 @@ Assuming Okapi is checked out to (and installed in) ~/folio, do:
 
 `java -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar dev`
 
-### Script for the above (clean up database, start Okapi)
+#### A script for all of the above (clean up database, start Okapi)
 
 `./clean-db-start-okapi.sh`
 
@@ -118,7 +118,7 @@ The installation process requires at least seven basic modules to be installed. 
 All other modules are optional, though often inter-dependencies will require one to be present for another to work.
 
 
-`basicModules`  holds the list of modules required by the installation script (though not necessarily required in the particular versions). 
+The array `basicModules` holds the list of modules required by the installation script. Module `version` is optional and only used for information. For example it can be used to flag that an installed version happens not to be the declared version.  
 
 ```
 "basicModules" : [
