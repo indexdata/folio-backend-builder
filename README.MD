@@ -218,25 +218,25 @@ Many modules use one of a few standard sets of environment variables. The module
 With the above basic system dependent settings defined, each module to install can be configured. For example: 
 
 ``` 
- { 
-    "name": "mod-circulation-storage",     
-    "checkedOutTo": "GIT-FOLIO",
-    "gitHost": "https://github.com/folio-org",
-    "requiredBy": [
-        "mod-circulation",
-        "mod-inventory",
-        "mod-feesfines",
-        "mod-template-engine"
-    ],
-    "deployment": {
-        "method": "DD",
-        "env": "STANDARD-PG",
-        "jvm": "JAVA11",
-        "pathToJar": "target/mod-circulation-storage-fat.jar"
-    },
-    "permissions": [
-        "circulation-storage.all"
-    ]
+{ 
+   "name": "mod-circulation-storage",     
+   "checkedOutTo": "GIT-FOLIO",
+   "gitHost": "https://github.com/folio-org",
+   "requiredBy": [
+       "mod-circulation",
+       "mod-inventory",
+       "mod-feesfines",
+       "mod-template-engine"
+   ],
+   "deployment": {
+       "method": "DD",
+       "env": "STANDARD-PG",
+       "jvm": "JAVA11",
+       "pathToJar": "target/mod-circulation-storage-fat.jar"
+   },
+   "permissions": [
+       "circulation-storage.all"
+   ]
 }
 ```
 The property `requiredBy` are is optional/informational. Keeping notes of interdependencies here can be convenient when wanting to include or exclude modules from the package. 
@@ -274,11 +274,12 @@ config if desired.
 A module can also be skipped by renaming the property `name`. Name it `skipped` instead for example:
 
 ```
-{ "name": "mod-patron-blocks",           "version": "1.9.0-SNAPSHOT"},
-{ "name": "mod-calendar",                "version": "2.4.3-SNAPSHOT"},
-{ "name": "mod-notes",                   "version": "5.1.0-SNAPSHOT"},
-{ "skipped": "mod-circulation",             "version": "23.6.0-SNAPSHOT"},
-{ "skipped": "mod-inventory",               "version": "20.1.0-SNAPSHOT"}
+"selectedModules": [
+    { "name": "mod-calendar",                "version": "2.4.3-SNAPSHOT"},
+    { "name": "mod-notes",                   "version": "5.1.0-SNAPSHOT"},
+    { "skipped": "mod-circulation",             "version": "23.6.0-SNAPSHOT"},
+    { "skipped": "mod-inventory",               "version": "20.1.0-SNAPSHOT"}
+]
 ```
 
 The `version` is informational and optional. It might eventually be used for flagging if a checked out version is not the specified version.
