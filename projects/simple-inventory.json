@@ -53,20 +53,16 @@
     {
       "symbol": "GIT-ID",
       "directory": "~/gitprojects"
-    },
-    {
-      "symbol": "GIT-NE",
-      "directory": "~/gitne"
     }
   ],
   "jvms": [
     {
       "symbol": "JAVA11",
-      "home": "/usr/lib/jvm/java-11-openjdk-amd64/"
+      "home": "/usr/lib/jvm/java-11-openjdk-amd64"
     },
     {
       "symbol": "JAVA17",
-      "home": "/usr/lib/jvm/java-17-openjdk-amd64/"
+      "home": "/usr/lib/jvm/java-17-openjdk-amd64"
     }
   ],
   "envVars": [

@@ -17,7 +17,7 @@ The order of operations of the `install-folio.sh` is roughly:
 Before the script can be run, following environment must be in place. There are helper scripts in this project for some of these tasks.
 
 * Postgres installed and running.
-* Kafka installed and running.
+* Kafka installed and running. 
 * Docker (if any modules should be deployed as Docker containers)
 * Postgres has the user `okapi` and database `okapi` (see below)
 * Postgres has the user `folio_admin` and database `okapi_modules` (see below)
@@ -26,63 +26,71 @@ Before the script can be run, following environment must be in place. There are 
 * Okapi and FOLIO modules are compiled. Some perhaps dockerized.
 * Okapi is started (see below)
 
+Apache Maven is required for compiling Okapi and modules.
+
+For compiling and running the modules, multiple versions of Java may be required, depending on which modules are included. At the time of writing JDK 8 should be phased out for most modules but JDK 11, 17, and 18 seems to be in play. Most modules and Okapi will compile and run with JDK 11 (Okapi should still be able to run with JDK 8 actually). 
+
 Finally, `curl` and `jq` are required for the module installation script.
 
-## Create the Postgres databases and database users and start Okapi
+The main Folio guides describes in details the software versions required, how to set up the databases etc, and options for building and starting Okapi. 
 
-The main Folio guides, and especially the Okapi guide have the best descriptions of software required, how to set up the databases etc, and optioons for building and starting Okapi. 
-
-* [Okapi READE](https://github.com/folio-org/okapi/blob/master/README.md)
+* [Developer Setup](https://dev.folio.org/guides/developer-setup/)
 * [Compiling and running Okapi](https://github.com/folio-org/okapi/blob/master/doc/guide.md#compiling-and-running)
 * [Okapi storage](https://github.com/folio-org/okapi/blob/master/doc/guide.md#storage)
+* [Okapi README](https://github.com/folio-org/okapi/blob/master/README.md)
 
-What follows is thus the bare minimum extract from those guides for one way to get Okapi ready for the module installation script.
+For Kafka, perhaps see [Kafka quickstart](https://kafka.apache.org/quickstart)
 
-#### Create Okapi user and database in Postgres (once)
 
+## One time preparation of the database
+
+### Create okapi user, okapi database, folio_admin user in Postgres (once)
+
+Create okapi user
 ```
 sudo -u postgres -i
 createuser -P okapi   # When it asks for a password, enter okapi25
 createdb -O okapi okapi
 ```
 
-#### Create super user folio_admin (once)
-
-Creates the Postgres user that modules will use for creating their database schema in the `okapi_modules` database.
+Create folio_admin user that modules will use for access their database schema in the `okapi_modules` database.
 
 `./postgresdb/create-pg-superuser-folio-admin.sh`
 
-#### Initialize Okapi database and start Okapi
 
-Assuming Okapi is checked out to ~/folio, do:
+## Recurring preparations of the database and Okapi
 
-`java -Dport=8600 -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar initdatabase` (if needed/desired before start - see Okapi guide)
+Following actions can be performed before each new run of the modules installation script. 
+
+### Create the modules database, potentially removing previously installed modules first
+
+Clean up first: 
+`./postgresdb/drop-pgdb-okapi_modules-and-roles.sh`
+Create: 
+`./postgresdb/create-pg-okapi_modules.sh`
+
+### Initialize Okapi database and start Okapi
+
+Assuming Okapi is checked out to (and installed in) ~/folio, do:
+
+`java -Dport=8600 -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar initdatabase` 
 
 `java -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar dev`
 
-Alternatively use  `export FOLIO=~/folio; ./okapi/init-db-start-okapi.sh`  
+### Script for the above (clean up database, start Okapi)and start Okapi
 
-#### Create the modules database, potentially removing previously installed modules first
+`./clean-db-start-okapi.sh`
 
-`./postgresdb/create-pg-okapi_modules.sh`
+## Install the modules
 
-or 
+Now the installation script can be run; pass in a selected project configuration JSON, for example:
 
-`./postgresdb/drop-and-recreate-okapi-modules-database.sh`
+`./install-folio.sh projects/simple-inventory.json`  
 
-
-## Install all modules
-
-Now run the installation script while passing in a selected project configuration JSON, for example:
-
-`./install-folio.sh projects/simple-inventory.json`  for a minimal install
-
-`./install-folio.sh projects/my-folio.json` for a larger - though by no means complete - FOLIO. It contains 20+ modules.
-
-The installation process requires at least seven basic modules to be installed. These are modules making it possible to create users and give them credentials and permissions. All other modules are optional, though often inter-dependencies will require one to be present for another to work.
+`./install-folio.sh projects/my-folio.json` 
 
 
-## Configuration details
+## Validate the configuration first?
 
 It's possible to validate a given configuration file using [validate-config.sh](configutils/validate-config.sh)
 
@@ -94,13 +102,20 @@ The validation script will
  * Check that declared JVM paths and check-out directories exist in the file system. 
  * Check that basic as well as selected modules are checked out and compiled, with required artifacts present in the file system
 
-Creating a JSON schema for the configuration JSON is work-in-progress.
+ `./configutils/validate-config.sh projects/my-folio.json`
 
-Here follows a walk-through of the sections in the configuration file.
+## Configuration details
+
+Here follows a walk-through of the different sections of the configuration file.
 
 ### Basic modules
 
-`basicModules`  holds the list modules required by the installation script, though not necessarily in particular versions. 
+The installation process requires at least seven basic modules to be installed. These are modules making it possible to create users and give them credentials and permissions.  
+
+All other modules are optional, though often inter-dependencies will require one to be present for another to work.
+
+
+`basicModules`  holds the list of modules required by the installation script (though not necessarily required in the particular versions). 
 
 ```
 "basicModules" : [
@@ -114,88 +129,96 @@ Here follows a walk-through of the sections in the configuration file.
 ]
 ```
 
-### Host dependent settings
+### System dependent settings
 
 #### Sample directory locations settings
 
+This sections defines, where on the file system, the modules to install are checked out.  If using ~/folio for this there is no need to change anything here. 
+
+The settings control both where the automatic git clone and mvn install script checks the projects out to, and where the install-folio script picks them up. 
+
+If one wanted to create a new platform next to the main development environment,  GIF-FOLIO might be changed to "~/folio-tmp".  
+
 ```
-    "checkoutRoots": [
-        {
-            "symbol": "GIT-FOLIO",
-            "directory": "~/folio"
-        },
-        {
-            "symbol": "GIT-OLE",
-            "directory": "~/git-ole"
-        },
-        {
-            "symbol": "GIT-ID",
-            "directory": "~/gitprojects"
-        },
-        {
-            "symbol": "GIT-NE",
-            "directory": "~/gitne"
-        }
-    ]
+"checkoutRoots": [
+    {
+        "symbol": "GIT-FOLIO",
+        "directory": "~/folio"
+    },
+    {
+        "symbol": "GIT-OLE",
+        "directory": "~/git-ole"
+    },
+    {
+        "symbol": "GIT-ID",
+        "directory": "~/gitprojects"
+    }
+]
 ```
 
 #### Sample JVM settings
 
+Most modules build and run with Java 11, a few require 17 or 18 to compile.
+
 ```
 "jvms": [
-        {
-            "symbol": "JAVA11",
-            "home": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java"
-        },
-        {
-            "symbol": "JAVA17",
-            "home": "/usr/lib/jvm/java-17-openjdk-amd64/bin/java"
-        },
-    ]
+    {
+        "symbol": "JAVA11",
+        "home": "/usr/lib/jvm/java-11-openjdk-amd64/bin/java"
+    },
+    {
+        "symbol": "JAVA17",
+        "home": "/usr/lib/jvm/java-17-openjdk-amd64/bin/java"
+    },
+    {
+        "symbol": "JAVA18",
+        "home": "~/.jdks/openjdk-18.0.2.1"
+    }
+]
 ```
 #### Standard environment variables
 Many modules use one of a few standard sets of environment variables. The module configuration can reference one of them or supply a specific set of variables of its own. Here is a sample of standard sets:
 
 ```
 "envVars": [
-        {
-            "symbol": "STANDARD-PG",
-            "env": [
-                { "name": "DB_HOST", "value": "localhost"},
-                { "name": "DB_PORT", "value": 5432},
-                { "name": "DB_USERNAME", "value": "folio_admin" },
-                { "name": "DB_PASSWORD", "value": "folio_admin" },
-                { "name": "DB_DATABASE", "value": "okapi_modules" }
-            ]
-        },
-        {
-            "symbol": "STANDARD-PG-KAFKA",
-            "env": [
-                { "name": "DB_HOST", "value": "localhost"},
-                { "name": "DB_PORT", "value": 5432},
-                { "name": "DB_USERNAME", "value": "folio_admin" },
-                { "name": "DB_PASSWORD", "value": "folio_admin" },
-                { "name": "DB_DATABASE", "value": "okapi_modules" },
-                { "name": "KAFKA_HOST", "value": "localhost"},
-                { "name": "KAFKA_PORT", "value": "9092" }
-            ]
-        },
-        {
-            "symbol": "NO-ENV-VARS",
-            "env": []
-        }
-    ],
+    {
+        "symbol": "STANDARD-PG",
+        "env": [
+            { "name": "DB_HOST", "value": "localhost"},
+            { "name": "DB_PORT", "value": 5432},
+            { "name": "DB_USERNAME", "value": "folio_admin" },
+            { "name": "DB_PASSWORD", "value": "folio_admin" },
+            { "name": "DB_DATABASE", "value": "okapi_modules" }
+        ]
+    },
+    {
+        "symbol": "STANDARD-PG-KAFKA",
+        "env": [
+            { "name": "DB_HOST", "value": "localhost"},
+            { "name": "DB_PORT", "value": 5432},
+            { "name": "DB_USERNAME", "value": "folio_admin" },
+            { "name": "DB_PASSWORD", "value": "folio_admin" },
+            { "name": "DB_DATABASE", "value": "okapi_modules" },
+            { "name": "KAFKA_HOST", "value": "localhost"},
+            { "name": "KAFKA_PORT", "value": "9092" }
+        ]
+    },
+    {
+        "symbol": "NO-ENV-VARS",
+        "env": []
+    }
+]
 ```
 
 ### Module configurations
 
-With the above, basic system dependent settings defined, each module to install can be configured. For example: 
+With the above basic system dependent settings defined, each module to install can be configured. For example: 
 
 ``` 
  { 
     "name": "mod-circulation-storage",     
     "checkedOutTo": "GIT-FOLIO",
-    "githost": "https://github.com/folio-org",
+    "gitHost": "https://github.com/folio-org",
     "requiredBy": [
         "mod-circulation",
         "mod-inventory",
@@ -213,9 +236,10 @@ With the above, basic system dependent settings defined, each module to install 
     ]
 }
 ```
-The properties `githost` and `requiredBy` are optional/informational. 
+The property `requiredBy` are is optional/informational. Keeping notes of interdependencies here can be convenient when wanting to include or exclude modules from the package. 
 
-With these settings the installation script will find the module, create a deployment descriptor (unless deployment method is DOCKER), and deploy.
+The property `gitHost` is used by the script that clones and compiles modules, but it will default to `https://github.com/folio-org` so only need to be set for modules residing in other organisations. 
+
 
 #### Method of deployment
 For modules that are deployed using a deployment descriptor, the `deployment.method` should be "DD". Otherwise the install script will assume that the module descriptor has a launch descriptor, like is usually the case for Docker based deployment.
@@ -256,62 +280,57 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 
 The `version` is informational and optional. It might eventually be used for flagging if a checked out version is not the specified version.
 
-## A one liner for cleaning up the database, validating the config, and installing the modules
-```
-cd ~/folio-backend-builder ; clear; \
-./postgresdb/drop-and-recreate-okapi-modules-database.sh;\
-./configutils/validate-config.sh projects/my-folio.json; read;\
-./install-folio.sh projects/my-folio.json
-```
+## Git cloning and Maven installing modules.
 
-## Automating cloning, compiling and installation of modules.
+The script `clone-and-compile.sh` can be run on a configuration file to check out all the basic and selected modules from Git, and compile (mvn install) them. 
+For example, create an empty directory, like ~/folio-modules. Define the check-out directories in the configuration file to point to that base directory (see `clone-and-compile-demo.json`).
 
-The script `clone-and-compile.sh` can be run on a configuration file to check out all the basic and selected modules from Git, and compile (mvn install) them. Subsequently the compiled modules can be installed to a running Okapi using install-folio.sh against the same configuration files.
+Then run  
 
-For example, create an empty directory, like ~/tmp/folio-clone. Define the check-out directories in the configuration file to point to that base directory.
+`./clone-and-compile.sh  projects/clone-and-compile-demo.json`
 
-Then run  `./clone-and-compile.sh  projects/clone-and-compile-demo.json`   This is a small install with just the seven base modules and two selected modules. 
+The script should tell what it's planning to do and ask for yes or no to continue.
 
-When complete, the configuration can be checked with `./configutils/validate-config.sh   projects/clone-and-compile-demo.json` 
+When complete, the configuration can be checked with 
 
-Finally the install can be run against a ready Okapi with `./install-folio.sh   projects/clone-and-compile-demo.json` 
+`./configutils/validate-config.sh   projects/clone-and-compile-demo.json` 
+
+The clone and compile script can be pointed to an existing directory. If a given check-out directory already exists, the script will not Git clone that module, and if the directory contains the build directory, `/target`, the script will not `mvn install`.  
+
+This also means that a clone-and-compile job can be resumed after an interruption, or it can add new modules to the directory later. 
 
 
 ## All-in-one
 
 
-Create empty directory `~/tmp/folio-clone`
+In separate windows: Start Kafka
+```
+.[kafka-install]/bin/zookeeper-server-start.sh config/zookeeper.properties`
+.[kafka-install]/bin/kafka-server-start.sh config/server.properties` 
+```   
+In a separate window: Clean up past installations from the database and start Okapi
+```
+./clean-db-start-okapi.sh ~/folio
+```
+Then, create the target directory for the module check-outs, and, in `/.../folio-backend-builder`, run the clone-compile, validate, and install scripts:
+```
+# Create empty directory `~/folio-modules`
 
-Clone modules from git and compile them (the demo config file is set up for that directory)
+mkdir ~/folio-modules
 
-`./clone-and-compile.sh   projects/clone-and-compile-demo.json`
+# Clone the selected modules from git and compile them 
 
-Clean up previous installations from Postgres for good measure
+./clone-and-compile.sh   projects/clone-and-compile-demo.json
 
-`./postgresdb/drop-pgdb-okapi_modules-and-roles.sh`
+# Run the validations and take a moment to check results
 
-`./postgresdb/create-pgdb-okapi_modules.sh`
+./configutils/validate-config.sh projects/clone-and-compile-demo.json
+printf "Press Enter " ; read
 
-Start Kafka 
-`./bin/zookeeper-server-start.sh config/zookeeper.properties`
+# Install the modules to Okapi
 
-`./bin/kafka-server-start.sh config/server.properties` 
-
-
-Initialize Okapi's database and start Okapi
-
-`java -Dport=8600 -Dstorage=postgres -jar /path/to/okapi/okapi-core/target/okapi-core-fat.jar initdatabase`
-
-`java -Dport_start=9152 -Dport_end=9199 -Dstorage=postgres -jar /path/to/okapi/okapi-core/target/okapi-core-fat.jar dev`
-
-Validate the modules configuration in clone-and-compile-demo.json
-
-`./configutils/validate-config.sh projects/clone-and-compile-demo.json`
-
-Install modules to Okapi
-
-`./install-folio.sh projects/clone-and-compile-demo.json`
-
+./install-folio.sh projects/clone-and-compile-demo.json
+```
 
 It should now be possible to log in as `diku_admin/admin` and GET some instances from `/instance-storage/instances`.
 

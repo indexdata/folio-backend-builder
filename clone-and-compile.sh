@@ -41,7 +41,7 @@ else
   printf "\nCheck-out directories:\n" 
   dirSymbols=$(jq -r '.moduleConfigs | unique_by(.checkedOutTo)[].checkedOutTo' "$CONFIG_FILE")
   for dirSymbol in $dirSymbols ; do
-    printf "%s:%s\n" $dirSymbol "$(checkoutRoot "$dirSymbol" "$CONFIG_FILE")"
+    printf "%s:%s\n" "$dirSymbol" "$(checkoutRoot "$dirSymbol" "$CONFIG_FILE")"
   done
 fi 
 printf "\n\n"
@@ -63,22 +63,23 @@ for moduleName in $moduleNames ; do
   gitHost=${gitHost/#null/"https://github.com/folio-org"}
   if [ -d "$baseDir" ]; then
     if [ ! -d "$modulePath" ]; then
-      printf "\n`date` Cloning %s to %s from %s/%s\n" "$moduleName" "$baseDir" "$gitHost" "$moduleName"
+      printf "\n$(date) Cloning %s to %s from %s/%s\n" "$moduleName" "$baseDir" "$gitHost" "$moduleName"
       git clone -q --recurse-submodules "$gitHost/$moduleName"  "$modulePath"
     fi
     if [ ! -f "$modulePath/target/ModuleDescriptor.json" ]; then
-      printf "`date` Compiling %s in %s\n" "$moduleName" "$modulePath"
+      printf "$(date) Compiling %s in %s\n" "$moduleName" "$modulePath"
       javaHome=$(javaHome "$moduleName" "$CONFIG_FILE")
       javaHome=${javaHome#null/""}
       javaHome=${javaHome/#~/$HOME}
       printf "Using JAVA_HOME: %s\n" "$javaHome"
-      dir=`pwd`
-      cd $modulePath
+      dir=$(pwd)
+      cd "$modulePath" || return
       export JAVA_HOME="$javaHome" ; mvn -q clean install -D skipTests
-      cd $dir
+      cd "$dir" || return
     fi
   else 
     printf "Cannot clone %s to %s. Directory does not exist.\n" "$moduleName" "$baseDir"   
   fi  
 done
-printf "\nFinished\n"   
+
+printf "\nStarted %s. Finished %s\n" "$started" "$(date)"
