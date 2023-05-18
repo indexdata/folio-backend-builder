@@ -350,3 +350,5 @@ relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip
 
 #### Script for easy re-deploy
 
+#### Faked APIs 
+To avoid pulling in a large dependency tree that's not needed for some immediate development task, a required API can be faked and thus enable the dependent module to be installed without it. This is done in some examples using a module from OLE's repository ("mod-shared-index-muted-apis") that is freely claiming to provide different APIs at different times. This could be generalized more and the configuration could provide the list of APIs it wants emulated.   
