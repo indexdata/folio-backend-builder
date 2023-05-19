@@ -5,8 +5,12 @@ workdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 CONFIG_FILE=$1
 if [[ -z "$CONFIG_FILE" ]]; then
-  echo "Please provide JSON config file listing and configuring modules to be install:  ./install-folio.sh projects/my-folio.json"
+  printf "Please provide JSON config file listing and configuring modules to be install:  ./install-folio.sh projects/my-folio.json\n"
   exit
+fi
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  printf "\n\nError: Could not find JSON config file [%s]. Have to bail, sorry.\n\n" "$CONFIG_FILE"
+  exit 
 fi
 started=$(date)
 
@@ -49,7 +53,7 @@ function setPgHostInModuleDescriptor() {
 function registerAndDeploy() {
   moduleName=$1
   if [[ -z $(moduleConfig "$moduleName" "$CONFIG_FILE") ]]; then
-    echo "ERROR: No configuration found in $CONFIG_FILE for $moduleName"
+    print "ERROR: No configuration found in %s for %s. Have to bail, sorry." "$CONFIG_FILE" "$moduleName"
     exit
   fi
   baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
