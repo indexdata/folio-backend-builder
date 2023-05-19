@@ -12,7 +12,7 @@ else
   fi
 fi
 
-errors=""
+Errors=()
 
 ### 
 echo "* Checking that major properties are present"
@@ -21,9 +21,10 @@ selectedModules=$(jq -r '.selectedModules' "$CONFIG_FILE")
 jvms=$(jq -r '.jvms' "$CONFIG_FILE")
 checkoutRoots=$(jq -r '.checkoutRoots' "$CONFIG_FILE")
 envVars=$(jq -r '.envVars' "$CONFIG_FILE")
-tenants=$(jq -r '.jvms' "$CONFIG_FILE")
-users=$(jq -r '.jvms' "$CONFIG_FILE")
-moduleConfigs=$(jq -r '.jvms' "$CONFIG_FILE")
+tenants=$(jq -r '.tenants' "$CONFIG_FILE")
+users=$(jq -r '.users' "$CONFIG_FILE")
+moduleConfigs=$(jq -r '.moduleConfigs' "$CONFIG_FILE")
+
 
 if [[ "$basicModules" == "null" || "$selectedModules" == "null" || "$jvms" == "null" || "$checkoutRoots" == "null" 
       || "$envVars" == "null" || "$tenants" == "null" || "$users" == "null" || "$moduleConfigs" == "null" ]]; then 
@@ -34,7 +35,7 @@ fi
 for name in mod-permissions mod-users mod-login mod-password-validator mod-authtoken mod-configuration mod-users-bl ; do
   found=$(jq --arg name "$name" -r ' .basicModules | any(.name == $name) ' "$CONFIG_FILE")
   if [[ "$found"  != "true" ]]; then
-    errors="$errors\nBasic module $name is missing. Users and authentication will not work without it"  
+    Errors=("${Errors[@]}" "Basic module $name is missing. Users and authentication will not work without it")
   fi
 done
 
@@ -45,7 +46,7 @@ for mod in $selectedModules; do
   found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
   if [[ -z "$found" ]]
     then
-      errors="$errors\nNo configuration found for selected module: $mod"
+      Errors=("${Errors[@]}" "No configuration found for selected module: $mod")
   fi
 done
 
@@ -56,11 +57,11 @@ for jvm in $requestedJvms; do
   if [[ ! "$jvm" == "null" ]]; then
     found=$(jq --arg jvm "$jvm" -r '.jvms | any(.symbol == $jvm)' "$CONFIG_FILE")
     if [[ "$found" != "true" ]]; then 
-      errors="$errors\nJVM $jvm is requested by a module but is not defined in 'jvms'"
+      Errors=("${Errors[@]}" "JVM $jvm is requested by a module but is not defined in 'jvms'")
     else   
      javaHome=$(jq --arg jvm "$jvm" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$CONFIG_FILE")
      if [ ! -d "$javaHome" ]; then
-       errors="$errors\nSpecified path to Java [$javaHome] not found on this file system"
+       Errors=("${Errors[@]}" "Specified path to Java [$javaHome] not found on this file system")
      fi
     fi
   fi
@@ -73,11 +74,11 @@ for dir in $requestedCheckoutDirs; do
   if [[ "$dir" != "null" ]]; then
     found=$(jq --arg dir "$dir" -r '.checkoutRoots | any(.symbol == $dir)' "$CONFIG_FILE")
     if [[ "$found" != "true" ]]; then 
-      errors="$errors\nCheckout directory $dir is requested by a module but is not defined in 'checkoutRoots'"
+      Errors=("${Errors[@]}" "Checkout directory $dir is requested by a module but is not defined in 'checkoutRoots'")
     else 
       directory=$(jq --arg dir "$dir" -r '.checkoutRoots[] | select(.symbol == $dir).directory | sub("~";env.HOME)' "$CONFIG_FILE")
       if [ ! -d "$directory" ]; then
-        errors="$errors\nSpecified check-out directory [$directory] not found on this file system"
+        Errors=("${Errors[@]}" "Specified check-out directory [$directory] not found on this file system")
       fi
     fi
   fi
@@ -93,44 +94,44 @@ for mod in $modules ; do
     methodSymbol=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.method' "$CONFIG_FILE")
     if [[ "$checkedOutToSymbol" == "null" || "$methodSymbol" == "null"  ]]; then
       if [[ "$checkedOutToSymbol" == "null" ]]; then
-        errors="$errors\nMissing configuration for $mod: 'checkedOutTo'.\n"
+        Errors=("${Errors[@]}" "Missing configuration for $mod: 'checkedOutTo'.")
       fi
       if [[ "$methodSymbol" == "null" ]]; then
-        errors="$errors\nMissing configuration for $mod: 'deployment.method'.\n"
+        Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.method'.")
       fi
     else 
       checkedOutTo=$(jq --arg symbol "$checkedOutToSymbol" -r '.checkoutRoots[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$CONFIG_FILE")
       if [[ ! -d "$checkedOutTo/$mod" ]]; then
-        errors="$errors\nNo check-out of $mod found at $checkedOutTo/$mod\n"
+        Errors=("${Errors[@]}" "No check-out of $mod found at $checkedOutTo/$mod")
       fi
       if [[ "$methodSymbol" == "DD" ]]; then
         pathToJar=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.pathToJar' "$CONFIG_FILE")
         jvm=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.jvm' "$CONFIG_FILE")
         env=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.env' "$CONFIG_FILE")
         if [ "$pathToJar" == "null" ]; then
-          errors="$errors\nMissing configuration for $mod: 'deployment.pathToJar'.\n"
+          Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.pathToJar'.")
         fi      
         if [ "$jvm" == "null" ]; then
-          errors="$errors\nMissing configuration for $mod: 'deployment.jvm'.\n"
+          Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.jvm'.")
         fi 
         if [ "$env" == "null" ]; then
-          errors="$errors\nMissing configuration for $mod: 'deployment.env'.\n"
+          Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.env'.")
         fi 
         if [[ -d "$checkedOutTo/$mod" && "$pathToJar" != "null" ]]; then
           if [ ! -d "$checkedOutTo/$mod" ]; then
-            errors="$errors\nModule directory [$checkedOutTo/$mod] not found.\n"
+            Errors=("${Errors[@]}" "Module directory [$checkedOutTo/$mod] not found.")
           elif [ ! -d "$checkedOutTo/$mod/target" ]; then
-            errors="$errors\n$mod's checkout directory found but it doesn't seem to be built (no /target) [$checkedOutTo/$mod/target]\n"
+            Errors=("${Errors[@]}" "$mod's checkout directory found but it doesn't seem to be built. No /target at [$checkedOutTo/$mod/target]")
           elif [ ! -f "$checkedOutTo/$mod/$pathToJar" ]; then
-            errors="$errors\n$mod's checkout directory with subdir /target found but cannot find the requested jar file [$checkedOutTo/$mod/$pathToJar]\n"
+            Errors=("${Errors[@]}" "$mod's checkout directory with subdir /target found but cannot find the requested jar file [$checkedOutTo/$mod/$pathToJar]")
           elif [ ! -f "$checkedOutTo/$mod/target/ModuleDescriptor.json" ]; then
-            errors="$errors\nFound module directory and jar file but cannot find a module descriptor at  $checkedOutTo/$mod/target/ModuleDescriptor.json\n"
+            Errors=("${Errors[@]}" "Found module directory and jar file but cannot find a module descriptor at  $checkedOutTo/$mod/target/ModuleDescriptor.json")
           fi
         fi
       fi
 
       specifiedVersion=$(jq --arg name "$mod" -r '(.basicModules, .selectedModules)[] | select(.name == $name) | .version ' "$CONFIG_FILE")
-      if [[ -d "$checkedOutTo/$mod" ]]; then
+      if [[ -f "$checkedOutTo/$mod/target/ModuleDescriptor.json"  ]]; then
         installedVersion=$(jq -r '.id' "$checkedOutTo/$mod/target/ModuleDescriptor.json")
         printf "\n  - %-40s" "$installedVersion"
         if [[ "$specifiedVersion" != "null" && "$installedVersion" != "$mod-$specifiedVersion" ]]; then
@@ -140,14 +141,17 @@ for mod in $modules ; do
     fi
     permissions=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).permissions' "$CONFIG_FILE")
     if [[ "$permissions" == "null" ]]; then
-      errors="$errors\nMissing configuration for $mod: 'permissions'.\n"
+      Errors=("${Errors[@]}" "Missing configuration for $mod: 'permissions'.")
     fi
   fi
 done
 
 ### Report
-if [[ -z "$errors" ]]; then
+if [ "${#Errors[@]}" == "0" ]; then
   printf "\n\nConfiguration [%s] looks good!\n\n" "$CONFIG_FILE"
 else 
-  printf "\n\nERROR: %s\n" "$errors"
+  printf "\n\nValidation failed: %s\n\n" 
+  for i in "${Errors[@]}"; do
+    printf "  * %s\n" "$i"
+  done
 fi  
