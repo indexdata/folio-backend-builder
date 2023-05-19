@@ -121,7 +121,7 @@ for mod in $modules ; do
           if [ ! -d "$checkedOutTo/$mod" ]; then
             Errors=("${Errors[@]}" "Module directory [$checkedOutTo/$mod] not found.")
           elif [ ! -d "$checkedOutTo/$mod/target" ]; then
-            Errors=("${Errors[@]}" "$mod's checkout directory found but it doesn't seem to be built. No /target at [$checkedOutTo/$mod/target]")
+            Errors=("${Errors[@]}" "$mod's checkout directory found but the module doesn't seem to be built. No /target at [$checkedOutTo/$mod/target]")
           elif [ ! -f "$checkedOutTo/$mod/$pathToJar" ]; then
             Errors=("${Errors[@]}" "$mod's checkout directory with subdir /target found but cannot find the requested jar file [$checkedOutTo/$mod/$pathToJar]")
           elif [ ! -f "$checkedOutTo/$mod/target/ModuleDescriptor.json" ]; then
@@ -129,7 +129,6 @@ for mod in $modules ; do
           fi
         fi
       fi
-
       specifiedVersion=$(jq --arg name "$mod" -r '(.basicModules, .selectedModules)[] | select(.name == $name) | .version ' "$CONFIG_FILE")
       if [[ -f "$checkedOutTo/$mod/target/ModuleDescriptor.json"  ]]; then
         installedVersion=$(jq -r '.id' "$checkedOutTo/$mod/target/ModuleDescriptor.json")
@@ -146,7 +145,49 @@ for mod in $modules ; do
   fi
 done
 
-### Report
+### Check for provisions of required interfaces (on ID level, not version level)
+Provided=()
+Required=()
+unmet=""
+for mod in $modules ; do
+  if [ -f "$checkedOutTo/$mod/target/ModuleDescriptor.json" ]; then
+      required=$(jq -r '. | if has("requires") then .requires[] | .id + " " else "" end' "$checkedOutTo/$mod/target/ModuleDescriptor.json")
+      provided=$(jq -r '. | if has("provides") then .provides[] | .id + " " else "" end' "$checkedOutTo/$mod/target/ModuleDescriptor.json")
+      for req in $required ; do
+        Required=("${Required[@]}" "$req")
+      done
+      for prov in $provided ; do
+        Provided=("${Provided[@]}" "$prov")
+      done
+  fi
+done
+faked=$(jq -r '. | if has("fakeApis") then .fakeApis.provides[] | .id + "" else "" end' "$CONFIG_FILE")
+for api in $faked; do
+  Provided=("${Provided[@]}" "$api") 
+done  
+for i in "${Required[@]}"; do
+  met=false
+  for j in "${Provided[@]}"; do
+    if [[ "$j" == "$i" ]]; then
+       met=true
+    fi    
+  done
+  if ! $met; then
+     unmet="$unmet $i "    
+  fi   
+done
+if (( ${#unmet} > 0 )); then
+  Errors=("${Errors[@]}" "There are unmet interface dependencies:  $unmet")
+fi
+
+
+### Report results
+if (( ${#faked} > 0 )); then
+  printf "\n\nThe installation is faking these interfaces: "
+  for api in $faked; do
+    printf "%s " "$api"
+  done 
+fi
 if [ "${#Errors[@]}" == "0" ]; then
   printf "\n\nConfiguration [%s] looks good!\n\n" "$CONFIG_FILE"
 else 
