@@ -87,8 +87,10 @@ if [[ "null" != "$(jq -r '.fakeApis.provides' "$CONFIG_FILE")" ]]; then
   curl -w '\n' -D - -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules
   curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "mod-fake-1.0.0"}' http://localhost:9130/_/proxy/tenants/diku/modules
 fi
-printf "Press enter "; read -r
 
+### Install basic and selective modules
+
+# Install basic modules
 basicModules=$(jq -r '.basicModules[] | .name' "$CONFIG_FILE")
 for name in $basicModules; do
   registerAndDeploy "$name" "$CONFIG_FILE"
@@ -98,8 +100,6 @@ for name in $basicModules; do
     curl -w '\n' -D - -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules
   fi
 done
-
-
 
 # Creating a user with credentials and initial permissions
 users=$(users "$CONFIG_FILE")

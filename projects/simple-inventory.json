@@ -159,19 +159,6 @@
       "permissions": []
     },
     {
-      "name": "mod-shared-index-muted-apis",
-      "checkedOutTo": "GIT-OLE",
-      "gitHost": "https://github.com/openlibraryenvironment",
-      "requiredBy": [],
-      "deployment": {
-        "method": "DD",
-        "env": "NO-ENV-VARS",
-        "jvm": "JAVA11",
-        "pathToJar": "target/mod-shared-index-muted-apis-fat.jar"
-      },
-      "permissions": []
-    },
-    {
       "name": "mod-inventory-storage",
       "checkedOutTo": "GIT-FOLIO",
       "gitHost": "https://github.com/folio-org",
