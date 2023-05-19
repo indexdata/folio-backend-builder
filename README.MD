@@ -99,7 +99,7 @@ Now the installation script can be run; pass in a selected project configuration
 
 ## Validate the configuration first?
 
-It's possible to validate a given configuration file using [validate-config.sh](configutils/validate-config.sh)
+It's possible to validate a given configuration file using [validate-config.sh](validate-config.sh)
 
 The validation script will
 

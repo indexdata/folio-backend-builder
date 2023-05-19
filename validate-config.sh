@@ -11,11 +11,9 @@ else
     exit
   fi
 fi
-
 Errors=()
 
-### 
-echo "* Checking that major properties are present"
+printf "* Checking that the major, required sections are present in the JSON config\n"
 basicModules=$(jq -r '.basicModules' "$CONFIG_FILE")
 selectedModules=$(jq -r '.selectedModules' "$CONFIG_FILE")
 jvms=$(jq -r '.jvms' "$CONFIG_FILE")
@@ -24,14 +22,13 @@ envVars=$(jq -r '.envVars' "$CONFIG_FILE")
 tenants=$(jq -r '.tenants' "$CONFIG_FILE")
 users=$(jq -r '.users' "$CONFIG_FILE")
 moduleConfigs=$(jq -r '.moduleConfigs' "$CONFIG_FILE")
-
-
 if [[ "$basicModules" == "null" || "$selectedModules" == "null" || "$jvms" == "null" || "$checkoutRoots" == "null" 
       || "$envVars" == "null" || "$tenants" == "null" || "$users" == "null" || "$moduleConfigs" == "null" ]]; then 
   printf "\n! Could not validate [%s] because one or more basic configuration elements are missing.\n" "$CONFIG_FILE"
   exit
 fi  
 
+printf "* Checking that the seven basic user infrastructure modules are selected\n"
 for name in mod-permissions mod-users mod-login mod-password-validator mod-authtoken mod-configuration mod-users-bl ; do
   found=$(jq --arg name "$name" -r ' .basicModules | any(.name == $name) ' "$CONFIG_FILE")
   if [[ "$found"  != "true" ]]; then
@@ -39,8 +36,7 @@ for name in mod-permissions mod-users mod-login mod-password-validator mod-autht
   fi
 done
 
-###
-echo "* Checking that configurations exist for all basic modules and optional (selected) modules"
+printf "* Checking that configurations exist for all basic modules and all selected modules\n"
 selectedModules=$(jq -r '(.basicModules, .selectedModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
 for mod in $selectedModules; do
   found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
@@ -50,8 +46,7 @@ for mod in $selectedModules; do
   fi
 done
 
-###
-echo "* Checking that the JVMs that are requested by modules are also defined in the configuration and exist on the file system"
+printf "* Checking that the JVMs that are requested by modules are also defined in the configuration and exist on the file system\n"
 requestedJvms=$(jq -r '.moduleConfigs | unique_by(.deployment.jvm)[].deployment.jvm' "$CONFIG_FILE")
 for jvm in $requestedJvms; do
   if [[ ! "$jvm" == "null" ]]; then
@@ -67,8 +62,7 @@ for jvm in $requestedJvms; do
   fi
 done
 
-###
-echo "* Checking that Git checkout directories that are referenced by modules are also defined in the configuration and exist on the file system"
+printf "* Checking that Git checkout directories that are referenced by modules are also defined in the configuration and exist on the file system\n"
 requestedCheckoutDirs=$(jq -r '.moduleConfigs | unique_by(.checkedOutTo)[].checkedOutTo' "$CONFIG_FILE")
 for dir in $requestedCheckoutDirs; do
   if [[ "$dir" != "null" ]]; then
@@ -84,8 +78,7 @@ for dir in $requestedCheckoutDirs; do
   fi
 done
 
-###
-echo "* Checking that basic and selected modules are checked out and built"
+printf "* Checking that basic and selected modules are checked out and built\n"
 modules=$(jq -r ' (.selectedModules, .basicModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
 for mod in $modules ; do
   found=$(jq --arg mod $mod -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
@@ -145,7 +138,7 @@ for mod in $modules ; do
   fi
 done
 
-### Check for provisions of required interfaces (on ID level, not version level)
+printf "* Checking that all interfaces that are required are also provided or faked. Checking interface id level only, not for required versions\n"
 Provided=()
 Required=()
 unmet=""
@@ -180,10 +173,9 @@ if (( ${#unmet} > 0 )); then
   Errors=("${Errors[@]}" "There are unmet interface dependencies:  $unmet")
 fi
 
-
 ### Report results
 if (( ${#faked} > 0 )); then
-  printf "\n\nThe installation is faking these interfaces: "
+  printf "\n\nThe installation has fakes for these interfaces: "
   for api in $faked; do
     printf "%s " "$api"
   done 
@@ -191,7 +183,7 @@ fi
 if [ "${#Errors[@]}" == "0" ]; then
   printf "\n\nConfiguration [%s] looks good!\n\n" "$CONFIG_FILE"
 else 
-  printf "\n\nValidation failed: %s\n\n" 
+  printf "\n\nValidation failed:\n\n"
   for i in "${Errors[@]}"; do
     printf "  * %s\n" "$i"
   done
