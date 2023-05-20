@@ -77,10 +77,16 @@ for moduleName in $moduleNames ; do
       javaHome=$(javaHome "$moduleName" "$CONFIG_FILE")
       javaHome=${javaHome#null/""}
       javaHome=${javaHome/#~/$HOME}
+      method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
       printf ", using JAVA_HOME: %s\n" "$javaHome"
       dir=$(pwd)
       cd "$modulePath" || return
       export JAVA_HOME="$javaHome" ; mvn -q clean install -D skipTests
+      if [[ "$method" == "DOCKER" ]]; then
+        dockerImage=$(jq -r '.launchDescriptor.dockerImage' "$modulePath/target/ModuleDescriptor.json")
+        printf "Building container %s" "$dockerImage"
+        docker build -t "$dockerImage" .
+      fi
       cd "$dir" || return
     fi
   else 
