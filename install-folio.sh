@@ -1,6 +1,6 @@
-# Installs listed modules. User diku_admin is created as soon as permissions, users, and login is in place. 
-# This is so that permissions can be assigned to diku_admin on a module by module basis.
-#
+# Installs all selected modules. User diku_admin is created once basic user infrastructure is in place,
+#so that permissions can be assigned to diku_admin during subsequent module installations.
+
 workdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 CONFIG_FILE=$1
@@ -14,23 +14,32 @@ if [[ ! -f "$CONFIG_FILE" ]]; then
 fi
 started=$(date)
 
+# Import jq functions for retrieving installation instructions from the passed-in configuration file
+source "$workdir/configutils/jsonConfigReader.sh"
+
+# Functions for: Error reporting, manipulation of descriptors, registration and deployment.
+
+## Error reporting functions
 Errors=()
 format="\nSTATUS::%{response_code}\nURL::%{url}"
+function statusCode() {
+  formattedResponse="$1"
+  printf "%s\n " "$formattedResponse" | sed -n -e 's/STATUS:://p'
+}
+function logError() {
+  Errors=("${Errors[@]}" "$1")
+}
 function report() {
   resp="$1"
-  status=$(printf "%s\n " "$resp" | sed -n -e 's/STATUS:://p')
+  status=$(statusCode "$resp")
   if [[ " 200 201 " == *"$status"* ]]; then
     printf " OK.\n";
   else
-    Errors=("${Errors[@]}" "$resp")
+    logError "$resp"
     printf "%s\n" "$resp"
   fi
 }
-
-# Import jq functions for retrieving settings from the config file
-source "$workdir/configutils/jsonConfigReader.sh"
-
-# Assembles DeploymentDescriptors from the JSON configuration using the config reader
+## Will assemble a deployment descriptor from the JSON configuration using the config reader
 function deploymentDescriptor() {
   moduleName="$1"
   id="$2"
@@ -46,7 +55,7 @@ function deploymentDescriptor() {
               "env": '"$env"' }}'
   fi
 }
-# Retrieves the ID from the module descriptor in the checked out module's /target/ directory
+## Will retrieve the ID from the module descriptor in the checked-out module's /target directory
 function idFromModuleDescriptor() {
   moduleName=$1
   baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
@@ -54,13 +63,12 @@ function idFromModuleDescriptor() {
   if [[ -f "$mdPath" ]]; then
     jq -r '.id' "$mdPath"
   else
-    Errors=("${Errors[@]}" "Could not find $mdPath (module not compiled)?")
+    logError "Could not find module descriptor in $baseDir/$moduleName (module not compiled?)"
     echo ""
   fi
 }
-
-# For docker based deployment, PG_HOST is changed from the common 'postgres' to the IP of this host
-# It's not known if the method for obtaining the host IP below is cross-platform.
+## For docker based deployment, PG_HOST is changed from the common 'postgres' to the IP of this host
+## It's not known if the method for obtaining the host IP below is cross-platform.
 function setPgHostInModuleDescriptor() {
   moduleName=$1
   thisHost=$(hostname -I | { read first rest ; echo $first ; })
@@ -68,11 +76,11 @@ function setPgHostInModuleDescriptor() {
   newMd=$(jq --arg pgHost "$thisHost" -r '(.launchDescriptor.env[] | select(.name == "DB_HOST")).value=$pgHost ' "$baseDir/$moduleName/target/ModuleDescriptor.json")
   echo "$newMd" > "$baseDir/$moduleName/target/ModuleDescriptor.json" 
 }
-
+## Will post partly generated, partly static ModuleDescriptors and DeploymentDescriptors to Okapi.
 function registerAndDeploy() {
   moduleName=$1
   if [[ -z $(moduleConfig "$moduleName" "$CONFIG_FILE") ]]; then
-    print "ERROR: No configuration found in %s for %s. Have to bail, sorry." "$CONFIG_FILE" "$moduleName"
+    printf "ERROR: No configuration found in %s for %s. Have to bail." "$CONFIG_FILE" "$moduleName"
     exit
   fi
   baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
@@ -89,21 +97,22 @@ function registerAndDeploy() {
       then
         deploymentDescriptor=$(deploymentDescriptor "$moduleName" "$moduleId" "$CONFIG_FILE")
         report "$(curl -s -w "$format" -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules)"
-
     else
         report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"srvcId": "'"$moduleId"'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules)"
     fi
   else
-    Errors=("${Errors[@]}" "Could not find module id. $moduleName not being installed. ")
+    logError "Could not find module id. $moduleName not being installed. "
   fi
 }
 
-# Basic infrastructure to be able to create a user with credentials and permissions
+# Main installation routines
+
+## Basic user infrastructure to be able to create a user with credentials and permissions
+### Create tenant
 tenants=$(tenants "$CONFIG_FILE")
 printf "Create tenant %s " "$tenants"
-report "$(curl  -s -w "$format" -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants)"
-
-# Deploy fake APIs if any
+report "$(curl -s -w "$format" -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants)"
+### Deploy fake APIs, if any
 if [[ "null" != "$(jq -r '.fakeApis.provides' "$CONFIG_FILE")" ]]; then
   pathToFaker="$workdir/configutils/api-faker"
   provides="$(jq -r '.fakeApis.provides' "$CONFIG_FILE")"
@@ -119,10 +128,7 @@ if [[ "null" != "$(jq -r '.fakeApis.provides' "$CONFIG_FILE")" ]]; then
   printf "Enable faker for diku."
   report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "mod-fake-1.0.0"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
 fi
-
-### Install basic and selective modules
-
-# Install basic modules
+### Install basic modules
 basicModules=$(jq -r '.basicModules[] | .name' "$CONFIG_FILE")
 for name in $basicModules; do
   registerAndDeploy "$name" "$CONFIG_FILE"
@@ -132,8 +138,7 @@ for name in $basicModules; do
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
   fi
 done
-
-# Creating a user with credentials and initial permissions
+### Create a user with credentials and initial permissions
 users=$(users "$CONFIG_FILE")
 printf "Create user diku_admin. "
 report "$(curl -s -w "$format" -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d "$users" http://localhost:9130/users)"
@@ -146,11 +151,13 @@ PU_ID=$(curl -s -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d
     "permissions" : ["perms.all", "login.all", "users.all", "configuration.all"]}' http://localhost:9130/perms/users | jq -r '.id')
 if [[ "$PU_ID" == "null" ]]; then
   printf "Error: There was a problem giving diku_admin initial permissions."
-  Errors=("${Errors[@]}" "There was a problem giving diku_admin initial permissions.")
+  logError "There was a problem giving diku_admin initial permissions."
 else
   printf " OK.\n"
 fi
-# Install selected modules
+
+## Install selected/optional modules
+
 selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name' "$CONFIG_FILE")
 for name in $selectedModules; do
   registerAndDeploy "$name"
@@ -165,7 +172,7 @@ for name in $selectedModules; do
     respAssign="$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$moduleId"'", "action": "enable"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
     report "$respAssign"
   fi
-  status=$(printf "%s\n " "$respAssign" | sed -n -e 's/STATUS:://p')
+  status=$(statusCode "$respAssign")
   if [[ " 200 201 " == *"$status"* ]]; then
     userPermissions=$(permissions "$name" "$CONFIG_FILE")
     for permission in $userPermissions; do
@@ -178,6 +185,8 @@ for name in $selectedModules; do
   fi
 done
 
+## Enable authentication
+
 printf "Locks down module access to authenticated users\n"
 authId=$(idFromModuleDescriptor "mod-authtoken" )
 printf "Assign mod-authtoken to DIKU. "
@@ -187,6 +196,9 @@ printf "Assign mod-users-bl to DIKU. "
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$usersId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
 printf "Finished."
 
+# Reporting
+
+## Report any errors
 if [ "${#Errors[@]}" == "0" ]; then
   printf "\n\nThe installation of [%s] completed!\n\n" "$CONFIG_FILE"
 else
@@ -196,6 +208,7 @@ else
   done
   printf "\n\n************************************************\ni^The installation had errors^\n\n"
 fi
+## Report results
 echo ""
 echo "Installation of a FOLIO using '$CONFIG_FILE' was started at $started"
 echo "Ended at $(date)"
