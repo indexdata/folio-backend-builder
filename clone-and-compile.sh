@@ -84,8 +84,8 @@ for moduleName in $moduleNames ; do
       export JAVA_HOME="$javaHome" ; mvn -q clean install -D skipTests
       if [[ "$method" == "DOCKER" ]]; then
         dockerImage=$(jq -r '.launchDescriptor.dockerImage' "$modulePath/target/ModuleDescriptor.json")
-        printf "Building container %s" "$dockerImage"
-        docker build -t "$dockerImage" .
+        printf "Building docker image %s\n" "$dockerImage"
+        docker build -q -t "$dockerImage" .
       fi
       cd "$dir" || return
     fi
