@@ -81,7 +81,7 @@ done
 printf "* Checking that basic and selected modules are checked out and built\n"
 modules=$(jq -r ' (.selectedModules, .basicModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
 for mod in $modules ; do
-  found=$(jq --arg mod $mod -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
+  found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
   if [[ -n "$found" ]]; then
     checkedOutToSymbol=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).checkedOutTo' "$CONFIG_FILE")
     methodSymbol=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.method' "$CONFIG_FILE")
@@ -138,7 +138,7 @@ for mod in $modules ; do
   fi
 done
 
-printf "* Checking that all interfaces that are required are also provided or faked. Checking interface id level only, not for required versions\n"
+printf "\n\n* Checking that all interfaces that are required are also provided (or faked). Checking interface id level only, not for required versions\n"
 Provided=()
 Required=()
 unmet=""
@@ -175,7 +175,7 @@ fi
 
 ### Report results
 if (( ${#faked} > 0 )); then
-  printf "\n\nThe installation has fakes for these interfaces: "
+  printf "\nThe installation has fakes for these interfaces: "
   for api in $faked; do
     printf "%s " "$api"
   done 

@@ -187,17 +187,23 @@ done
 
 ## Enable authentication
 
-printf "Locks down module access to authenticated users\n"
+printf "\nLock down module access to authenticated users\n"
 authId=$(idFromModuleDescriptor "mod-authtoken" )
 printf "Assign mod-authtoken to DIKU. "
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$authId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
 usersId=$(idFromModuleDescriptor "mod-users-bl" )
 printf "Assign mod-users-bl to DIKU. "
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$usersId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
-printf "Finished."
 
 # Reporting
 
+## Report results
+
+printf "\n\nInstallation of a FOLIO using %s finished\n\n" "$CONFIG_FILE"
+printf "Started: %s\n" "$started"
+printf "Ended:   %s\n" "$(date)"
+printf "\nInstalled modules, diku:\n"
+curl -s http://localhost:9130/_/proxy/tenants/diku/modules | jq -r '.[].id'
 ## Report any errors
 if [ "${#Errors[@]}" == "0" ]; then
   printf "\n\nThe installation of [%s] completed!\n\n" "$CONFIG_FILE"
@@ -206,12 +212,5 @@ else
   for i in "${Errors[@]}"; do
     printf "  * %s\n" "$i"
   done
-  printf "\n\n************************************************\ni^The installation had errors^\n\n"
+  printf "\nThe installation had errors\n************************************************\n\n"
 fi
-## Report results
-echo ""
-echo "Installation of a FOLIO using '$CONFIG_FILE' was started at $started"
-echo "Ended at $(date)"
-echo "Installed modules, diku:" 
-echo " "
-curl -s http://localhost:9130/_/proxy/tenants/diku/modules | jq -r '.[].id'

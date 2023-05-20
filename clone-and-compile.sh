@@ -9,39 +9,45 @@ started=$(date)
 
 # Import jq functions for retrieving settings from the config file
 source "$workdir/configutils/jsonConfigReader.sh"
-
+printf "\nGit clone and Maven install of selected modules"
+printf "\n***********************************************\n"
+# Checking file system status for all requested modules
 moduleNames=$(jq -r '(.basicModules, .selectedModules)[] | .name ' "$CONFIG_FILE")
 clone=""
 compile=""
 skip=""
+printf "\nChecking file system status of selected modules\n"
 for moduleName in $moduleNames ; do
   baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
   modulePath="$baseDir/$moduleName"
   if [ -d "$baseDir" ]; then
     if [ -d "$modulePath" ]; then
       if [ -f "$modulePath/target/ModuleDescriptor.json" ]; then
+        printf " - %-30s Build found: %s/target/ModuleDescriptor.json\n" "$moduleName" "$modulePath"
         skip="$skip $moduleName"
-      else 
+      else
+        printf " - %-30s Detected no build in %s\n" "$moduleName" "$modulePath"
         compile="$compile $moduleName"  
       fi
-    else 
+    else
+      printf " - %-30s Module check-out not found in %s\n" "$moduleName" "$baseDir"
       clone="$clone $moduleName"
       compile="$compile $moduleName"
     fi
   else 
-    printf "Cannot clone %s to %s. Directory does not exist.\n" "$moduleName" "$baseDir"   
+    printf "Cannot check out %s to %s. Directory does not exist.\n" "$moduleName" "$baseDir"
   fi
 done
 if [[ -z "$cloneAndCompile" && -z "$compile" ]]; then
-  printf "All modules already cloned and compiled: %s" "$skip"
+  printf "\nAll selected modules already checked out and compiled."
 else
-  printf "Will clone %s\n" "${clone:-"no modules"}"
-  printf "Will compile %s\n" "${compile:-"no modules"}"
-  printf "Skipping %s\n" "${skip:-none}"
-  printf "\nCheck-out directories:\n" 
+  printf "\nWill clone:   %s\n" "${clone:-" NONE"}"
+  printf "Will compile: %s\n" "${compile:-" NONE"}"
+  printf "Skipping:     %s\n" "${skip:-" NONE"}"
+  printf "\nUsing check-out directories "
   dirSymbols=$(jq -r '.moduleConfigs | unique_by(.checkedOutTo)[].checkedOutTo' "$CONFIG_FILE")
   for dirSymbol in $dirSymbols ; do
-    printf "%s:%s\n" "$dirSymbol" "$(checkoutRoot "$dirSymbol" "$CONFIG_FILE")"
+    printf "%s:%s " "$dirSymbol" "$(checkoutRoot "$dirSymbol" "$CONFIG_FILE")"
   done
 fi 
 printf "\n\n"
@@ -67,11 +73,11 @@ for moduleName in $moduleNames ; do
       git clone -q --recurse-submodules "$gitHost/$moduleName"  "$modulePath"
     fi
     if [ ! -f "$modulePath/target/ModuleDescriptor.json" ]; then
-      printf "$(date) Compiling %s in %s\n" "$moduleName" "$modulePath"
+      printf "$(date) Compiling %s in %s" "$moduleName" "$modulePath"
       javaHome=$(javaHome "$moduleName" "$CONFIG_FILE")
       javaHome=${javaHome#null/""}
       javaHome=${javaHome/#~/$HOME}
-      printf "Using JAVA_HOME: %s\n" "$javaHome"
+      printf ", using JAVA_HOME: %s\n" "$javaHome"
       dir=$(pwd)
       cd "$modulePath" || return
       export JAVA_HOME="$javaHome" ; mvn -q clean install -D skipTests
@@ -82,4 +88,5 @@ for moduleName in $moduleNames ; do
   fi  
 done
 
-printf "\nStarted %s. Finished %s\n" "$started" "$(date)"
+printf "\nStarted   %s" "$started"
+printf "\nFinished  %s\n" "$(date)"

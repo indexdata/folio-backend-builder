@@ -1,15 +1,6 @@
 {
     "description": "Template FOLIO configuration.",
 
-    "basicModules" : [
-        { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
-        { "name": "mod-users",              "version": "19.2.0-SNAPSHOT"},
-        { "name": "mod-login",              "version": "7.10.0-SNAPSHOT"},
-        { "name": "mod-password-validator", "version": "3.1.1-SNAPSHOT"},
-        { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT"},
-        { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT"},
-        { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
-    ],
     "selectedModules": [
         { "name": "mod-inventory-storage",       "version": "26.1.0-SNAPSHOT" },
         { "name": "mod-pubsub",                  "version": "2.10.0-SNAPSHOT" },
@@ -26,37 +17,16 @@
         { "name": "mod-circulation",             "version": "23.6.0-SNAPSHOT"},
         { "name": "mod-inventory",               "version": "20.1.0-SNAPSHOT"}
     ],
-    "tenants": [
-        {
-            "id": "diku",
-            "name": "Datalogisk Institut",
-            "description": "Danish Library Technology Institute"
-        }
-    ],
-    "users": [
-        {
-            "user": {
-                "username" : "diku_admin",
-                "id" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
-                "active" : true,
-                "proxyFor" : [ ],
-                "personal" : {
-                    "lastName" : "ADMINISTRATOR",
-                    "firstName" : "DIKU",
-                    "email" : "admin@diku.example.org",
-                    "addresses" : [ ]
-                }
-            },
-            "credentials" : {
-                "userId":"1ad737b0-d847-11e6-bf26-cec0c932ce01",
-                "password":"admin" 
-            }
-        }
-    ],
+    "fakeApis": {
+        "provides": [
+            { "id": "source-storage-records", "version": "3.0" },
+            { "id": "instance-authority-links", "version": "2.0" }
+        ]
+    },
     "checkoutRoots": [
         {
             "symbol": "GIT-FOLIO",
-            "directory": "~/folio"
+            "directory": "~/folio-modules"
         },
         {
             "symbol": "GIT-ID",
@@ -77,46 +47,6 @@
             "home": "~/.jdks/openjdk-18.0.2.1"
         }
     ],
-    "envVars": [
-        {
-            "symbol": "STANDARD-PG",
-            "env": [
-                { "name": "DB_HOST", "value": "localhost"},
-                { "name": "DB_PORT", "value": 5432},
-                { "name": "DB_USERNAME", "value": "folio_admin" },
-                { "name": "DB_PASSWORD", "value": "folio_admin" },
-                { "name": "DB_DATABASE", "value": "okapi_modules" }
-            ]
-        },
-        {
-            "symbol": "STANDARD-PG-KAFKA",
-            "env": [
-                { "name": "DB_HOST", "value": "localhost"},
-                { "name": "DB_PORT", "value": 5432},
-                { "name": "DB_USERNAME", "value": "folio_admin" },
-                { "name": "DB_PASSWORD", "value": "folio_admin" },
-                { "name": "DB_DATABASE", "value": "okapi_modules" },
-                { "name": "KAFKA_HOST", "value": "localhost"},
-                { "name": "KAFKA_PORT", "value": "9092" }
-            ]
-        },
-        {
-            "symbol": "NO-ENV-VARS",
-            "env": []
-        }
-    ],
-    "fakeApis": {
-        "provides": [
-            {
-                "id": "source-storage-records",
-                "version": "3.0"
-            },
-            {
-                "id": "instance-authority-links",
-                "version": "2.0"
-            }
-        ]
-    },
     "moduleConfigs": [
         {
             "name": "mod-permissions",
@@ -412,7 +342,7 @@
             ],
             "deployment": {
                 "method": "DD",
-                "env": "NO-ENV-VARS",
+                "env": [],
                 "jvm": "JAVA11",
                 "pathToJar": "target/mod-sender-fat.jar"
             },
@@ -621,6 +551,66 @@
             },
             "permissions": [
                 "inventory.all"
+            ]
+        }
+    ],
+    "basicModules" : [
+        { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
+        { "name": "mod-users",              "version": "19.2.0-SNAPSHOT"},
+        { "name": "mod-login",              "version": "7.10.0-SNAPSHOT"},
+        { "name": "mod-password-validator", "version": "3.1.1-SNAPSHOT"},
+        { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT"},
+        { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT"},
+        { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
+    ],
+    "tenants": [
+        {
+            "id": "diku",
+            "name": "Datalogisk Institut",
+            "description": "Danish Library Technology Institute"
+        }
+    ],
+    "users": [
+        {
+            "user": {
+                "username" : "diku_admin",
+                "id" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
+                "active" : true,
+                "proxyFor" : [ ],
+                "personal" : {
+                    "lastName" : "ADMINISTRATOR",
+                    "firstName" : "DIKU",
+                    "email" : "admin@diku.example.org",
+                    "addresses" : [ ]
+                }
+            },
+            "credentials" : {
+                "userId":"1ad737b0-d847-11e6-bf26-cec0c932ce01",
+                "password":"admin"
+            }
+        }
+    ],
+    "envVars": [
+        {
+            "symbol": "STANDARD-PG",
+            "env": [
+                { "name": "DB_HOST", "value": "localhost"},
+                { "name": "DB_PORT", "value": 5432},
+                { "name": "DB_USERNAME", "value": "folio_admin" },
+                { "name": "DB_PASSWORD", "value": "folio_admin" },
+                { "name": "DB_DATABASE", "value": "okapi_modules" }
+            ]
+        },
+        {
+            "symbol": "STANDARD-PG-KAFKA",
+            "env": [
+                { "name": "DB_HOST", "value": "localhost"},
+                { "name": "DB_PORT", "value": 5432},
+                { "name": "DB_USERNAME", "value": "folio_admin" },
+                { "name": "DB_PASSWORD", "value": "folio_admin" },
+                { "name": "DB_DATABASE", "value": "okapi_modules" },
+                { "name": "KAFKA_HOST", "value": "localhost"},
+                { "name": "KAFKA_PORT", "value": "9092" }
             ]
         }
     ]
