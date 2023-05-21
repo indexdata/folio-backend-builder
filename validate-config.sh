@@ -12,6 +12,16 @@ else
   fi
 fi
 Errors=()
+function gitStatus() {
+  modulePath=$1
+  gitStatus=$(git -C "$modulePath" status | head -1)  
+  if [[ "$gitStatus" == "On branch master" ]]; then
+    echo ""
+  else 
+    echo " [$gitStatus]"
+  fi
+}
+
 
 printf "* Checking that the major, required sections are present in the JSON config\n"
 basicModules=$(jq -r '.basicModules' "$CONFIG_FILE")
@@ -92,7 +102,7 @@ for mod in $modules ; do
       if [[ "$methodSymbol" == "null" ]]; then
         Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.method'.")
       fi
-    else 
+    else
       checkedOutTo=$(jq --arg symbol "$checkedOutToSymbol" -r '.checkoutRoots[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$CONFIG_FILE")
       if [[ ! -d "$checkedOutTo/$mod" ]]; then
         Errors=("${Errors[@]}" "No check-out of $mod found at $checkedOutTo/$mod")
@@ -111,13 +121,15 @@ for mod in $modules ; do
           Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.env'.")
         fi 
         if [[ -d "$checkedOutTo/$mod" && "$pathToJar" != "null" ]]; then
-          if [ ! -d "$checkedOutTo/$mod" ]; then
+          if [[ ! -d "$checkedOutTo/$mod" ]]; then
             Errors=("${Errors[@]}" "Module directory [$checkedOutTo/$mod] not found.")
-          elif [ ! -d "$checkedOutTo/$mod/target" ]; then
-            Errors=("${Errors[@]}" "$mod's checkout directory found but the module doesn't seem to be built. No /target at [$checkedOutTo/$mod/target]")
-          elif [ ! -f "$checkedOutTo/$mod/$pathToJar" ]; then
+            printf "%s/%s not found" "$checkedOutTo" "$mod"
+          elif [[ ! -d "$checkedOutTo/$mod/target" ]]; then
+            Errors=("${Errors[@]}" "$mod's checkout directory found but the module doesn't seem to be built. No /target in [$checkedOutTo/$mod]")
+            printf "\n  Can't find build for '%s'. No /target directory in %s/%s" $mod $checkedOutTo $mod
+          elif [[ ! -f "$checkedOutTo/$mod/$pathToJar" ]]; then
             Errors=("${Errors[@]}" "$mod's checkout directory with subdir /target found but cannot find the requested jar file [$checkedOutTo/$mod/$pathToJar]")
-          elif [ ! -f "$checkedOutTo/$mod/target/ModuleDescriptor.json" ]; then
+          elif [[ ! -f "$checkedOutTo/$mod/target/ModuleDescriptor.json" ]]; then
             Errors=("${Errors[@]}" "Found module directory and jar file but cannot find a module descriptor at  $checkedOutTo/$mod/target/ModuleDescriptor.json")
           fi
         fi
@@ -125,9 +137,11 @@ for mod in $modules ; do
       specifiedVersion=$(jq --arg name "$mod" -r '(.basicModules, .selectedModules)[] | select(.name == $name) | .version ' "$CONFIG_FILE")
       if [[ -f "$checkedOutTo/$mod/target/ModuleDescriptor.json"  ]]; then
         installedVersion=$(jq -r '.id' "$checkedOutTo/$mod/target/ModuleDescriptor.json")
-        printf "\n  - %-40s" "$installedVersion"
+        gitStatus=$(gitStatus "$checkedOutTo/$mod")
+        gitStatus=${gitStatus/#"On branch master"/""}
+        printf "\n  - %-40s%-30s" "$installedVersion" "$gitStatus"
         if [[ "$specifiedVersion" != "null" && "$installedVersion" != "$mod-$specifiedVersion" ]]; then
-          printf " (config declared: %s-%s)"  "$mod"  "$specifiedVersion" 
+          printf " (config said: %s-%s)"  "$mod"  "$specifiedVersion" 
         fi
       fi  
     fi
@@ -142,7 +156,9 @@ printf "\n\n* Checking that all interfaces that are required are also provided (
 Provided=()
 Required=()
 unmet=""
-for mod in $modules ; do
+for mod in $modules ; do 
+  checkedOutToSymbol=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).checkedOutTo' "$CONFIG_FILE")
+  checkedOutTo=$(jq --arg symbol "$checkedOutToSymbol" -r '.checkoutRoots[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$CONFIG_FILE")  
   if [ -f "$checkedOutTo/$mod/target/ModuleDescriptor.json" ]; then
       required=$(jq -r '. | if has("requires") then .requires[] | .id + " " else "" end' "$checkedOutTo/$mod/target/ModuleDescriptor.json")
       provided=$(jq -r '. | if has("provides") then .provides[] | .id + " " else "" end' "$checkedOutTo/$mod/target/ModuleDescriptor.json")
