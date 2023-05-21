@@ -72,3 +72,35 @@ tenants() {
   jq '.tenants[]' "$1"
 }
 
+## Will assemble a deployment descriptor with provided module name and id
+## Requires that the module is checked out to look for the MD id.
+makeDeploymentDescriptor() {
+  moduleName="$1"
+  configFile="$2"
+  method=$(deploymentMethod "$moduleName" "$configFile")
+  if [[ "$method" == "DD" ]]; then
+    jvm=$(javaHome "$moduleName" "$configFile")
+    baseDir=$(baseDir "$moduleName" "$configFile")
+    mdId=$(moduleDescriptorId "$moduleName" "$configFile")
+    jar=$(pathToJar "$moduleName" "$configFile")
+    env=$(env "$moduleName" "$configFile")
+    echo '{ "srvcId": "'"$mdId"'",  "nodeId": "localhost",
+            "descriptor": {
+              "exec": "'"$jvm"/bin/java' -Dport=%p -jar '"$baseDir"'/'"$moduleName"'/'"$jar"' -Dhttp.port=%p",
+              "env": '"$env"' }}'
+  fi
+}
+
+## Reads the module descriptor so requires that the module is checked out.
+moduleDescriptorId() {
+  moduleName=$1
+  configFile=$2
+  baseDir=$(baseDir "$moduleName" "$configFile")
+  mdPath="$baseDir/$moduleName/target/ModuleDescriptor.json"
+  if [[ -f "$mdPath" ]]; then
+    jq -r '.id' "$mdPath"
+ else
+    echo ""
+ fi
+}
+

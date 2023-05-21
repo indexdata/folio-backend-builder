@@ -7,8 +7,18 @@ if [[ -z "$CONFIG_FILE" ]]; then
 fi
 started=$(date)
 
+function gitStatus() {
+  modulePath=$1
+  gitStatus=$(git -C "$modulePath" status | head -1)  
+  if [[ "$gitStatus" == "On branch master" ]]; then
+    echo ""
+  else 
+    echo " ($gitStatus)"
+  fi
+}
+
 # Import jq functions for retrieving settings from the config file
-source "$workdir/configutils/jsonConfigReader.sh"
+source "$workdir/lib/ConfigReader.sh"
 printf "\nGit clone and Maven install of selected modules"
 printf "\n***********************************************\n"
 # Checking file system status for all requested modules
@@ -22,15 +32,17 @@ for moduleName in $moduleNames ; do
   modulePath="$baseDir/$moduleName"
   if [ -d "$baseDir" ]; then
     if [ -d "$modulePath" ]; then
+      gitStatus=$(gitStatus "$modulePath")
       if [ -f "$modulePath/target/ModuleDescriptor.json" ]; then
-        printf " - %-30s Build found: %s/target/ModuleDescriptor.json\n" "$moduleName" "$modulePath"
+        gitStatus=${gitStatus/#"On branch master"/""}
+        printf " - %-50s Build found: %s/target/ModuleDescriptor.json\n" "$moduleName$gitStatus" "$modulePath"  
         skip="$skip $moduleName"
       else
-        printf " - %-30s Detected no build in %s\n" "$moduleName" "$modulePath"
-        compile="$compile $moduleName"  
+        printf " - %-50s Detected no build in %s\n" "$moduleName $gitStatus" "$modulePath"
+        compile="$compile $moduleName$gitStatus"  
       fi
     else
-      printf " - %-30s Module check-out not found in %s\n" "$moduleName" "$baseDir"
+      printf " - %-50s Module check-out not found in %s\n" "$moduleName" "$baseDir"
       clone="$clone $moduleName"
       compile="$compile $moduleName"
     fi
@@ -72,8 +84,9 @@ for moduleName in $moduleNames ; do
       printf "\n$(date) Cloning %s to %s from %s/%s\n" "$moduleName" "$baseDir" "$gitHost" "$moduleName"
       git clone -q --recurse-submodules "$gitHost/$moduleName"  "$modulePath"
     fi
+    gitStatus=$(gitStatus $modulePath)
     if [ ! -f "$modulePath/target/ModuleDescriptor.json" ]; then
-      printf "$(date) Compiling %s in %s" "$moduleName" "$modulePath"
+      printf "$(date) Compiling %s in %s" "$moduleName$gitStatus" "$modulePath"
       javaHome=$(javaHome "$moduleName" "$CONFIG_FILE")
       javaHome=${javaHome#null/""}
       javaHome=${javaHome/#~/$HOME}

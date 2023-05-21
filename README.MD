@@ -110,7 +110,7 @@ The validation script will
 * Check that basic as well as selected modules are checked out and compiled, with required artifacts present in the file
   system
 
-`./configutils/validate-config.sh projects/my-folio.json`
+`./validate-config.sh projects/my-folio.json`
 
 ## Configuration details
 
@@ -358,7 +358,7 @@ The script should tell what it's planning to do and ask for yes or no to continu
 
 When complete, the configuration can be checked with
 
-`./configutils/validate-config.sh   projects/clone-and-compile-demo.json`
+`./validate-config.sh   projects/clone-and-compile-demo.json`
 
 The clone and compile script can be pointed to an existing directory with module check-outs in it already. If a given
 module check-out directory already exists, the script will not `git clone` that module, and if the directory contains
@@ -396,7 +396,7 @@ mkdir ~/folio-modules
 
 # Run the validations and take a moment to check results
 
-./configutils/validate-config.sh projects/clone-and-compile-demo.json
+./validate-config.sh projects/clone-and-compile-demo.json
 printf "Press Enter " ; read
 
 # Install the modules to Okapi

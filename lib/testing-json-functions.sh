@@ -1,4 +1,4 @@
-source jsonConfigReader.sh
+source ConfigReader.sh
 
 selectedModules ../projects/my-folio.json
 
@@ -22,4 +22,6 @@ env mod-permissions  ../projects/my-folio.json
 env mod-pubsub  ../projects/my-folio.json
 
 baseDir mod-permissions ../projects/my-folio.json
+
+deploymentDescriptor mod-permissions ../projects/my-folio.json
 

@@ -15,7 +15,7 @@ fi
 started=$(date)
 
 # Import jq functions for retrieving installation instructions from the passed-in configuration file
-source "$workdir/configutils/jsonConfigReader.sh"
+source "$workdir/lib/ConfigReader.sh"
 
 # Functions for: Error reporting, manipulation of descriptors, registration and deployment.
 
@@ -39,34 +39,6 @@ function report() {
     printf "%s\n" "$resp"
   fi
 }
-## Will assemble a deployment descriptor from the JSON configuration using the config reader
-function deploymentDescriptor() {
-  moduleName="$1"
-  id="$2"
-  method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
-  if [[ "$method" == "DD" ]]; then
-    jvm=$(javaHome "$moduleName" "$CONFIG_FILE")
-    dir=$(baseDir "$moduleName" "$CONFIG_FILE")
-    jar=$(pathToJar "$moduleName" "$CONFIG_FILE")
-    env=$(env "$moduleName" "$CONFIG_FILE")
-    echo '{ "srvcId": "'"$id"'",  "nodeId": "localhost",
-            "descriptor": {
-              "exec": "'"$jvm"/bin/java' -Dport=%p -jar '"$dir"'/'"$moduleName"'/'"$jar"' -Dhttp.port=%p",
-              "env": '"$env"' }}'
-  fi
-}
-## Will retrieve the ID from the module descriptor in the checked-out module's /target directory
-function idFromModuleDescriptor() {
-  moduleName=$1
-  baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
-  mdPath="$baseDir/$moduleName/target/ModuleDescriptor.json"
-  if [[ -f "$mdPath" ]]; then
-    jq -r '.id' "$mdPath"
-  else
-    logError "Could not find module descriptor in $baseDir/$moduleName (module not compiled?)"
-    echo ""
-  fi
-}
 ## For docker based deployment, PG_HOST is changed from the common 'postgres' to the IP of this host
 ## It's not known if the method for obtaining the host IP below is cross-platform.
 function setPgHostInModuleDescriptor() {
@@ -85,7 +57,7 @@ function registerAndDeploy() {
   fi
   baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
   method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
-  moduleId=$(idFromModuleDescriptor "$moduleName" "$CONFIG_FILE")
+  moduleId=$(moduleDescriptorId "$moduleName" "$CONFIG_FILE")
   if [[ -n "$moduleId" ]]; then
     if [[ "$method" == "DOCKER" ]]; then
         setPgHostInModuleDescriptor "$moduleName"
@@ -95,7 +67,7 @@ function registerAndDeploy() {
     printf "Deploy %s. " "$moduleId"
     if [[ "$method" == "DD" ]]
       then
-        deploymentDescriptor=$(deploymentDescriptor "$moduleName" "$moduleId" "$CONFIG_FILE")
+        deploymentDescriptor=$(makeDeploymentDescriptor "$moduleName" "$CONFIG_FILE")
         report "$(curl -s -w "$format" -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules)"
     else
         report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"srvcId": "'"$moduleId"'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules)"
@@ -114,7 +86,7 @@ printf "Create tenant %s " "$tenants"
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants)"
 ### Deploy fake APIs, if any
 if [[ "null" != "$(jq -r '.fakeApis.provides' "$CONFIG_FILE")" ]]; then
-  pathToFaker="$workdir/configutils/api-faker"
+  pathToFaker="$workdir/lib/api-faker"
   provides="$(jq -r '.fakeApis.provides' "$CONFIG_FILE")"
   if [ ! -f "$pathToFaker/target/mod-fake-fat.jar" ];  then
     mvn clean install -f "$pathToFaker"
@@ -133,7 +105,7 @@ basicModules=$(jq -r '.basicModules[] | .name' "$CONFIG_FILE")
 for name in $basicModules; do
   registerAndDeploy "$name" "$CONFIG_FILE"
   if [[ "$name" != "mod-authtoken" && "$name" != "mod-users-bl" ]]; then  # Activation deferred until permissions assigned for all modules.
-    moduleId=$(idFromModuleDescriptor "$name" "$CONFIG_FILE")
+    moduleId=$(moduleDescriptorId "$name" "$CONFIG_FILE")
     printf "Install %s for diku. " "$moduleId"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
   fi
@@ -161,7 +133,7 @@ fi
 selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name' "$CONFIG_FILE")
 for name in $selectedModules; do
   registerAndDeploy "$name"
-  moduleId=$(idFromModuleDescriptor "$name" )
+  moduleId=$(moduleDescriptorId "$name" "$CONFIG_FILE" )
   tenantParams=$(installParameters "$name" "$CONFIG_FILE")
   if [[ -n "$tenantParams" ]]; then
     # Has tenant init parameters - send to 'install' end-point
@@ -188,10 +160,10 @@ done
 ## Enable authentication
 
 printf "\nLock down module access to authenticated users\n"
-authId=$(idFromModuleDescriptor "mod-authtoken" )
+authId=$(moduleDescriptorId "mod-authtoken" "$CONFIG_FILE")
 printf "Assign mod-authtoken to DIKU. "
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$authId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
-usersId=$(idFromModuleDescriptor "mod-users-bl" )
+usersId=$(moduleDescriptorId "mod-users-bl" "$CONFIG_FILE" )
 printf "Assign mod-users-bl to DIKU. "
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$usersId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
 
