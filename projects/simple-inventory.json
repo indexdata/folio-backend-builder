@@ -2,50 +2,28 @@
   "description": "Template FOLIO configuration.",
 
   "basicModules" : [
-    { "name": "mod-permissions",       "version": "6.4.0-SNAPSHOT" },
-    { "name": "mod-users",             "version": "19.2.0-SNAPSHOT" },
-    { "name": "mod-login",             "version": "7.10.0-SNAPSHOT" },
-    { "name": "mod-password-validator",      "version": "3.1.0-SNAPSHOT" },
-    { "name": "mod-authtoken",               "version": "2.14.0-SNAPSHOT" },
-    { "name": "mod-configuration",           "version": "5.9.2-SNAPSHOT" },
-    { "name": "mod-users-bl",                "version": "7.6.0-SNAPSHOT"}
+    { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
+    { "name": "mod-users",              "version": "19.2.0-SNAPSHOT" },
+    { "name": "mod-login",              "version": "7.10.0-SNAPSHOT" },
+    { "name": "mod-password-validator", "version": "3.1.0-SNAPSHOT" },
+    { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT" },
+    { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT" },
+    { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
   ],
   "selectedModules": [
-    { "name": "mod-inventory-storage",       "version": "26.1.0-SNAPSHOT" },
-    { "name": "mod-inventory-update",        "version": "3.1.1-SNAPSHOT" }
+    { "name": "mod-inventory-storage",  "version": "26.1.0-SNAPSHOT" },
+    { "name": "mod-inventory-update",   "version": "3.1.1-SNAPSHOT" }
   ],
-  "tenants": [
-    {
-      "id": "diku",
-      "name": "Datalogisk Institut",
-      "description": "Danish Library Technology Institute"
-    }
-  ],
-  "users": [
-    {
-      "user": {
-        "username" : "diku_admin",
-        "id" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
-        "active" : true,
-        "proxyFor" : [ ],
-        "personal" : {
-          "lastName" : "ADMINISTRATOR",
-          "firstName" : "DIKU",
-          "email" : "admin@diku.example.org",
-          "addresses" : [ ]
-        }
-      },
-      "credentials" : {
-        "userId":"1ad737b0-d847-11e6-bf26-cec0c932ce01",
-        "password":"admin"
+  "fakeApis": {
+    "provides": [
+      {
+        "id": "fake-api",
+        "version": "1.0"
       }
-    }
-  ],
-  "checkoutRoots": [
-    {
-      "symbol": "GIT-FOLIO",
-      "directory": "~/folio"
-    },
+    ]
+  },
+  "sourceDirectory": "~/folio",
+  "alternativeDirectories": [
     {
       "symbol": "GIT-ID",
       "directory": "~/gitprojects"
@@ -61,47 +39,9 @@
       "home": "/usr/lib/jvm/java-17-openjdk-amd64"
     }
   ],
-  "envVars": [
-    {
-      "symbol": "STANDARD-PG",
-      "env": [
-        { "name": "DB_HOST", "value": "localhost"},
-        { "name": "DB_PORT", "value": 5432},
-        { "name": "DB_USERNAME", "value": "folio_admin" },
-        { "name": "DB_PASSWORD", "value": "folio_admin" },
-        { "name": "DB_DATABASE", "value": "okapi_modules" }
-      ]
-    },
-    {
-      "symbol": "STANDARD-PG-KAFKA",
-      "env": [
-        { "name": "DB_HOST", "value": "localhost"},
-        { "name": "DB_PORT", "value": 5432},
-        { "name": "DB_USERNAME", "value": "folio_admin" },
-        { "name": "DB_PASSWORD", "value": "folio_admin" },
-        { "name": "DB_DATABASE", "value": "okapi_modules" },
-        { "name": "KAFKA_HOST", "value": "localhost"},
-        { "name": "KAFKA_PORT", "value": "9092" }
-      ]
-    },
-    {
-      "symbol": "NO-ENV-VARS",
-      "env": []
-    }
-  ],
-  "fakeApis": {
-    "provides": [
-      {
-        "id": "fake-api",
-        "version": "1.0"
-      }  
-    ]
-  },
   "moduleConfigs": [
     {
       "name": "mod-permissions",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-users-bl",
         "mod-pubsub",
@@ -116,8 +56,6 @@
     },
     {
       "name": "mod-users",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "circulation",
         "inventory",
@@ -140,8 +78,6 @@
     },
     {
       "name": "mod-login",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-users-bl",
         "mod-pubsub"
@@ -156,8 +92,6 @@
     },
     {
       "name": "mod-inventory-storage",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-circulation",
         "mod-inventory",
@@ -179,8 +113,6 @@
     },
     {
       "name": "mod-password-validator",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-users-bl"
       ],
@@ -191,8 +123,6 @@
     },
     {
       "name": "mod-authtoken",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-users-bl"
       ],
@@ -206,8 +136,6 @@
     },
     {
       "name": "mod-pubsub",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy":[
         "mod-circulation",
         "mod-feesfines",
@@ -296,8 +224,6 @@
     },
     {
       "name": "mod-circulation-storage",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-circulation",
         "mod-inventory",
@@ -316,8 +242,6 @@
     },
     {
       "name": "mod-event-config",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-notify"
       ],
@@ -328,8 +252,6 @@
     },
     {
       "name": "mod-configuration",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-circulation",
         "mod-notes",
@@ -349,8 +271,6 @@
     },
     {
       "name": "mod-users-bl",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [],
       "deployment": {
         "method": "DD",
@@ -362,8 +282,6 @@
     },
     {
       "name": "mod-template-engine",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-notify"
       ],
@@ -379,8 +297,6 @@
     },
     {
       "name": "mod-email",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-sender"
       ],
@@ -397,8 +313,6 @@
     },
     {
       "name": "mod-sender",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-notify"
       ],
@@ -412,8 +326,6 @@
     },
     {
       "name": "mod-notify",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-feesfines"
       ],
@@ -426,8 +338,6 @@
     },
     {
       "name": "mod-feesfines",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-circulation"
       ],
@@ -527,8 +437,6 @@
     },
     {
       "name": "mod-patron-blocks",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-circulation"
       ],
@@ -555,8 +463,6 @@
     },
     {
       "name": "mod-calendar",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": ["mod-circulation"],
       "deployment": {
         "method": "DOCKER"
@@ -569,8 +475,6 @@
     },
     {
       "name": "mod-notes",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [
         "mod-circulation"
       ],
@@ -583,8 +487,6 @@
     },
     {
       "name": "mod-circulation",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [],
       "deployment": {
         "method": "DD",
@@ -606,8 +508,6 @@
     },
     {
       "name": "mod-inventory",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [],
       "deployment": {
         "method": "DD",
@@ -621,8 +521,6 @@
     },
     {
       "name": "mod-inventory-update",
-      "checkedOutTo": "GIT-FOLIO",
-      "gitHost": "https://github.com/folio-org",
       "requiredBy": [],
       "deployment": {
         "method": "DD",
@@ -633,6 +531,61 @@
       "permissions": [
         "inventory-update.all"
       ]
+    }
+  ],
+  "tenants": [
+    {
+      "id": "diku",
+      "name": "Datalogisk Institut",
+      "description": "Danish Library Technology Institute"
+    }
+  ],
+  "users": [
+    {
+      "user": {
+        "username" : "diku_admin",
+        "id" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
+        "active" : true,
+        "proxyFor" : [ ],
+        "personal" : {
+          "lastName" : "ADMINISTRATOR",
+          "firstName" : "DIKU",
+          "email" : "admin@diku.example.org",
+          "addresses" : [ ]
+        }
+      },
+      "credentials" : {
+        "userId":"1ad737b0-d847-11e6-bf26-cec0c932ce01",
+        "password":"admin"
+      }
+    }
+  ],
+  "envVars": [
+    {
+      "symbol": "STANDARD-PG",
+      "env": [
+        { "name": "DB_HOST", "value": "localhost"},
+        { "name": "DB_PORT", "value": 5432},
+        { "name": "DB_USERNAME", "value": "folio_admin" },
+        { "name": "DB_PASSWORD", "value": "folio_admin" },
+        { "name": "DB_DATABASE", "value": "okapi_modules" }
+      ]
+    },
+    {
+      "symbol": "STANDARD-PG-KAFKA",
+      "env": [
+        { "name": "DB_HOST", "value": "localhost"},
+        { "name": "DB_PORT", "value": 5432},
+        { "name": "DB_USERNAME", "value": "folio_admin" },
+        { "name": "DB_PASSWORD", "value": "folio_admin" },
+        { "name": "DB_DATABASE", "value": "okapi_modules" },
+        { "name": "KAFKA_HOST", "value": "localhost"},
+        { "name": "KAFKA_PORT", "value": "9092" }
+      ]
+    },
+    {
+      "symbol": "NO-ENV-VARS",
+      "env": []
     }
   ]
 }

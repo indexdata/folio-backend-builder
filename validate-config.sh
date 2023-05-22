@@ -1,154 +1,165 @@
-CONFIG_FILE=$1
+CF=$1
 
-if [[ -z "$CONFIG_FILE" ]]; then
+if [[ -z "$CF" ]]; then
   printf "\nPlease provide JSON config file to validate:  ./validate-config.sh my-folio.json\n"
   exit
 else 
-  printf "\nValidating [%s]\n\n" "$CONFIG_FILE"
-  parsed=$(jq -r '.' "$CONFIG_FILE")
+  printf "\nValidating [%s]\n\n" "$CF"
+  parsed=$(jq -r '.' "$CF")
   if [[ -z "$parsed" ]]; then
-    printf "\n! Could not validate [%s] due to parsing errors.\n" "$CONFIG_FILE"
+    printf "\n! Could not validate [%s] due to parsing errors.\n" "$CF"
     exit
   fi
 fi
 Errors=()
-function gitStatus() {
-  modulePath=$1
-  gitStatus=$(git -C "$modulePath" status | head -1)  
-  if [[ "$gitStatus" == "On branch master" ]]; then
-    echo ""
-  else 
-    echo " [$gitStatus]"
-  fi
+function logError() {
+  Errors=("${Errors[@]}" "$1")
 }
+source lib/Utils.sh
+source lib/ConfigReader.sh
+
+mainDirectory=$(sourceDirectory "$CF")
+
+if [[ -z "$mainDirectory" ]]; then
+  printf "Main (default) source directory not defined\n\n"
+else
+  printf "Main (default) source directory is [%s]\n\n" "$mainDirectory"
+fi
 
 
+if [[ -z "$mainDirectory" ]]; then
+  moduleNames=$(jq -r '(.basicModules,.selectedModules)[] | .name' "$CF")
+  for moduleName in $moduleNames ; do
+    if [[ -z "$(moduleDirectory "$moduleName" "$CF")" ]]; then
+      printf "No default source directory and no explicit source directory defined for %s\n" "$moduleName"
+      printf "Need the source directories of all modules for further validation. Exiting.\n\n"
+      exit
+    fi
+  done
+fi
 printf "* Checking that the major, required sections are present in the JSON config\n"
-basicModules=$(jq -r '.basicModules' "$CONFIG_FILE")
-selectedModules=$(jq -r '.selectedModules' "$CONFIG_FILE")
-jvms=$(jq -r '.jvms' "$CONFIG_FILE")
-sourceDirectories=$(jq -r '.sourceDirectories' "$CONFIG_FILE")
-envVars=$(jq -r '.envVars' "$CONFIG_FILE")
-tenants=$(jq -r '.tenants' "$CONFIG_FILE")
-users=$(jq -r '.users' "$CONFIG_FILE")
-moduleConfigs=$(jq -r '.moduleConfigs' "$CONFIG_FILE")
-if [[ "$basicModules" == "null" || "$selectedModules" == "null" || "$jvms" == "null" || "$sourceDirectories" == "null" 
-      || "$envVars" == "null" || "$tenants" == "null" || "$users" == "null" || "$moduleConfigs" == "null" ]]; then 
-  printf "\n! Could not validate [%s] because one or more basic configuration elements are missing.\n" "$CONFIG_FILE"
+
+if [[ "$(basicModules "$CF")" == "null" ||
+      "$(selectedModules "$CF")" == "null" ||
+      "$(jvms "$CF")" == "null" ||
+      "$(envVars "$CF")" == "null" ||
+      "$(tenants "$CF")" == "null" ||
+      "$(users "$CF")" == "null" ||
+      "$(moduleConfigs "$CF")" == "null" ]]; then
+  printf "\n! Could not validate [%s] because one or more basic configuration elements are missing.\n" "$CF"
   exit
-fi  
+fi
+
+if [[ -z "$(sourceDirectory "$CF")" && -z "$(alternativeDirectories "$CF")" ]]; then
+  printf "\n! Could not validate [%s] because both 'sourceDirectory' and 'alternativeDirectories' are missing. At least one source directory must be defined.\n" "$CF"
+  exit
+fi
 
 printf "* Checking that the seven basic user infrastructure modules are selected\n"
 for name in mod-permissions mod-users mod-login mod-password-validator mod-authtoken mod-configuration mod-users-bl ; do
-  found=$(jq --arg name "$name" -r ' .basicModules | any(.name == $name) ' "$CONFIG_FILE")
+  found=$(jq --arg name "$name" -r ' .basicModules | any(.name == $name) ' "$CF")
   if [[ "$found"  != "true" ]]; then
-    Errors=("${Errors[@]}" "Basic module $name is missing. Users and authentication will not work without it")
+    logError"Basic module $name is missing. Users and authentication will not work without it"
   fi
 done
 
 printf "* Checking that configurations exist for all basic modules and all selected modules\n"
-allModules=$(jq -r '(.basicModules, .selectedModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
+allModules=$(jq -r '(.basicModules, .selectedModules)[] | .name ' "$CF")
 for mod in $allModules; do
-  found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
+  found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CF")
   if [[ -z "$found" ]]
     then
-      Errors=("${Errors[@]}" "No configuration found for selected module: $mod")
+      logError"No configuration found for selected module: $mod"
   fi
 done
 
 printf "* Checking that the JVMs that are requested by modules are also defined in the configuration and exist on the file system\n"
-requestedJvms=$(jq -r '.moduleConfigs | unique_by(.deployment.jvm)[].deployment.jvm' "$CONFIG_FILE")
+requestedJvms=$(jq -r '.moduleConfigs | unique_by(.deployment.jvm)[].deployment.jvm' "$CF")
 for jvm in $requestedJvms; do
   if [[ ! "$jvm" == "null" ]]; then
-    found=$(jq --arg jvm "$jvm" -r '.jvms | any(.symbol == $jvm)' "$CONFIG_FILE")
+    found=$(jq --arg jvm "$jvm" -r '.jvms | any(.symbol == $jvm)' "$CF")
     if [[ "$found" != "true" ]]; then 
-      Errors=("${Errors[@]}" "JVM $jvm is requested by a module but is not defined in 'jvms'")
+      logError"JVM $jvm is requested by a module but is not defined in 'jvms'"
     else   
-     javaHome=$(jq --arg jvm "$jvm" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$CONFIG_FILE")
+     javaHome=$(jq --arg jvm "$jvm" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$CF")
      if [ ! -d "$javaHome" ]; then
-       Errors=("${Errors[@]}" "Specified path to Java [$javaHome] not found on this file system")
+       logError"Specified path to Java [$javaHome] not found on this file system"
      fi
     fi
   fi
 done
 
-printf "* Checking that Git checkout directories that are referenced by modules are also defined in the configuration and exist on the file system\n"
-allModules=$(jq -r '(.basicModules, .selectedModules)[] | .name ' "$CONFIG_FILE")
-requestedCheckoutDirs=$(jq -r '(.basicModules,.selectedModules) | unique_by(.sourceDirectory)[].sourceDirectory' "$CONFIG_FILE")
-for dir in $requestedCheckoutDirs; do
-  if [[ "$dir" != "null" ]]; then
-    found=$(jq --arg dir "$dir" -r '.sourceDirectories | any(.symbol == $dir)' "$CONFIG_FILE")
-    if [[ "$found" != "true" ]]; then 
-      Errors=("${Errors[@]}" "Checkout directory $dir is requested by a module but is not defined in 'sourceDirectories'")
-    else 
-      directory=$(jq --arg dir "$dir" -r '.sourceDirectories[] | select(.symbol == $dir).directory | sub("~";env.HOME)' "$CONFIG_FILE")
-      if [ ! -d "$directory" ]; then
-        Errors=("${Errors[@]}" "Specified check-out directory [$directory] not found on this file system")
+allModules=$(jq -r '(.basicModules, .selectedModules)[] | .name ' "$CF")
+requestedCheckoutDirs=$(jq -r '(.basicModules,.selectedModules) | unique_by(.sourceDirectory)[].sourceDirectory' "$CF")
+if [[ "$requestedCheckoutDirs" != "null" ]]; then
+  printf "* Checking that Git checkout directories that are referenced by modules are also defined in the configuration and exist on the file system\n"
+  for dir in $requestedCheckoutDirs; do
+    if [[ "$dir" != "null" ]]; then
+      found=$(jq --arg dir "$dir" -r '.alternativeDirectories | any(.symbol == $dir)' "$CF")
+      if [[ "$found" != "true" ]]; then
+        logError "Checkout directory $dir is requested by a module but is not defined in 'alternativeDirectories'"
+      else
+        directory=$(jq --arg dir "$dir" -r '.alternativeDirectories[] | select(.symbol == $dir).directory | sub("~";env.HOME)' "$CF")
+        if [ ! -d "$directory" ]; then
+          logError"Specified check-out directory [$directory] not found on this file system"
+        fi
       fi
     fi
-  fi
-done
+  done
+fi
 
 printf "* Checking that basic and selected modules are checked out and built\n"
-modules=$(jq -r ' (.selectedModules, .basicModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
-for mod in $modules ; do
-  found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
+modules=$(jq -r ' (.selectedModules, .basicModules)[] | .name ' "$CF")
+for moduleName in $modules ; do
+  found=$(jq --arg mod "$moduleName" -r '.moduleConfigs[] | select(.name == $mod)' "$CF")
   if [[ -n "$found" ]]; then
-    sourceDirectorySymbol=$(jq --arg mod "$mod" -r '(.selectedModules,.basicModules)[] | select(.name == $mod).sourceDirectory' "$CONFIG_FILE")
-    methodSymbol=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.method' "$CONFIG_FILE")
-    if [[ "$sourceDirectorySymbol" == "null" || "$methodSymbol" == "null"  ]]; then
-      if [[ "$sourceDirectorySymbol" == "null" ]]; then
-        Errors=("${Errors[@]}" "Missing configuration for $mod: 'sourceDirectory'.")
-      fi
-      if [[ "$methodSymbol" == "null" ]]; then
-        Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.method'.")
-      fi
+    methodSymbol=$(jq --arg mod "$moduleName" -r '.moduleConfigs[] | select(.name == $mod).deployment.method' "$CF")
+    if [[ "$methodSymbol" == "null"  ]]; then
+        logError "Missing configuration for $mod: 'deployment.method'."
     else
-      sourceDirectory=$(jq --arg symbol "$sourceDirectorySymbol" -r '.sourceDirectories[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$CONFIG_FILE")
+      sourceDirectory="$(moduleDirectory "$moduleName" "$CF")"
       if [[ ! -d "$sourceDirectory/$mod" ]]; then
-        Errors=("${Errors[@]}" "No check-out of $mod found at $sourceDirectory/$mod")
+        logError "No check-out of $moduleName found at $sourceDirectory/$mod"
       fi
       if [[ "$methodSymbol" == "DD" ]]; then
-        pathToJar=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.pathToJar' "$CONFIG_FILE")
-        jvm=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.jvm' "$CONFIG_FILE")
-        env=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.env' "$CONFIG_FILE")
+        pathToJar="$(pathToJar "$moduleName" "$CF")"
         if [ "$pathToJar" == "null" ]; then
-          Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.pathToJar'.")
+          logError "Missing configuration for $moduleName: 'deployment.pathToJar'."
         fi      
-        if [ "$jvm" == "null" ]; then
-          Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.jvm'.")
+        if [ "$(jvm "$moduleName" "$CF")" == "null" ]; then
+          logError "Missing configuration for $moduleName: 'deployment.jvm'."
         fi 
-        if [ "$env" == "null" ]; then
-          Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.env'.")
+        if [ "$(env "$moduleName" "$CF")" == "null" ]; then
+          logError "Missing configuration for $moduleName: 'deployment.env'."
         fi 
         if [[ -d "$sourceDirectory/$mod" && "$pathToJar" != "null" ]]; then
           if [[ ! -d "$sourceDirectory/$mod" ]]; then
-            Errors=("${Errors[@]}" "Module directory [$sourceDirectory/$mod] not found.")
-            printf "%s/%s not found" "$sourceDirectory" "$mod"
-          elif [[ ! -d "$sourceDirectory/$mod/target" ]]; then
-            Errors=("${Errors[@]}" "$mod's checkout directory found but the module doesn't seem to be built. No /target in [$sourceDirectory/$mod]")
-            printf "\n  Can't find build for '%s'. No /target directory in %s/%s" "$mod" "$sourceDirectory" "$mod"
-          elif [[ ! -f "$sourceDirectory/$mod/$pathToJar" ]]; then
-            Errors=("${Errors[@]}" "$mod's checkout directory with subdir /target found but cannot find the requested jar file [$sourceDirectory/$mod/$pathToJar]")
-          elif [[ ! -f "$sourceDirectory/$mod/target/ModuleDescriptor.json" ]]; then
-            Errors=("${Errors[@]}" "Found module directory and jar file but cannot find a module descriptor at  $sourceDirectory/$mod/target/ModuleDescriptor.json")
+            logError "Module directory [$sourceDirectory/$moduleName] not found."
+            printf "%s/%s not found" "$sourceDirectory" "$moduleName"
+          elif [[ ! -d "$sourceDirectory/$moduleName/target" ]]; then
+            logError "$mod's checkout directory found but the module doesn't seem to be built. No /target in [$sourceDirectory/$moduleName]"
+            printf "\n  Can't find build for '%s'. No /target directory in %s/%s" "$moduleName" "$sourceDirectory" "$moduleName"
+          elif [[ ! -f "$sourceDirectory/$moduleName/$pathToJar" ]]; then
+            logError "$moduleName's checkout directory with subdir /target found but cannot find the requested jar file [$sourceDirectory/$moduleName/$pathToJar]"
+          elif [[ ! -f "$sourceDirectory/$moduleName/target/ModuleDescriptor.json" ]]; then
+            logError "Found module directory and jar file but cannot find a module descriptor at  $sourceDirectory/$moduleName/target/ModuleDescriptor.json"
           fi
         fi
       fi
-      specifiedVersion=$(jq --arg name "$mod" -r '(.basicModules, .selectedModules)[] | select(.name == $name) | .version ' "$CONFIG_FILE")
-      if [[ -f "$sourceDirectory/$mod/target/ModuleDescriptor.json"  ]]; then
-        installedVersion=$(jq -r '.id' "$sourceDirectory/$mod/target/ModuleDescriptor.json")
-        gitStatus=$(gitStatus "$sourceDirectory/$mod")
+      specifiedVersion=$(jq --arg name "$moduleName" -r '(.basicModules, .selectedModules)[] | select(.name == $name) | .version ' "$CF")
+      if [[ -f "$sourceDirectory/$moduleName/target/ModuleDescriptor.json"  ]]; then
+        installedVersion=$(jq -r '.id' "$sourceDirectory/$moduleName/target/ModuleDescriptor.json")
+        gitStatus=$(gitStatus "$sourceDirectory/$moduleName")
         gitStatus=${gitStatus/#"On branch master"/""}
-        printf "\n  - %-40s%-30s" "$installedVersion" "$gitStatus"
-        if [[ "$specifiedVersion" != "null" && "$installedVersion" != "$mod-$specifiedVersion" ]]; then
-          printf " (config said: %s-%s)"  "$mod"  "$specifiedVersion" 
+        printf "\n  %s %-40s%-30s" "$sourceDirectory" "$installedVersion" "$gitStatus"
+        if [[ "$specifiedVersion" != "null" && "$installedVersion" != "$moduleName-$specifiedVersion" ]]; then
+          printf " (config said: %s-%s)"  "$moduleName"  "$specifiedVersion"
         fi
       fi  
     fi
-    permissions=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).permissions' "$CONFIG_FILE")
+    permissions=$(jq --arg moduleName "$moduleName" -r '.moduleConfigs[] | select(.name == $moduleName).permissions' "$CF")
     if [[ "$permissions" == "null" ]]; then
-      Errors=("${Errors[@]}" "Missing configuration for $mod: 'permissions'.")
+      logError "Missing configuration for $moduleName: 'permissions'."
     fi
   fi
 done
@@ -157,13 +168,12 @@ printf "\n\n* Checking that all interfaces that are required are also provided (
 Provided=()
 Required=()
 unmet=""
-modules=$(jq -r ' (.selectedModules, .basicModules)[] | .name ' "$CONFIG_FILE")
-for mod in $modules ; do 
-  sourceDirectorySymbol=$(jq --arg mod "$mod" -r '(.selectedModules,.basicModules)[] | select(.name == $mod).sourceDirectory' "$CONFIG_FILE")
-  sourceDirectory=$(jq --arg symbol "$sourceDirectorySymbol" -r '.sourceDirectories[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$CONFIG_FILE")
-  if [ -f "$sourceDirectory/$mod/target/ModuleDescriptor.json" ]; then
-      required=$(jq -r '. | if has("requires") then .requires[] | .id + " " else "" end' "$sourceDirectory/$mod/target/ModuleDescriptor.json")
-      provided=$(jq -r '. | if has("provides") then .provides[] | .id + " " else "" end' "$sourceDirectory/$mod/target/ModuleDescriptor.json")
+modules=$(jq -r ' (.selectedModules, .basicModules)[] | .name ' "$CF")
+for moduleName in $modules ; do
+  sourceDirectory=$(moduleDirectory "$moduleName" "$CF")
+  if [ -f "$sourceDirectory/$moduleName/target/ModuleDescriptor.json" ]; then
+      required=$(jq -r '. | if has("requires") then .requires[] | .id + " " else "" end' "$sourceDirectory/$moduleName/target/ModuleDescriptor.json")
+      provided=$(jq -r '. | if has("provides") then .provides[] | .id + " " else "" end' "$sourceDirectory/$moduleName/target/ModuleDescriptor.json")
       for req in $required ; do
         Required=("${Required[@]}" "$req")
       done
@@ -172,7 +182,7 @@ for mod in $modules ; do
       done
   fi
 done
-faked=$(jq -r '. | if has("fakeApis") then .fakeApis.provides[] | .id + "" else "" end' "$CONFIG_FILE")
+faked=$(jq -r '. | if has("fakeApis") then .fakeApis.provides[] | .id + "" else "" end' "$CF")
 for api in $faked; do
   Provided=("${Provided[@]}" "$api") 
 done  
@@ -188,7 +198,7 @@ for i in "${Required[@]}"; do
   fi   
 done
 if (( ${#unmet} > 0 )); then
-  Errors=("${Errors[@]}" "There are unmet interface dependencies:  $unmet")
+  logError "There are unmet interface dependencies:  $unmet"
 fi
 
 ### Report results
@@ -199,7 +209,7 @@ if (( ${#faked} > 0 )); then
   done 
 fi
 if [ "${#Errors[@]}" == "0" ]; then
-  printf "\n\nConfiguration [%s] looks good!\n\n" "$CONFIG_FILE"
+  printf "\n\nConfiguration [%s] looks good!\n\n" "$CF"
 else 
   printf "\n\nValidation failed:\n\n"
   for i in "${Errors[@]}"; do

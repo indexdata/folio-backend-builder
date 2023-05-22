@@ -45,7 +45,7 @@ function report() {
 function setPgHostInModuleDescriptor() {
   moduleName=$1
   thisHost=$(hostname -I | { read first rest ; echo $first ; })
-  sourceDirectory=$(sourceDirectory "$moduleName" "$CONFIG_FILE")
+  sourceDirectory=$(moduleDirectory "$moduleName" "$CONFIG_FILE")
   newMd=$(jq --arg pgHost "$thisHost" -r '(.launchDescriptor.env[] | select(.name == "DB_HOST")).value=$pgHost ' "$sourceDirectory/$moduleName/target/ModuleDescriptor.json")
   echo "$newMd" > "$sourceDirectory/$moduleName/target/ModuleDescriptor.json"
 }
@@ -56,7 +56,7 @@ function registerAndDeploy() {
     printf "ERROR: No configuration found in %s for %s. Have to bail." "$CONFIG_FILE" "$moduleName"
     exit
   fi
-  sourceDirectory=$(sourceDirectory "$moduleName" "$CONFIG_FILE")
+  sourceDirectory=$(moduleDirectory "$moduleName" "$CONFIG_FILE")
   method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
   moduleId=$(moduleDescriptorId "$moduleName" "$CONFIG_FILE")
   if [[ -n "$moduleId" ]]; then

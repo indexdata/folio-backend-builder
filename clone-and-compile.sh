@@ -20,7 +20,7 @@ compile=""
 skip=""
 printf "\nChecking file system status of selected modules\n"
 for moduleName in $moduleNames ; do
-  sourceDirectory=$(sourceDirectory "$moduleName" "$CONFIG_FILE")
+  sourceDirectory=$(moduleDirectory "$moduleName" "$CONFIG_FILE")
   modulePath="$sourceDirectory/$moduleName"
   if [ -d "$sourceDirectory" ]; then
     if [ -d "$modulePath" ]; then
@@ -50,7 +50,7 @@ else
   printf "\nUsing source directories "
   sourceDirectories=$(jq -r '(.basicModules,.selectedModules) | unique_by(.sourceDirectory)[].sourceDirectory' "$CONFIG_FILE")
   for symbol in $sourceDirectories ; do
-    printf "%s:%s " "$symbol" "$(_sourceDirectory "$symbol" "$CONFIG_FILE")"
+    printf "%s:%s " "$symbol" "$(alternativeDirectory "$symbol" "$CONFIG_FILE")"
   done
 fi 
 printf "\n\n"
@@ -66,7 +66,7 @@ do
 done
 
 for moduleName in $moduleNames ; do
-  sourceDirectory=$(sourceDirectory "$moduleName" "$CONFIG_FILE")
+  sourceDirectory=$(moduleDirectory "$moduleName" "$CONFIG_FILE")
   modulePath="$sourceDirectory/$moduleName"
   gitHost=$(moduleRepo "$moduleName" "$CONFIG_FILE")
   if [ -d "$sourceDirectory" ]; then

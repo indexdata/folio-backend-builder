@@ -1,5 +1,13 @@
 selectedModules() {
-  jq -r '.selectedModules[] | select(.name != null)' "$1"
+  jq -r '.selectedModules[]' "$1"
+}
+
+basicModules() {
+  jq -r '.basicModules[]' "$1"
+}
+
+moduleConfigs() {
+  jq -r '.moduleConfigs[]' "$1"
 }
 
 moduleConfig() {
@@ -25,20 +33,41 @@ moduleVersion()  {
   module "$1" "$2" | jq -r '(.version)'
 }
 
-_moduleSourceSymbol() {
+moduleSourceSymbol() {
   module "$1" "$2" | jq -r '(.sourceDirectory)'
 }
 
-_sourceDirectory() {
-  jq --arg symbol "$1" -r '.sourceDirectories[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$2"
+alternativeDirectories() {
+  jq  -r '.alternativeDirectories//""' "$1"
+}
+
+alternativeDirectory() {
+  jq --arg symbol "$1" -r '.alternativeDirectories[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$2"
 }
 
 jvm() {
   jq --arg jvm "$1" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$2"
 }
 
+jvms() {
+  jq -r '.jvms' "$1"
+}
+
+envVars() {
+  jq -r '.envVars' "$1"
+}
+
 sourceDirectory() {
-  _sourceDirectory "$(_moduleSourceSymbol "$1" "$2")" "$2"
+  jq -r '. | if has("sourceDirectory") then (.sourceDirectory | sub("~";env.HOME)) else "" end' "$1"
+}
+
+moduleDirectory() {
+  symbol=$(module "$1" "$2" | jq -r '.sourceDirectory')
+  if [[ "$symbol" == "null" ]]; then
+    sourceDirectory "$2"
+  else
+    alternativeDirectory "$symbol" "$2"
+  fi
 }
 
 javaHome() {
@@ -97,7 +126,7 @@ makeDeploymentDescriptor() {
   method=$(deploymentMethod "$moduleName" "$configFile")
   if [[ "$method" == "DD" ]]; then
     jvm=$(javaHome "$moduleName" "$configFile")
-    sourceDirectory=$(sourceDirectory "$moduleName" "$configFile")
+    sourceDirectory=$(moduleDirectory "$moduleName" "$configFile")
     mdId=$(moduleDescriptorId "$moduleName" "$configFile")
     jar=$(pathToJar "$moduleName" "$configFile")
     env=$(env "$moduleName" "$configFile")
@@ -112,7 +141,7 @@ makeDeploymentDescriptor() {
 moduleDescriptorId() {
   moduleName=$1
   configFile=$2
-  sourceDirectory=$(sourceDirectory "$moduleName" "$configFile")
+  sourceDirectory=$(moduleDirectory "$moduleName" "$configFile")
   mdPath="$sourceDirectory/$moduleName/target/ModuleDescriptor.json"
   if [[ -f "$mdPath" ]]; then
     jq -r '.id' "$mdPath"
