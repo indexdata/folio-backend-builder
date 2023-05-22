@@ -35,14 +35,14 @@ for moduleName in $moduleNames ; do
       gitStatus=$(gitStatus "$modulePath")
       if [ -f "$modulePath/target/ModuleDescriptor.json" ]; then
         gitStatus=${gitStatus/#"On branch master"/""}
-        printf " - %-50s Build found: %s/target/ModuleDescriptor.json\n" "$moduleName$gitStatus" "$modulePath"  
+        printf " - %-25s%-35s Got %s/target\n" "$moduleName" "$gitStatus" "$modulePath"  
         skip="$skip $moduleName"
       else
-        printf " - %-50s Detected no build in %s\n" "$moduleName $gitStatus" "$modulePath"
+        printf " - %-60s - Detected no build in %s\n" "$moduleName $gitStatus" "$modulePath"
         compile="$compile $moduleName$gitStatus"  
       fi
     else
-      printf " - %-50s Module check-out not found in %s\n" "$moduleName" "$baseDir"
+      printf " - %-60s - Module check-out not found in %s\n" "$moduleName" "$baseDir"
       clone="$clone $moduleName"
       compile="$compile $moduleName"
     fi
@@ -91,7 +91,7 @@ for moduleName in $moduleNames ; do
       javaHome=${javaHome#null/""}
       javaHome=${javaHome/#~/$HOME}
       method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
-      printf ", using JAVA_HOME: %s\n" "$javaHome"
+      printf " with JVM [%s]\n" "$javaHome"
       dir=$(pwd)
       cd "$modulePath" || return
       export JAVA_HOME="$javaHome" ; mvn -q clean install -D skipTests

@@ -47,8 +47,8 @@ for name in mod-permissions mod-users mod-login mod-password-validator mod-autht
 done
 
 printf "* Checking that configurations exist for all basic modules and all selected modules\n"
-selectedModules=$(jq -r '(.basicModules, .selectedModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
-for mod in $selectedModules; do
+allModules=$(jq -r '(.basicModules, .selectedModules)[] | select(.name != null) | .name ' "$CONFIG_FILE")
+for mod in $allModules; do
   found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
   if [[ -z "$found" ]]
     then
