@@ -2,29 +2,29 @@
     "description": "Template FOLIO configuration.",
 
     "selectedModules": [
-        { "name": "mod-inventory-storage",    "source": "GIT-FOLIO", "version": "26.1.0-SNAPSHOT" },
-        { "name": "mod-pubsub",               "source": "GIT-FOLIO", "version": "2.10.0-SNAPSHOT" },
-        { "name": "mod-circulation-storage",  "source": "GIT-FOLIO", "version": "16.1.0-SNAPSHOT" },
-        { "name": "mod-event-config",         "source": "GIT-FOLIO", "version": "2.6.0-SNAPSHOT" },
-        { "name": "mod-template-engine",      "source": "GIT-FOLIO", "version": "1.19.0-SNAPSHOT"},
-        { "name": "mod-email",                "source": "GIT-FOLIO", "version": "1.15.4-SNAPSHOT"},
-        { "name": "mod-sender",               "source": "GIT-FOLIO", "version": "1.11.0-SNAPSHOT"},
-        { "name": "mod-notify",               "source": "GIT-FOLIO", "version": "3.0.1-SNAPSHOT"},
-        { "name": "mod-feesfines",            "source": "GIT-FOLIO", "version": "18.3.0-SNAPSHOT"},
-        { "name": "mod-patron-blocks",        "source": "GIT-FOLIO", "version": "1.9.0-SNAPSHOT"},
-        { "name": "mod-calendar",             "source": "GIT-FOLIO", "version": "2.4.3-SNAPSHOT"},
-        { "name": "mod-notes",                "source": "GIT-FOLIO", "version": "5.1.0-SNAPSHOT"},
-        { "name": "mod-circulation",          "source": "GIT-FOLIO", "version": "23.6.0-SNAPSHOT"},
-        { "name": "mod-inventory",            "source": "GIT-FOLIO", "version": "20.1.0-SNAPSHOT"}
+        { "name": "mod-inventory-storage",    "sourceDirectory": "GIT-FOLIO", "version": "26.1.0-SNAPSHOT" },
+        { "name": "mod-pubsub",               "sourceDirectory": "GIT-FOLIO", "version": "2.10.0-SNAPSHOT" },
+        { "name": "mod-circulation-storage",  "sourceDirectory": "GIT-FOLIO", "version": "16.1.0-SNAPSHOT" },
+        { "name": "mod-event-config",         "sourceDirectory": "GIT-FOLIO", "version": "2.6.0-SNAPSHOT" },
+        { "name": "mod-template-engine",      "sourceDirectory": "GIT-FOLIO", "version": "1.19.0-SNAPSHOT"},
+        { "name": "mod-email",                "sourceDirectory": "GIT-FOLIO", "version": "1.15.4-SNAPSHOT"},
+        { "name": "mod-sender",               "sourceDirectory": "GIT-FOLIO", "version": "1.11.0-SNAPSHOT"},
+        { "name": "mod-notify",               "sourceDirectory": "GIT-FOLIO", "version": "3.0.1-SNAPSHOT"},
+        { "name": "mod-feesfines",            "sourceDirectory": "GIT-FOLIO", "version": "18.3.0-SNAPSHOT"},
+        { "name": "mod-patron-blocks",        "sourceDirectory": "GIT-FOLIO", "version": "1.9.0-SNAPSHOT"},
+        { "name": "mod-calendar",             "sourceDirectory": "GIT-FOLIO", "version": "2.4.3-SNAPSHOT"},
+        { "name": "mod-notes",                "sourceDirectory": "GIT-FOLIO", "version": "5.1.0-SNAPSHOT"},
+        { "name": "mod-circulation",          "sourceDirectory": "GIT-FOLIO", "version": "23.6.0-SNAPSHOT"},
+        { "name": "mod-inventory",            "sourceDirectory": "GIT-FOLIO", "version": "20.1.0-SNAPSHOT"}
     ],
     "basicModules" : [
-        { "name": "mod-permissions",          "source": "GIT-FOLIO", "version": "6.4.0-SNAPSHOT" },
-        { "name": "mod-users",                "source": "GIT-FOLIO", "version": "19.2.0-SNAPSHOT"},
-        { "name": "mod-login",                "source": "GIT-FOLIO", "version": "7.10.0-SNAPSHOT"},
-        { "name": "mod-password-validator",   "source": "GIT-FOLIO", "version": "3.1.1-SNAPSHOT"},
-        { "name": "mod-authtoken",            "source": "GIT-FOLIO", "version": "2.14.0-SNAPSHOT"},
-        { "name": "mod-configuration",        "source": "GIT-FOLIO", "version": "5.9.2-SNAPSHOT"},
-        { "name": "mod-users-bl",             "source": "GIT-FOLIO", "version": "7.6.0-SNAPSHOT"}
+        { "name": "mod-permissions",          "sourceDirectory": "GIT-FOLIO", "version": "6.4.0-SNAPSHOT" },
+        { "name": "mod-users",                "sourceDirectory": "GIT-FOLIO", "version": "19.2.0-SNAPSHOT"},
+        { "name": "mod-login",                "sourceDirectory": "GIT-FOLIO", "version": "7.10.0-SNAPSHOT"},
+        { "name": "mod-password-validator",   "sourceDirectory": "GIT-FOLIO", "version": "3.1.1-SNAPSHOT"},
+        { "name": "mod-authtoken",            "sourceDirectory": "GIT-FOLIO", "version": "2.14.0-SNAPSHOT"},
+        { "name": "mod-configuration",        "sourceDirectory": "GIT-FOLIO", "version": "5.9.2-SNAPSHOT"},
+        { "name": "mod-users-bl",             "sourceDirectory": "GIT-FOLIO", "version": "7.6.0-SNAPSHOT"}
     ],
     "fakeApis": {
         "provides": [

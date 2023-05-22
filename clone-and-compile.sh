@@ -48,7 +48,7 @@ else
   printf "Will compile: %s\n" "${compile:-" NONE"}"
   printf "Skipping:     %s\n" "${skip:-" NONE"}"
   printf "\nUsing source directories "
-  sourceDirectories=$(jq -r '(.basicModules,.selectedModules) | unique_by(.source)[].source' "$CONFIG_FILE")
+  sourceDirectories=$(jq -r '(.basicModules,.selectedModules) | unique_by(.sourceDirectory)[].sourceDirectory' "$CONFIG_FILE")
   for symbol in $sourceDirectories ; do
     printf "%s:%s " "$symbol" "$(_sourceDirectory "$symbol" "$CONFIG_FILE")"
   done
@@ -68,8 +68,7 @@ done
 for moduleName in $moduleNames ; do
   sourceDirectory=$(sourceDirectory "$moduleName" "$CONFIG_FILE")
   modulePath="$sourceDirectory/$moduleName"
-  gitHost=$(moduleConfig "$moduleName" "$CONFIG_FILE" | jq -r '.gitHost')
-  gitHost=${gitHost/#null/"https://github.com/folio-org"}
+  gitHost=$(moduleRepo "$moduleName" "$CONFIG_FILE")
   if [ -d "$sourceDirectory" ]; then
     if [ ! -d "$modulePath" ]; then
       printf "\n$(date) Cloning %s to %s from %s/%s\n" "$moduleName" "$sourceDirectory" "$gitHost" "$moduleName"

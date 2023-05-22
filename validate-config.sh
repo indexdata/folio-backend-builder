@@ -74,7 +74,7 @@ done
 
 printf "* Checking that Git checkout directories that are referenced by modules are also defined in the configuration and exist on the file system\n"
 allModules=$(jq -r '(.basicModules, .selectedModules)[] | .name ' "$CONFIG_FILE")
-requestedCheckoutDirs=$(jq -r '(.basicModules,.selectedModules) | unique_by(.source)[].source' "$CONFIG_FILE")
+requestedCheckoutDirs=$(jq -r '(.basicModules,.selectedModules) | unique_by(.sourceDirectory)[].sourceDirectory' "$CONFIG_FILE")
 for dir in $requestedCheckoutDirs; do
   if [[ "$dir" != "null" ]]; then
     found=$(jq --arg dir "$dir" -r '.sourceDirectories | any(.symbol == $dir)' "$CONFIG_FILE")
@@ -94,11 +94,11 @@ modules=$(jq -r ' (.selectedModules, .basicModules)[] | select(.name != null) | 
 for mod in $modules ; do
   found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CONFIG_FILE")
   if [[ -n "$found" ]]; then
-    sourceDirectorySymbol=$(jq --arg mod "$mod" -r '(.selectedModules,.basicModules)[] | select(.name == $mod).source' "$CONFIG_FILE")
+    sourceDirectorySymbol=$(jq --arg mod "$mod" -r '(.selectedModules,.basicModules)[] | select(.name == $mod).sourceDirectory' "$CONFIG_FILE")
     methodSymbol=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod).deployment.method' "$CONFIG_FILE")
     if [[ "$sourceDirectorySymbol" == "null" || "$methodSymbol" == "null"  ]]; then
       if [[ "$sourceDirectorySymbol" == "null" ]]; then
-        Errors=("${Errors[@]}" "Missing configuration for $mod: 'source'.")
+        Errors=("${Errors[@]}" "Missing configuration for $mod: 'sourceDirectory'.")
       fi
       if [[ "$methodSymbol" == "null" ]]; then
         Errors=("${Errors[@]}" "Missing configuration for $mod: 'deployment.method'.")
@@ -159,7 +159,7 @@ Required=()
 unmet=""
 modules=$(jq -r ' (.selectedModules, .basicModules)[] | .name ' "$CONFIG_FILE")
 for mod in $modules ; do 
-  sourceDirectorySymbol=$(jq --arg mod "$mod" -r '(.selectedModules,.basicModules)[] | select(.name == $mod).source' "$CONFIG_FILE")
+  sourceDirectorySymbol=$(jq --arg mod "$mod" -r '(.selectedModules,.basicModules)[] | select(.name == $mod).sourceDirectory' "$CONFIG_FILE")
   sourceDirectory=$(jq --arg symbol "$sourceDirectorySymbol" -r '.sourceDirectories[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$CONFIG_FILE")
   if [ -f "$sourceDirectory/$mod/target/ModuleDescriptor.json" ]; then
       required=$(jq -r '. | if has("requires") then .requires[] | .id + " " else "" end' "$sourceDirectory/$mod/target/ModuleDescriptor.json")

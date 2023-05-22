@@ -129,13 +129,13 @@ version.
 
 ```
 "basicModules" : [
-        { "name": "mod-permissions",        "source": "GIT-FOLIO", "version": "6.4.0-SNAPSHOT" },
-        { "name": "mod-users",              "source": "GIT-FOLIO", "version": "19.2.0-SNAPSHOT"},
-        { "name": "mod-login",              "source": "GIT-FOLIO", "version": "7.10.0-SNAPSHOT"},
-        { "name": "mod-password-validator", "source": "GIT-FOLIO", "version": "3.1.1-SNAPSHOT"},
-        { "name": "mod-authtoken",          "source": "GIT-FOLIO", "version": "2.14.0-SNAPSHOT"},
-        { "name": "mod-configuration",      "source": "GIT-FOLIO", "version": "5.9.2-SNAPSHOT"},
-        { "name": "mod-users-bl",           "source": "GIT-FOLIO", "version": "7.6.0-SNAPSHOT"}
+        { "name": "mod-permissions",        "sourceDirectory": "GIT-FOLIO", "version": "6.4.0-SNAPSHOT" },
+        { "name": "mod-users",              "sourceDirectory": "GIT-FOLIO", "version": "19.2.0-SNAPSHOT"},
+        { "name": "mod-login",              "sourceDirectory": "GIT-FOLIO", "version": "7.10.0-SNAPSHOT"},
+        { "name": "mod-password-validator", "sourceDirectory": "GIT-FOLIO", "version": "3.1.1-SNAPSHOT"},
+        { "name": "mod-authtoken",          "sourceDirectory": "GIT-FOLIO", "version": "2.14.0-SNAPSHOT"},
+        { "name": "mod-configuration",      "sourceDirectory": "GIT-FOLIO", "version": "5.9.2-SNAPSHOT"},
+        { "name": "mod-users-bl",           "sourceDirectory": "GIT-FOLIO", "version": "7.6.0-SNAPSHOT"}
 ]
 ```
 
@@ -298,10 +298,10 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 
 ```
 "selectedModules": [
-    { "name": "mod-calendar",       "source": "GIT-FOLIO", "version": "2.4.3-SNAPSHOT"},
-    { "name": "mod-notes",          "source": "GIT-FOLIO", version": "5.1.0-SNAPSHOT"},
-    { "skipped": "mod-circulation", "source": "GIT-FOLIO", "version": "23.6.0-SNAPSHOT"},
-    { "skipped": "mod-inventory",   "source": "GIT-FOLIO", "version": "20.1.0-SNAPSHOT"}
+    { "name": "mod-calendar",       "sourceDirectory": "GIT-FOLIO", "version": "2.4.3-SNAPSHOT"},
+    { "name": "mod-notes",          "sourceDirectory": "GIT-FOLIO", version": "5.1.0-SNAPSHOT"},
+    { "skipped": "mod-circulation", "sourceDirectory": "GIT-FOLIO", "version": "23.6.0-SNAPSHOT"},
+    { "skipped": "mod-inventory",   "sourceDirectory": "GIT-FOLIO", "version": "20.1.0-SNAPSHOT"}
 ]
 ```
 

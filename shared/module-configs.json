@@ -2,7 +2,6 @@
   [
     {
       "name": "mod-permissions",
-      "version": "6.4.0-SNAPSHOT",
       "requiredBy": [
         "mod-users-bl",
         "mod-pubsub",
@@ -18,7 +17,6 @@
     },
     {
       "name": "mod-users",
-      "version": "19.2.0-SNAPSHOT",
       "requiredBy": [
         "circulation",
         "inventory",
@@ -41,7 +39,6 @@
     },
     {
       "name": "mod-login",
-      "version": "7.10.0-SNAPSHOT",
       "requiredBy": [
         "mod-users-bl",
         "mod-pubsub"
@@ -56,7 +53,6 @@
     },
     {
       "name": "mod-inventory-storage",
-      "version": "26.1.0-SNAPSHOT",
       "requiredBy": [
         "mod-circulation",
         "mod-inventory",
@@ -78,8 +74,6 @@
     },
     {
       "name": "mod-password-validator",
-      "version": "3.1.0-SNAPSHOT",
-      "checkedOutTo": "GIT-FOLIO",
       "requiredBy": [
         "mod-users-bl"
       ],
@@ -91,7 +85,6 @@
     },
     {
       "name": "mod-authtoken",
-      "version": "2.14.0-SNAPSHOT",
       "requiredBy": [
         "mod-users-bl"
       ],
@@ -105,7 +98,6 @@
     },
     {
       "name": "mod-pubsub",
-      "version": "2.10.0-SNAPSHOT",
       "requiredBy": [
         "mod-circulation",
         "mod-feesfines",
@@ -194,8 +186,6 @@
     },
     {
       "name": "mod-circulation-storage",
-      "version": "16.1.0-SNAPSHOT",
-      "gitHost": "https://github.com/indexdata",
       "requiredBy": [
         "mod-circulation",
         "mod-inventory",
@@ -214,7 +204,6 @@
     },
     {
       "name": "mod-event-config",
-      "version": "2.6.0-SNAPSHOT",
       "requiredBy": [
         "mod-notify"
       ],
@@ -226,7 +215,6 @@
     },
     {
       "name": "mod-configuration",
-      "version": "5.9.2-SNAPSHOT",
       "requiredBy": [
         "mod-circulation",
         "mod-notes",
@@ -246,7 +234,6 @@
     },
     {
       "name": "mod-users-bl",
-      "version": "7.6.0-SNAPSHOT",
       "requiredBy": [],
       "deployment": {
         "method": "DD",
@@ -258,14 +245,13 @@
     },
     {
       "name": "mod-template-engine",
-      "version": "1.19.0-SNAPSHOT",
       "requiredBy": [
         "mod-notify"
       ],
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-template-engine-fat.jar"
       },
       "permissions": [
@@ -274,7 +260,6 @@
     },
     {
       "name": "mod-email",
-      "version": "1.15.4-SNAPSHOT",
       "requiredBy": [
         "mod-sender"
       ],
@@ -291,7 +276,6 @@
     },
     {
       "name": "mod-sender",
-      "version": "1.11.0-SNAPSHOT",
       "requiredBy": [
         "mod-notify"
       ],
@@ -305,7 +289,6 @@
     },
     {
       "name": "mod-notify",
-      "version": "3.0.1-SNAPSHOT",
       "requiredBy": [
         "mod-feesfines"
       ],
@@ -319,8 +302,6 @@
     },
     {
       "name": "mod-feesfines",
-      "version": "18.3.0-SNAPSHOT",
-      "gitHost": "https://github.com/indexdata",
       "requiredBy": [
         "mod-circulation"
       ],
@@ -420,7 +401,6 @@
     },
     {
       "name": "mod-patron-blocks",
-      "version": "1.9.0-SNAPSHOT",
       "requiredBy": [
         "mod-circulation"
       ],
@@ -447,7 +427,6 @@
     },
     {
       "name": "mod-calendar",
-      "version": "2.4.3-SNAPSHOT",
       "requiredBy": [
         "mod-circulation"
       ],
@@ -463,7 +442,6 @@
     },
     {
       "name": "mod-notes",
-      "version": "5.1.0-SNAPSHOT",
       "requiredBy": [
         "mod-circulation"
       ],
@@ -477,8 +455,6 @@
     },
     {
       "name": "mod-circulation",
-      "version": "23.6.0-SNAPSHOT",
-      "gitHost": "https://github.com/indexdata",
       "requiredBy": [],
       "deployment": {
         "method": "DD",
@@ -501,7 +477,6 @@
     },
     {
       "name": "mod-inventory",
-      "version": "20.1.0-SNAPSHOT",
       "requiredBy": [],
       "deployment": {
         "method": "DD",
@@ -515,7 +490,6 @@
     },
     {
       "name": "mod-audit",
-      "version": "2.7.1-SNAPSHOT",
       "requiredBy": [],
       "deployment": {
         "method": "DD",
@@ -525,6 +499,31 @@
       },
       "permissions": [
         "audit.all"
+      ]
+    },
+    {
+      "name": "mod-harvester-admin",
+      "version": "1.0.1-SNAPSHOT",
+      "gitHost": "https://github.com/indexdata",
+      "requiredBy": [],
+      "deployment": {
+        "method": "DD",
+        "env": [
+          { "name": "DB_HOST", "value": "localhost"},
+          { "name": "DB_PORT", "value": 5432},
+          { "name": "DB_USERNAME", "value": "folio_admin" },
+          { "name": "DB_PASSWORD", "value": "folio_admin" },
+          { "name": "DB_DATABASE", "value": "okapi_modules" },
+          { "name": "harvester_protocol", "value": "http"},
+          { "name": "harvester_host", "value": "localhost"},
+          { "name": "harvester_port", "value": "8080"},
+          { "name": "acl_filter_by_tenant", "value": true}
+        ],
+        "pathToJar": "target/mod-harvester-admin-fat.jar",
+        "jvm": "JAVA18"
+      },
+      "permissions": [
+        "harvester-admin.all"
       ]
     }
   ]

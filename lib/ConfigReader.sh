@@ -10,12 +10,23 @@ module() {
   jq --arg name "$1"  -r '(.selectedModules,.basicModules)[] | select(.name == $name)' "$2"
 }
 
+moduleRepo() {
+  repo=$(module "$1" "$2" | jq -r '.repo')
+  repo=${repo#null}
+  if [[ -n "$repo" ]]; then
+    echo "$repo"
+  else
+    repo=$(moduleConfig "$1" "$2" | jq -r '.gitHost')
+    echo "${repo/#null/"https://github.com/folio-org"}"
+  fi
+}
+
 moduleVersion()  {
   module "$1" "$2" | jq -r '(.version)'
 }
 
 _moduleSourceSymbol() {
-  module "$1" "$2" | jq -r '(.source)'
+  module "$1" "$2" | jq -r '(.sourceDirectory)'
 }
 
 _sourceDirectory() {
@@ -34,10 +45,6 @@ javaHome() {
   symbol=$(moduleConfig "$1" "$2"  | jq -r '.deployment.jvm')
   found=$(jvm "$symbol" "$2")
   echo "${found#null}"
-}
-
-gitHost() {
-  symbol=$(moduleConfig "$1" "$2"  | jq -r '.gitHost')
 }
 
 pathToJar() {
