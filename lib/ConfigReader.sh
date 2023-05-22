@@ -6,18 +6,28 @@ moduleConfig() {
   jq --arg name "$1"  -r '.moduleConfigs[] | select(.name == $name)' "$2"
 }
 
-checkoutRoot() {
-  jq --arg dir "$1" -r '.checkoutRoots[] | select(.symbol == $dir).directory | sub("~";env.HOME)' "$2"
+module() {
+  jq --arg name "$1"  -r '(.selectedModules,.basicModules)[] | select(.name == $name)' "$2"
+}
+
+moduleVersion()  {
+  module "$1" "$2" | jq -r '(.version)'
+}
+
+_moduleSourceSymbol() {
+  module "$1" "$2" | jq -r '(.source)'
+}
+
+_sourceDirectory() {
+  jq --arg symbol "$1" -r '.sourceDirectories[] | select(.symbol == $symbol).directory | sub("~";env.HOME)' "$2"
 }
 
 jvm() {
   jq --arg jvm "$1" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$2"
 }
 
-baseDir() {
-  symbol=$(moduleConfig "$1" "$2" | jq -r '.checkedOutTo')
-  dir=$(checkoutRoot "$symbol" "$2")
-  echo "${dir/#null}"
+sourceDirectory() {
+  _sourceDirectory "$(_moduleSourceSymbol "$1" "$2")" "$2"
 }
 
 javaHome() {
@@ -80,13 +90,13 @@ makeDeploymentDescriptor() {
   method=$(deploymentMethod "$moduleName" "$configFile")
   if [[ "$method" == "DD" ]]; then
     jvm=$(javaHome "$moduleName" "$configFile")
-    baseDir=$(baseDir "$moduleName" "$configFile")
+    sourceDirectory=$(sourceDirectory "$moduleName" "$configFile")
     mdId=$(moduleDescriptorId "$moduleName" "$configFile")
     jar=$(pathToJar "$moduleName" "$configFile")
     env=$(env "$moduleName" "$configFile")
     echo '{ "srvcId": "'"$mdId"'",  "nodeId": "localhost",
             "descriptor": {
-              "exec": "'"$jvm"/bin/java' -Dport=%p -jar '"$baseDir"'/'"$moduleName"'/'"$jar"' -Dhttp.port=%p",
+              "exec": "'"$jvm"/bin/java' -Dport=%p -jar '"$sourceDirectory"'/'"$moduleName"'/'"$jar"' -Dhttp.port=%p",
               "env": '"$env"' }}'
   fi
 }
@@ -95,8 +105,8 @@ makeDeploymentDescriptor() {
 moduleDescriptorId() {
   moduleName=$1
   configFile=$2
-  baseDir=$(baseDir "$moduleName" "$configFile")
-  mdPath="$baseDir/$moduleName/target/ModuleDescriptor.json"
+  sourceDirectory=$(sourceDirectory "$moduleName" "$configFile")
+  mdPath="$sourceDirectory/$moduleName/target/ModuleDescriptor.json"
   if [[ -f "$mdPath" ]]; then
     jq -r '.id' "$mdPath"
  else

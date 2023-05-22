@@ -2,20 +2,29 @@
     "description": "Template FOLIO configuration.",
 
     "selectedModules": [
-        { "name": "mod-inventory-storage",       "version": "26.1.0-SNAPSHOT" },
-        { "name": "mod-pubsub",                  "version": "2.10.0-SNAPSHOT" },
-        { "name": "mod-circulation-storage",     "version": "16.1.0-SNAPSHOT" },
-        { "name": "mod-event-config",            "version": "2.6.0-SNAPSHOT" },
-        { "name": "mod-template-engine",         "version": "1.19.0-SNAPSHOT"},
-        { "name": "mod-email",                   "version": "1.15.4-SNAPSHOT"},
-        { "name": "mod-sender",                  "version": "1.11.0-SNAPSHOT"},
-        { "name": "mod-notify",                  "version": "3.0.1-SNAPSHOT"},
-        { "name": "mod-feesfines",               "version": "18.3.0-SNAPSHOT"},
-        { "name": "mod-patron-blocks",           "version": "1.9.0-SNAPSHOT"},
-        { "name": "mod-calendar",                "version": "2.4.3-SNAPSHOT"},
-        { "name": "mod-notes",                   "version": "5.1.0-SNAPSHOT"},
-        { "name": "mod-circulation",             "version": "23.6.0-SNAPSHOT"},
-        { "name": "mod-inventory",               "version": "20.1.0-SNAPSHOT"}
+        { "name": "mod-inventory-storage",    "source": "GIT-FOLIO", "version": "26.1.0-SNAPSHOT" },
+        { "name": "mod-pubsub",               "source": "GIT-FOLIO", "version": "2.10.0-SNAPSHOT" },
+        { "name": "mod-circulation-storage",  "source": "GIT-FOLIO", "version": "16.1.0-SNAPSHOT" },
+        { "name": "mod-event-config",         "source": "GIT-FOLIO", "version": "2.6.0-SNAPSHOT" },
+        { "name": "mod-template-engine",      "source": "GIT-FOLIO", "version": "1.19.0-SNAPSHOT"},
+        { "name": "mod-email",                "source": "GIT-FOLIO", "version": "1.15.4-SNAPSHOT"},
+        { "name": "mod-sender",               "source": "GIT-FOLIO", "version": "1.11.0-SNAPSHOT"},
+        { "name": "mod-notify",               "source": "GIT-FOLIO", "version": "3.0.1-SNAPSHOT"},
+        { "name": "mod-feesfines",            "source": "GIT-FOLIO", "version": "18.3.0-SNAPSHOT"},
+        { "name": "mod-patron-blocks",        "source": "GIT-FOLIO", "version": "1.9.0-SNAPSHOT"},
+        { "name": "mod-calendar",             "source": "GIT-FOLIO", "version": "2.4.3-SNAPSHOT"},
+        { "name": "mod-notes",                "source": "GIT-FOLIO", "version": "5.1.0-SNAPSHOT"},
+        { "name": "mod-circulation",          "source": "GIT-FOLIO", "version": "23.6.0-SNAPSHOT"},
+        { "name": "mod-inventory",            "source": "GIT-FOLIO", "version": "20.1.0-SNAPSHOT"}
+    ],
+    "basicModules" : [
+        { "name": "mod-permissions",          "source": "GIT-FOLIO", "version": "6.4.0-SNAPSHOT" },
+        { "name": "mod-users",                "source": "GIT-FOLIO", "version": "19.2.0-SNAPSHOT"},
+        { "name": "mod-login",                "source": "GIT-FOLIO", "version": "7.10.0-SNAPSHOT"},
+        { "name": "mod-password-validator",   "source": "GIT-FOLIO", "version": "3.1.1-SNAPSHOT"},
+        { "name": "mod-authtoken",            "source": "GIT-FOLIO", "version": "2.14.0-SNAPSHOT"},
+        { "name": "mod-configuration",        "source": "GIT-FOLIO", "version": "5.9.2-SNAPSHOT"},
+        { "name": "mod-users-bl",             "source": "GIT-FOLIO", "version": "7.6.0-SNAPSHOT"}
     ],
     "fakeApis": {
         "provides": [
@@ -23,7 +32,7 @@
             { "id": "instance-authority-links", "version": "2.0" }
         ]
     },
-    "checkoutRoots": [
+    "sourceDirectories": [
         {
             "symbol": "GIT-FOLIO",
             "directory": "~/folio"
@@ -50,7 +59,6 @@
     "moduleConfigs": [
         {
             "name": "mod-permissions",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-users-bl", 
                 "mod-pubsub", 
@@ -65,7 +73,6 @@
         },
         {
             "name": "mod-users",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "circulation", 
                 "inventory", 
@@ -88,7 +95,6 @@
         },
         {
             "name": "mod-login",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-users-bl",
                 "mod-pubsub"
@@ -103,7 +109,6 @@
         },
         {
             "name": "mod-password-validator",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-users-bl"
             ],
@@ -115,7 +120,6 @@
         },
         {
             "name": "mod-authtoken",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-users-bl"
             ],
@@ -129,7 +133,6 @@
         },
         { 
             "name": "mod-configuration",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-circulation",
                 "mod-notes",
@@ -149,7 +152,6 @@
         },
         {
             "name": "mod-users-bl",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [],
             "deployment": {
                 "method": "DD",
@@ -161,7 +163,6 @@
         },
         {
             "name": "mod-inventory-storage",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-circulation",
                 "mod-inventory",
@@ -183,7 +184,6 @@
         },
         { 
             "name": "mod-pubsub",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy":[
                 "mod-circulation",
                 "mod-feesfines",
@@ -272,7 +272,6 @@
         },
         { 
             "name": "mod-circulation-storage",     
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-circulation",
                 "mod-inventory",
@@ -291,7 +290,6 @@
         },
         { 
             "name": "mod-event-config",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-notify"
             ],
@@ -303,7 +301,6 @@
         },
         {
             "name": "mod-template-engine",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-notify"
             ],
@@ -319,7 +316,6 @@
         },
         {
             "name": "mod-email",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-sender"
             ],
@@ -336,7 +332,6 @@
         },
         {
             "name": "mod-sender",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-notify"
             ],
@@ -350,7 +345,6 @@
         },
         {
             "name": "mod-notify",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-feesfines"
             ],
@@ -364,7 +358,6 @@
         },
         {
             "name": "mod-feesfines",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-circulation"
             ],
@@ -464,7 +457,6 @@
         },
         {
             "name": "mod-patron-blocks",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-circulation"
             ],
@@ -491,7 +483,6 @@
         },
         {
             "name": "mod-calendar",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": ["mod-circulation"],
             "deployment": {
                 "method": "DOCKER",
@@ -505,7 +496,6 @@
         },
         {
             "name": "mod-notes",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [
                 "mod-circulation"
             ],
@@ -519,7 +509,6 @@
         },
         {
             "name": "mod-circulation",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [],
             "deployment": {
                 "method": "DD",
@@ -541,7 +530,6 @@
         },
         {
             "name": "mod-inventory",
-            "checkedOutTo": "GIT-FOLIO",
             "requiredBy": [],
             "deployment": {
                 "method": "DD",
@@ -553,15 +541,6 @@
                 "inventory.all"
             ]
         }
-    ],
-    "basicModules" : [
-        { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
-        { "name": "mod-users",              "version": "19.2.0-SNAPSHOT"},
-        { "name": "mod-login",              "version": "7.10.0-SNAPSHOT"},
-        { "name": "mod-password-validator", "version": "3.1.1-SNAPSHOT"},
-        { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT"},
-        { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT"},
-        { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
     ],
     "tenants": [
         {

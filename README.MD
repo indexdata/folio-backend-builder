@@ -35,7 +35,7 @@ Most modules and Okapi will compile and run with JDK 11 (Okapi should still be a
 
 Finally, `curl` and `jq` are required for the module installation script.
 
-The main Folio guides describe much better the software versions required, how to set up the databases etc, and options
+The main Folio guides describe much better the software versions required, how to set up the databases etc., and options
 for building and starting Okapi.
 
 * [Developer Setup](https://dev.folio.org/guides/developer-setup/)
@@ -103,7 +103,7 @@ It's possible to validate a given configuration file using [validate-config.sh](
 
 The validation script will
 
-* Check that all seven modules requried for the basic users and authentication handling are present in `basicModules`
+* Check that all seven modules required for the basic users and authentication handling are present in `basicModules`
 * Check references between module configs and general settings internally in the config file
 * Check for required properties
 * Check that declared JVM paths and check-out directories exist in the file system.
@@ -121,21 +121,21 @@ Here follows a walk-through of the different sections of the configuration file.
 The installation process requires at least seven basic modules to be installed. These are modules making it possible to
 create users and give them credentials and permissions.
 
-All other modules are optional, though often inter-dependencies will require one to be present for another to work.
+All other modules are optional, though often interdependencies will require one to be present for another to work.
 
 The array `basicModules` holds the list of modules required by the installation script. Module `version` is optional and
-only used for information. For example it can be used to flag that an installed version happens not to be the declared
+only used for information. For example, it can be used to flag that an installed version happens not to be the declared
 version.
 
 ```
 "basicModules" : [
-        { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
-        { "name": "mod-users",              "version": "19.2.0-SNAPSHOT"},
-        { "name": "mod-login",              "version": "7.10.0-SNAPSHOT"},
-        { "name": "mod-password-validator", "version": "3.1.1-SNAPSHOT"},
-        { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT"},
-        { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT"},
-        { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
+        { "name": "mod-permissions",        "source": "GIT-FOLIO", "version": "6.4.0-SNAPSHOT" },
+        { "name": "mod-users",              "source": "GIT-FOLIO", "version": "19.2.0-SNAPSHOT"},
+        { "name": "mod-login",              "source": "GIT-FOLIO", "version": "7.10.0-SNAPSHOT"},
+        { "name": "mod-password-validator", "source": "GIT-FOLIO", "version": "3.1.1-SNAPSHOT"},
+        { "name": "mod-authtoken",          "source": "GIT-FOLIO", "version": "2.14.0-SNAPSHOT"},
+        { "name": "mod-configuration",      "source": "GIT-FOLIO", "version": "5.9.2-SNAPSHOT"},
+        { "name": "mod-users-bl",           "source": "GIT-FOLIO", "version": "7.6.0-SNAPSHOT"}
 ]
 ```
 
@@ -153,7 +153,7 @@ If one wanted to create a new platform next to the main development environment,
 /folio-tmp".
 
 ```
-"checkoutRoots": [
+"sourceDirectories": [
     {
         "symbol": "GIT-FOLIO",
         "directory": "~/folio"
@@ -233,7 +233,6 @@ With the above basic system dependent settings defined, each module to install c
 ``` 
 { 
    "name": "mod-circulation-storage",     
-   "checkedOutTo": "GIT-FOLIO",
    "gitHost": "https://github.com/folio-org",
    "requiredBy": [
        "mod-circulation",
@@ -261,14 +260,9 @@ to `https://github.com/folio-org` so only need to be set for modules residing in
 
 #### Method of deployment
 
-For modules that are deployed using a deployment descriptor, the `deployment.method` should be "DD". Otherwise the
-install script will assume that the module descriptor has a launch descriptor, like is usually the case for Docker based
+For modules that are deployed using a deployment descriptor, the `deployment.method` should be "DD". Otherwise, the
+installation script will assume that the module descriptor has a launch descriptor, like is usually the case for Docker based
 deployment.
-
-#### Finding the JAR
-
-The path to the JAR must be provided, relative to the module's check out directory, using `checkedOutTo`, `name`
-and `pathToJar`
 
 #### Select a runtime JVM
 
@@ -304,12 +298,14 @@ A module can also be skipped by renaming the property `name`. Name it `skipped` 
 
 ```
 "selectedModules": [
-    { "name": "mod-calendar",                "version": "2.4.3-SNAPSHOT"},
-    { "name": "mod-notes",                   "version": "5.1.0-SNAPSHOT"},
-    { "skipped": "mod-circulation",             "version": "23.6.0-SNAPSHOT"},
-    { "skipped": "mod-inventory",               "version": "20.1.0-SNAPSHOT"}
+    { "name": "mod-calendar",       "source": "GIT-FOLIO", "version": "2.4.3-SNAPSHOT"},
+    { "name": "mod-notes",          "source": "GIT-FOLIO", version": "5.1.0-SNAPSHOT"},
+    { "skipped": "mod-circulation", "source": "GIT-FOLIO", "version": "23.6.0-SNAPSHOT"},
+    { "skipped": "mod-inventory",   "source": "GIT-FOLIO", "version": "20.1.0-SNAPSHOT"}
 ]
 ```
+
+The `source` specifies where on the file system to find the source and build of the module. The symbol is referring to an entry in `sourceDirectories`
 
 The `version` is informational and optional. It might eventually be used for flagging if a checked out version is not
 the specified version.
@@ -347,7 +343,7 @@ interfaces. It probably goes without saying that some cautiousness is warranted 
 The script `clone-and-compile.sh` can be run on a configuration file to check out all the basic and selected modules
 from Git, and compile (mvn install) them.
 
-For example, create an empty directory, like ~/folio-modules. Define the check-out directories in the configuration file
+For example, create an empty directory, like ~/folio-modules. Define the source directories in the configuration file
 to point to that base directory (see `clone-and-compile-demo.json`).
 
 Then run
@@ -361,7 +357,7 @@ When complete, the configuration can be checked with
 `./validate-config.sh   projects/clone-and-compile-demo.json`
 
 The clone and compile script can be pointed to an existing directory with module check-outs in it already. If a given
-module check-out directory already exists, the script will not `git clone` that module, and if the directory contains
+module source directory already exists, the script will not `git clone` that module, and if the directory contains
 the build directory, `/target`, the script will not `mvn install`.
 
 This also means that a clone-and-compile job can be resumed after an interruption, or it can add new modules to the
@@ -379,7 +375,7 @@ In separate windows: Start Kafka
 In a separate window: Clean up past installations from the database and start Okapi
 
 ```
-./clean-db-start-okapi.sh ~/folio    # <- use actual location of the Okapi checkout directory
+./clean-db-start-okapi.sh ~/folio    # <- use actual location of the Okapi root directory
 ```
 
 Then, create the target directory for the module check-outs, and, in `/.../folio-backend-builder`, run the

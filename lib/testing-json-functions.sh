@@ -21,7 +21,7 @@ javaHome mod-inventory-storage  ../projects/my-folio.json
 env mod-permissions  ../projects/my-folio.json
 env mod-pubsub  ../projects/my-folio.json
 
-baseDir mod-permissions ../projects/my-folio.json
+sourceDirectory mod-permissions ../projects/my-folio.json
 
 deploymentDescriptor mod-permissions ../projects/my-folio.json
 

@@ -16,6 +16,7 @@ started=$(date)
 
 # Import jq functions for retrieving installation instructions from the passed-in configuration file
 source "$workdir/lib/ConfigReader.sh"
+source "$workdir/lib/Utils.sh"
 
 # Functions for: Error reporting, manipulation of descriptors, registration and deployment.
 
@@ -33,7 +34,7 @@ function report() {
   resp="$1"
   status=$(statusCode "$resp")
   if [[ " 200 201 " == *"$status"* ]]; then
-    printf " OK.\n";
+    printf "\n";
   else
     logError "$resp"
     printf "%s\n" "$resp"
@@ -44,9 +45,9 @@ function report() {
 function setPgHostInModuleDescriptor() {
   moduleName=$1
   thisHost=$(hostname -I | { read first rest ; echo $first ; })
-  baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
-  newMd=$(jq --arg pgHost "$thisHost" -r '(.launchDescriptor.env[] | select(.name == "DB_HOST")).value=$pgHost ' "$baseDir/$moduleName/target/ModuleDescriptor.json")
-  echo "$newMd" > "$baseDir/$moduleName/target/ModuleDescriptor.json" 
+  sourceDirectory=$(sourceDirectory "$moduleName" "$CONFIG_FILE")
+  newMd=$(jq --arg pgHost "$thisHost" -r '(.launchDescriptor.env[] | select(.name == "DB_HOST")).value=$pgHost ' "$sourceDirectory/$moduleName/target/ModuleDescriptor.json")
+  echo "$newMd" > "$sourceDirectory/$moduleName/target/ModuleDescriptor.json"
 }
 ## Will post partly generated, partly static ModuleDescriptors and DeploymentDescriptors to Okapi.
 function registerAndDeploy() {
@@ -55,16 +56,16 @@ function registerAndDeploy() {
     printf "ERROR: No configuration found in %s for %s. Have to bail." "$CONFIG_FILE" "$moduleName"
     exit
   fi
-  baseDir=$(baseDir "$moduleName" "$CONFIG_FILE")
+  sourceDirectory=$(sourceDirectory "$moduleName" "$CONFIG_FILE")
   method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
   moduleId=$(moduleDescriptorId "$moduleName" "$CONFIG_FILE")
   if [[ -n "$moduleId" ]]; then
     if [[ "$method" == "DOCKER" ]]; then
         setPgHostInModuleDescriptor "$moduleName"
     fi
-    printf "Register %s. " "$moduleId"
-    report "$(curl -s -w "$format" -H "Content-type: application/json" -d @"$baseDir"/"$moduleName"/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules)"
-    printf "Deploy %s. " "$moduleId"
+    printf "Register %-40s" "$moduleId"
+    report "$(curl -s -w "$format" -H "Content-type: application/json" -d @"$sourceDirectory"/"$moduleName"/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules)"
+    printf "Deploy   - %-40s%s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")"
     if [[ "$method" == "DD" ]]
       then
         deploymentDescriptor=$(makeDeploymentDescriptor "$moduleName" "$CONFIG_FILE")
@@ -82,7 +83,7 @@ function registerAndDeploy() {
 ## Basic user infrastructure to be able to create a user with credentials and permissions
 ### Create tenant
 tenants=$(tenants "$CONFIG_FILE")
-printf "Create tenant %s " "$tenants"
+printf "Create tenant %s" "$tenants"
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants)"
 ### Deploy fake APIs, if any
 if [[ "null" != "$(jq -r '.fakeApis.provides' "$CONFIG_FILE")" ]]; then
@@ -106,7 +107,7 @@ for name in $basicModules; do
   registerAndDeploy "$name" "$CONFIG_FILE"
   if [[ "$name" != "mod-authtoken" && "$name" != "mod-users-bl" ]]; then  # Activation deferred until permissions assigned for all modules.
     moduleId=$(moduleDescriptorId "$name" "$CONFIG_FILE")
-    printf "Install %s for diku. " "$moduleId"
+    printf "Install  - %-40s" "$moduleId"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
   fi
 done
@@ -137,10 +138,10 @@ for name in $selectedModules; do
   tenantParams=$(installParameters "$name" "$CONFIG_FILE")
   if [[ -n "$tenantParams" ]]; then
     # Has tenant init parameters - send to 'install' end-point
-    printf "Install %s for diku with parameters %s. " "$name" "$tenantParams"
+    printf "Install  - %s with parameters %s. " "$name" "$tenantParams"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d '[{"id": "'"$moduleId"'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters="$tenantParams")"
   else
-    printf "Assign %s to diku. " "$name"
+    printf "Assign   - %-40s" "$name"
     respAssign="$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$moduleId"'", "action": "enable"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
     report "$respAssign"
   fi
