@@ -26,6 +26,7 @@ DROP_ROLE diku_mod_password_validator;
 DROP_ROLE diku_mod_marc_storage;
 DROP_ROLE diku_mod_eusage_reports;
 DROP_ROLE diku_mod_harvester_admin;
+DROP_ROLE diku_mod_audit;
 
 #echo "Remaining roles:"
 #sudo -u postgres bash -c "PGPASSWORD=post psql -c \"SELECT rolname FROM pg_roles;\""
