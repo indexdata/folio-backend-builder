@@ -68,7 +68,7 @@ done
 for moduleName in $moduleNames ; do
   sourceDirectory=$(moduleDirectory "$moduleName" "$CONFIG_FILE")
   modulePath="$sourceDirectory/$moduleName"
-  gitHost=$(moduleRepo "$moduleName" "$CONFIG_FILE")
+  gitHost=$(moduleRepoOrDefault "$moduleName" "$CONFIG_FILE")
   if [ -d "$sourceDirectory" ]; then
     if [ ! -d "$modulePath" ]; then
       printf "\n$(date) Cloning %s to %s from %s/%s\n" "$moduleName" "$sourceDirectory" "$gitHost" "$moduleName"

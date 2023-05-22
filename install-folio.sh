@@ -65,7 +65,7 @@ function registerAndDeploy() {
     fi
     printf "Register %-40s" "$moduleId"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d @"$sourceDirectory"/"$moduleName"/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules)"
-    printf "Deploy   - %-40s%s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")"
+    printf "Deploy   - %-40s%s %s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")" "$(moduleRepo "$moduleName" "$CONFIG_FILE")"
     if [[ "$method" == "DD" ]]
       then
         deploymentDescriptor=$(makeDeploymentDescriptor "$moduleName" "$CONFIG_FILE")

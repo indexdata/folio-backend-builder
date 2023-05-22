@@ -20,6 +20,11 @@ module() {
 
 moduleRepo() {
   repo=$(module "$1" "$2" | jq -r '.repo')
+  echo "${repo#null}"
+}
+
+moduleRepoOrDefault() {
+  repo=$(module "$1" "$2" | jq -r '.repo')
   repo=${repo#null}
   if [[ -n "$repo" ]]; then
     echo "$repo"
