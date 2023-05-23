@@ -23,8 +23,7 @@ of these tasks.
 * Postgres has the user `okapi` and database `okapi` (see below)
 * Postgres has the user `folio_admin` and database `okapi_modules` (see below)
 * Okapi is checked out from folio-org at GitHub.
-* All FOLIO modules to be installed are checked out and compiled, manually or using [the provided script](#git-cloning-and-maven-installing-modules)
-* Okapi and FOLIO modules are compiled. Some perhaps dockerized.
+* All FOLIO modules to be installed are checked out and compiled and perhaps dockerized, manually or using [the provided script](#git-cloning-and-maven-installing-modules)
 * Okapi is started (see below)
 
 Apache Maven is required for compiling Okapi and modules.
