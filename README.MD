@@ -18,7 +18,7 @@ Before the script can be run, following environment must be in place. There are 
 of these tasks.
 
 * Postgres installed and running.
-* Kafka installed and running.
+* Kafka installed and running. [Kafka quickstart](https://kafka.apache.org/quickstart)
 * Docker (if any modules should be deployed as Docker containers)
 * Postgres has the user `okapi` and database `okapi` [see below](https://github.com/indexdata/folio-backend-builder#create-okapi-user-okapi-database-folio_admin-user-in-postgres-once)
 * Postgres has the user `folio_admin` and database `okapi_modules` [see below](https://github.com/indexdata/folio-backend-builder#create-okapi-user-okapi-database-folio_admin-user-in-postgres-once)
@@ -41,7 +41,6 @@ for building and starting Okapi.
 * [Okapi storage](https://github.com/folio-org/okapi/blob/master/doc/guide.md#storage)
 * [Okapi README](https://github.com/folio-org/okapi/blob/master/README.md)
 
-For Kafka, perhaps see [Kafka quickstart](https://kafka.apache.org/quickstart)
 
 ## One time preparation of the database
 
