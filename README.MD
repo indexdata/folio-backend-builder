@@ -20,10 +20,10 @@ of these tasks.
 * Postgres installed and running.
 * Kafka installed and running.
 * Docker (if any modules should be deployed as Docker containers)
-* Postgres has the user `okapi` and database `okapi` (see below)
-* Postgres has the user `folio_admin` and database `okapi_modules` (see below)
+* Postgres has the user `okapi` and database `okapi` [see below](https://github.com/indexdata/folio-backend-builder#create-okapi-user-okapi-database-folio_admin-user-in-postgres-once)
+* Postgres has the user `folio_admin` and database `okapi_modules` [see below](https://github.com/indexdata/folio-backend-builder#create-okapi-user-okapi-database-folio_admin-user-in-postgres-once)
 * All FOLIO modules to be installed are checked out and compiled and perhaps dockerized, manually or using [the provided script](#git-cloning-and-maven-installing-modules)
-* Okapi is checked out, installed, and started (see below)
+* Okapi is checked out, installed, and started [see below](#initialize-okapi-database-and-start-okapi)
 
 Apache Maven is required for compiling Okapi and modules.
 
@@ -371,7 +371,7 @@ interfaces. It probably goes without saying that some cautiousness is warranted 
 
 ## Git cloning and Maven installing modules.
 
-The script `clone-and-compile.sh` can be run on a configuration file to check out all the basic and selected modules
+The script `clone-and-compile.sh` can be run on a configuration file to check out (clone) all the basic and selected modules
 from Git, and compile (mvn install) them.
 
 For example, create an empty directory, like ~/folio-modules. Define the source directories in the configuration file

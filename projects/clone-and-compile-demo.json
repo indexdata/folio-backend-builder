@@ -2,23 +2,23 @@
     "description": "Template FOLIO configuration.",
   
     "basicModules" : [
-      { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
-      { "name": "mod-users",              "version": "19.2.0-SNAPSHOT" },
-      { "name": "mod-login",              "version": "7.10.0-SNAPSHOT" },
-      { "name": "mod-password-validator", "version": "3.1.0-SNAPSHOT" },
-      { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT" },
-      { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT" },
-      { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
+      { "name": "mod-permissions" },
+      { "name": "mod-users" },
+      { "name": "mod-login" },
+      { "name": "mod-password-validator" },
+      { "name": "mod-authtoken" },
+      { "name": "mod-configuration" },
+      { "name": "mod-users-bl" }
     ],
     "selectedModules": [
-      { "name": "mod-inventory-storage",  "version": "26.1.0-SNAPSHOT" },
-      { "name": "mod-inventory-update",   "version": "3.1.1-SNAPSHOT" }
+      { "name": "mod-inventory-storage" },
+      { "name": "mod-inventory-update" }
     ],
-    "sourceDirectory": "~/folio",
+    "sourceDirectory": "~/folio-modules",
     "alternativeDirectories": [
       {
-        "symbol": "GIT-FOLIO",
-        "directory": "~/folio-modules"
+        "symbol": "OTHER-GIT",
+        "directory": "~/some-directory"
       }
     ],
     "jvms": [
