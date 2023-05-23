@@ -129,45 +129,67 @@ version.
 
 ```
 "basicModules" : [
-        { "name": "mod-permissions",        "sourceDirectory": "GIT-FOLIO", "version": "6.4.0-SNAPSHOT" },
-        { "name": "mod-users",              "sourceDirectory": "GIT-FOLIO", "version": "19.2.0-SNAPSHOT"},
-        { "name": "mod-login",              "sourceDirectory": "GIT-FOLIO", "version": "7.10.0-SNAPSHOT"},
-        { "name": "mod-password-validator", "sourceDirectory": "GIT-FOLIO", "version": "3.1.1-SNAPSHOT"},
-        { "name": "mod-authtoken",          "sourceDirectory": "GIT-FOLIO", "version": "2.14.0-SNAPSHOT"},
-        { "name": "mod-configuration",      "sourceDirectory": "GIT-FOLIO", "version": "5.9.2-SNAPSHOT"},
-        { "name": "mod-users-bl",           "sourceDirectory": "GIT-FOLIO", "version": "7.6.0-SNAPSHOT"}
+        { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
+        { "name": "mod-users",              "version": "19.2.0-SNAPSHOT"},
+        { "name": "mod-login",              "version": "7.10.0-SNAPSHOT"},
+        { "name": "mod-password-validator", "version": "3.1.1-SNAPSHOT"},
+        { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT"},
+        { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT"},
+        { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
 ]
 ```
+
+On top of that, any number of optional modules can be added:
+
+```
+"selectedModules": [
+        { "name": "mod-inventory-storage",    "version": "26.1.0-SNAPSHOT" },
+        { "name": "mod-pubsub",               "version": "2.10.0-SNAPSHOT" },
+        { "name": "mod-circulation-storage",  "version": "16.1.0-SNAPSHOT" }, 
+        { "name": "mod-event-config",         "version": "2.6.0-SNAPSHOT" },      
+]
+```
+
+The `version` property is optional. It's informational and only potentially used for flagging if a checked out version
+is not
+the specified version, so it can be a way to be alerted that something changed.
 
 ### System dependent settings
 
-#### Sample directory locations settings
+#### Source directories
 
-This sections defines, where on the file system, the modules to install are checked out. If using ~/folio for this there
-is no need to change anything here.
+The configuration must define the source directory, or directories, where the modules are checked out.
 
-The settings control both where the automatic git clone and mvn install script checks the projects out to, and where the
-install-folio script picks them up.
+The modules will be installed from the directory specified in `sourceDirectory` - in the example below under `/folio` in
+the home directory.
 
-If one wanted to create a new platform next to the main development environment, GIF-FOLIO might be changed to "~
-/folio-tmp".
+Alternative locations can be defined for individual modules by a symbol that then must be defined
+in `alternativeDirectories`, for example:
 
 ```
-"sourceDirectories": [
-    {
-        "symbol": "GIT-FOLIO",
-        "directory": "~/folio"
-    },
-    {
-        "symbol": "GIT-OLE",
-        "directory": "~/git-ole"
-    },
-    {
-        "symbol": "GIT-ID",
-        "directory": "~/gitprojects"
-    }
+"selectedModules": [
+        { "name": "mod-inventory-storage",    "version": "26.1.0-SNAPSHOT" },
+        { "name": "mod-pubsub",               "version": "2.10.0-SNAPSHOT", "sourceDirectory": "TMP" },
+        { "name": "mod-circulation-storage",  "version": "16.1.0-SNAPSHOT" }, 
+        { "name": "mod-event-config",         "version": "2.6.0-SNAPSHOT" },      
+        { "name": "my-module-1",              "version": "0.0.1-SNAPSHOT",  "sourceDirectory": "MY-GIT" }
+        { "name": "my-module-2",              "version": "0.0.1-SNAPSHOT",  "sourceDirectory": "MY-GIT" } 
+],
+"sourceDirectory": "~/folio",
+"alternativeDirectories": [
+  {
+    "symbol": "TMP",
+    "directory": "~/tmp-folio"
+  },
+  { 
+    "symbol": "MY-GIT",
+    "directory": "~/gitprojects"
+  }  
 ]
 ```
+
+The scripts will not create these root directories, they must be created beforehand. The scripts should flag if the
+specified directories don't exist.
 
 #### Sample JVM settings
 
@@ -233,7 +255,6 @@ With the above basic system dependent settings defined, each module to install c
 ``` 
 { 
    "name": "mod-circulation-storage",     
-   "gitHost": "https://github.com/folio-org",
    "requiredBy": [
        "mod-circulation",
        "mod-inventory",
@@ -252,16 +273,52 @@ With the above basic system dependent settings defined, each module to install c
 }
 ```
 
-The property `requiredBy` are is optional/informational. Keeping notes of interdependencies here can be convenient when
+The property `requiredBy` is optional/informational. Keeping notes of interdependencies here can be convenient when
 wanting to include or exclude modules from the package.
 
-The property `gitHost` is used by the script that clones and compiles modules, but it will default
-to `https://github.com/folio-org` so only need to be set for modules residing in other organisations.
+### Specifying Git repositories
+
+If using the script in this tool that clones modules from GitHub, then modules are by default cloned
+from https://github.com/folio-org.
+
+If a module resides in another git repository, it can be specified in the module config:
+
+``` 
+{ 
+   "name": "mod-my-module",     
+   "gitHost": "https://github.com/my-organisation"
+   "deployment": {
+       "method": "DD",
+       "env": "STANDARD-PG",
+       "jvm": "JAVA11",
+       "pathToJar": "target/mod-my-module-fat.jar"
+   },
+   "permissions": [
+       "my-module.all"
+   ]
+}
+```
+
+It's also possible to override the default in the modules listing, for example if a module is temporarily forked
+from `folio-org` to another organization
+
+```
+"selectedModules": [
+    { "name": "mod-inventory",  "repo": "https://github.com/my-organisation" }
+    { "name": "mod-inventory-storage"},
+    { "name": "mod-pubsub"},
+    { "name": "mod-circulation-storage"}, 
+]
+```
+
+In other words, the Git repository will be "https://github.com/folio-org", unless this is overridden by `gitHost` in the module
+configuration, unless this is overridden by `repo` in the modules listing.
 
 #### Method of deployment
 
 For modules that are deployed using a deployment descriptor, the `deployment.method` should be "DD". Otherwise, the
-installation script will assume that the module descriptor has a launch descriptor, like is usually the case for Docker based
+installation script will assume that the module descriptor has a launch descriptor, like is usually the case for Docker
+based
 deployment.
 
 #### Select a runtime JVM
@@ -286,29 +343,6 @@ exact parameters the module needs. See `mod-pubsub` in the sample config.
 #### Setting permissions
 
 In `permissions`, provide a list of permissions to assign to `diku_admin` for the module.
-
-### Selecting and deselecting modules
-
-Modules to install must be listed in `selectedModules`
-
-Modules can be de-selected by removing the entry from `selectedModules`. The module configuration can be retained in the
-config if desired.
-
-A module can also be skipped by renaming the property `name`. Name it `skipped` instead for example:
-
-```
-"selectedModules": [
-    { "name": "mod-calendar",       "sourceDirectory": "GIT-FOLIO", "version": "2.4.3-SNAPSHOT"},
-    { "name": "mod-notes",          "sourceDirectory": "GIT-FOLIO", version": "5.1.0-SNAPSHOT"},
-    { "skipped": "mod-circulation", "sourceDirectory": "GIT-FOLIO", "version": "23.6.0-SNAPSHOT"},
-    { "skipped": "mod-inventory",   "sourceDirectory": "GIT-FOLIO", "version": "20.1.0-SNAPSHOT"}
-]
-```
-
-The `source` specifies where on the file system to find the source and build of the module. The symbol is referring to an entry in `sourceDirectories`
-
-The `version` is informational and optional. It might eventually be used for flagging if a checked out version is not
-the specified version.
 
 ### Faking modules
 
