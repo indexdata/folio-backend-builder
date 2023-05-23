@@ -22,9 +22,8 @@ of these tasks.
 * Docker (if any modules should be deployed as Docker containers)
 * Postgres has the user `okapi` and database `okapi` (see below)
 * Postgres has the user `folio_admin` and database `okapi_modules` (see below)
-* Okapi is checked out from folio-org at GitHub.
 * All FOLIO modules to be installed are checked out and compiled and perhaps dockerized, manually or using [the provided script](#git-cloning-and-maven-installing-modules)
-* Okapi is started (see below)
+* Okapi is checked out, installed, and started (see below)
 
 Apache Maven is required for compiling Okapi and modules.
 
@@ -78,7 +77,7 @@ Create the database (again):
 
 #### Initialize Okapi database and start Okapi
 
-Assuming Okapi is checked out to (and installed in) ~/folio, do:
+Assuming that Okapi is checked out from https://github.com/folio-org/okapi to, say, `~/folio` and installed (`mvn install`) there, do:
 
 `java -Dport=8600 -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar initdatabase`
 
