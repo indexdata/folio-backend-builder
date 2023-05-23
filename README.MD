@@ -23,7 +23,7 @@ of these tasks.
 * Postgres has the user `okapi` and database `okapi` (see below)
 * Postgres has the user `folio_admin` and database `okapi_modules` (see below)
 * Okapi is checked out from folio-org at GitHub.
-* All FOLIO modules to be installed are checked out, for example from folio-org at GitHub.
+* All FOLIO modules to be installed are checked out and compiled, manually or using [the provided script](#git-cloning-and-maven-installing-modules)
 * Okapi and FOLIO modules are compiled. Some perhaps dockerized.
 * Okapi is started (see below)
 
@@ -116,7 +116,7 @@ The validation script will
 
 Here follows a walk-through of the different sections of the configuration file.
 
-### Basic modules
+### Selecting modules
 
 The installation process requires at least seven basic modules to be installed. These are modules making it possible to
 create users and give them credentials and permissions.
@@ -150,9 +150,8 @@ On top of that, any number of optional modules can be added:
 ]
 ```
 
-The `version` property is optional. It's informational and only potentially used for flagging if a checked out version
-is not
-the specified version, so it can be a way to be alerted that something changed.
+The `version` property is optional. It's potentially used for flagging if a checked out version
+diverged from the specified version.
 
 ### System dependent settings
 
