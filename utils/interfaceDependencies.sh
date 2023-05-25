@@ -11,7 +11,7 @@ function providedInterfaces() {
   directories=""
   # find all module descriptors
   for moduleName in $modules ; do
-    directories="$directories  $(moduleDirectory "$moduleName" "$CF")/$moduleName/target/ModuleDescriptor.json"
+    directories="$directories  $(moduleDirectory "$moduleName" "$1")/$moduleName/target/ModuleDescriptor.json"
   done
   # shellcheck disable=SC2086
   jq -n  '[ inputs | .id as $moduleId |
@@ -24,7 +24,7 @@ function requiredInterfaces() {
   directories=""
   # find all module descriptors
   for moduleName in $modules ; do
-    directories="$directories  $(moduleDirectory "$moduleName" "$CF")/$moduleName/target/ModuleDescriptor.json"
+    directories="$directories  $(moduleDirectory "$moduleName" "$1")/$moduleName/target/ModuleDescriptor.json"
   done
   # shellcheck disable=SC2086
   jq -n  '[ inputs | .id as $moduleId | .requires[]? | { id, "module": $moduleId }]' $directories
