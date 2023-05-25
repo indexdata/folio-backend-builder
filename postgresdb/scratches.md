@@ -2,7 +2,7 @@
 
 #### Log in to Okapi modules' database
 
-`psql -U folio_admin -d okapi_modules -h localhost`
+`psql -U folio_admin -d okapi_modules -h localhost   # pw folio_admin`se
 
 (was once `psql -U folio_admin postgresql://localhost:5432 okapi_modules`)
 

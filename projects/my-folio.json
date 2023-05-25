@@ -1,38 +1,22 @@
 {
     "description": "Template FOLIO configuration.",
-
+    "sourceDirectory": "~/folio-modules",
     "selectedModules": [
-        { "name": "mod-inventory-storage",    "version": "26.1.0-SNAPSHOT" },
-        { "name": "mod-pubsub",               "version": "2.10.0-SNAPSHOT" },
-        { "name": "mod-circulation-storage",  "version": "16.1.0-SNAPSHOT" },
-        { "name": "mod-event-config",         "version": "2.6.0-SNAPSHOT" },
-        { "name": "mod-template-engine",      "version": "1.19.0-SNAPSHOT"},
-        { "name": "mod-email",                "version": "1.15.4-SNAPSHOT"},
-        { "name": "mod-sender",               "version": "1.11.0-SNAPSHOT"},
-        { "name": "mod-notify",               "version": "3.0.1-SNAPSHOT"},
-        { "name": "mod-feesfines",            "version": "18.3.0-SNAPSHOT"},
-        { "name": "mod-patron-blocks",        "version": "1.9.0-SNAPSHOT"},
-        { "name": "mod-calendar",             "version": "2.4.3-SNAPSHOT"},
-        { "name": "mod-notes",                "version": "5.1.0-SNAPSHOT"},
-        { "name": "mod-circulation",          "version": "23.6.0-SNAPSHOT"},
-        { "name": "mod-inventory",            "version": "20.1.0-SNAPSHOT"}
+        { "name": "mod-inventory-storage" },
+        { "name": "mod-pubsub" },
+        { "name": "mod-circulation-storage" },
+        { "name": "mod-event-config" },
+        { "name": "mod-template-engine" },
+        { "name": "mod-email" },
+        { "name": "mod-sender" },
+        { "name": "mod-notify" },
+        { "name": "mod-feesfines" },
+        { "name": "mod-patron-blocks" },
+        { "name": "mod-calendar" },
+        { "name": "mod-notes" },
+        { "name": "mod-circulation" },
+        { "name": "mod-inventory" }
     ],
-    "basicModules" : [
-        { "name": "mod-permissions",          "version": "6.4.0-SNAPSHOT" },
-        { "name": "mod-users",                "version": "19.2.0-SNAPSHOT"},
-        { "name": "mod-login",                "version": "7.10.0-SNAPSHOT"},
-        { "name": "mod-password-validator",   "version": "3.1.1-SNAPSHOT"},
-        { "name": "mod-authtoken",            "version": "2.14.0-SNAPSHOT"},
-        { "name": "mod-configuration",        "version": "5.9.2-SNAPSHOT"},
-        { "name": "mod-users-bl",             "version": "7.6.0-SNAPSHOT"}
-    ],
-    "fakeApis": {
-        "provides": [
-            { "id": "source-storage-records", "version": "3.0" },
-            { "id": "instance-authority-links", "version": "2.0" }
-        ]
-    },
-    "sourceDirectory": "~/mainz",
     "alternativeDirectories": [
         {
             "symbol": "some short hand",
@@ -52,6 +36,21 @@
             "symbol": "JAVA18",
             "home": "~/.jdks/openjdk-18.0.2.1"
         }
+    ],
+    "fakeApis": {
+        "provides": [
+            { "id": "source-storage-records", "version": "3.0" },
+            { "id": "instance-authority-links", "version": "2.0" }
+        ]
+    },
+    "basicModules" : [
+        { "name": "mod-permissions" },
+        { "name": "mod-users" },
+        { "name": "mod-login" },
+        { "name": "mod-password-validator" },
+        { "name": "mod-authtoken" },
+        { "name": "mod-configuration" },
+        { "name": "mod-users-bl" }
     ],
     "moduleConfigs": [
         {

@@ -111,7 +111,22 @@ The validation script will
 
 ## Configuration details
 
-Here follows a walk-through of the different sections of the configuration file.
+The project configuration consists of 10 sections that are described in more detail in the following paragraphs. 
+
+| Property               | Purpose                                                                                  | Character                                                                             |
+|------------------------|------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| sourceDirectory        | Main directory where the FOLIO modules are checked out to, for example "~/folio-modules" | Mandatory. To be set as desired for the local file system                             | 
+| selectedModules        | List of modules to include in the installation                                           | Mandatory. To be set as desired for the current project                               |  
+| alternativeDirectories | List of other directories containing modules                                             | Optional. To be set in case some modules should reside outside of the main directory. | 
+| jvms                   | Paths to JDKs for compiling and/or running modules                                       | Mandatory. Depends on the local Java installations.                                   |
+| fakeApis               | List of interfaces that should be faked to reduce the installation footprint             | Optional. Depends on the needs of the current project.                                |
+| basicModules           | List of seven modules that are always needed for the installation                        | Mandatory. Samples here can be used. No changes needed.                               |
+| moduleConfigs          | Configurations for, at least, all selected and basic modules                             | Mandatory. Samples here could be used as is, possibly with more modules added.        |
+| tenants                | Array of one tenant definition, 'diku'                                                   | Mandatory. Samples here can be used. No changes needed.                               |
+| users                  | Array of one user definition 'diku_admin'                                                | Mandatory. Samples here can be used. No changes needed.                               |
+| envVars                | Standard sets of environment variables that will suffice for deployment of most modules  | Optional but very convenient. Samples here can be used.                               | 
+
+So the essential configuration properties to check are 'sourceDirectory', 'selectedModules' and 'jvms'. 
 
 ### Selecting modules
 
