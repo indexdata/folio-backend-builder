@@ -15,7 +15,8 @@
         { "name": "mod-calendar" },
         { "name": "mod-notes" },
         { "name": "mod-circulation" },
-        { "name": "mod-inventory" }
+        { "name": "mod-inventory" },
+        { "name": "mod-audit" }
     ],
     "alternativeDirectories": [
         {
@@ -536,7 +537,20 @@
             "permissions": [
                 "inventory.all"
             ]
-        }
+        },
+        {
+            "name": "mod-audit",
+            "requiredBy": [],
+            "deployment": {
+              "method": "DD",
+              "env": "STANDARD-PG-KAFKA",
+              "pathToJar": "mod-audit-server/target/mod-audit-server-fat.jar",
+              "jvm": "JAVA11"
+            },
+            "permissions": [
+              "audit.all"
+            ]
+          }             
     ],
     "tenants": [
         {
