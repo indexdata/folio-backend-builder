@@ -65,7 +65,7 @@ function registerAndDeploy() {
     fi
     printf "Register %-40s" "$moduleId"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d @"$sourceDirectory"/"$moduleName"/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules)"
-    printf "Deploy   - %-40s%s %s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")" "$(moduleRepo "$moduleName" "$CONFIG_FILE")"
+    printf "Deploy   - %-40s%s from %s %s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")" "$sourceDirectory" "$(moduleRepo "$moduleName" "$CONFIG_FILE")"
     if [[ "$method" == "DD" ]]
       then
         deploymentDescriptor=$(makeDeploymentDescriptor "$moduleName" "$CONFIG_FILE")
@@ -113,6 +113,7 @@ for name in $basicModules; do
 done
 ### Create a user with credentials and initial permissions
 users=$(users "$CONFIG_FILE")
+printf "***********************\n"
 printf "Create user diku_admin. "
 report "$(curl -s -w "$format" -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d "$users" http://localhost:9130/users)"
 credentials=$(credentials "$CONFIG_FILE")
@@ -128,7 +129,7 @@ if [[ "$PU_ID" == "null" ]]; then
 else
   printf " OK.\n"
 fi
-
+printf "***********************\n"
 ## Install selected/optional modules
 
 selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name' "$CONFIG_FILE")
