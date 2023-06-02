@@ -11,6 +11,15 @@ started=$(date)
 source "$workdir/lib/ConfigReader.sh"
 source "$workdir/lib/Utils.sh"
 
+mainSourceDirectory=$(sourceDirectory "$CONFIG_FILE")
+if [[ -z "$mainSourceDirectory" ]]; then
+  printf "\n !! Project configuration has no main source directory ("sourceDirectory" not set), cannot continue.\n\n"
+  exit
+elif [[ ! -d "$mainSourceDirectory" ]]; then
+  printf "\n !! The projects main source directory for module check-outs does not exist. Please create '%s' to run with this configuration.\n\n" "$mainSourceDirectory"
+  exit
+fi
+
 printf "\nGit clone and Maven install of selected modules"
 printf "\n***********************************************\n"
 # Checking file system status for all requested modules
@@ -59,7 +68,6 @@ do
     read -r -p 'Continue [y/N]? ' choice
     choice=${choice:-N}
     case "$choice" in
-      n|N) exit;;
       y|Y) break;;
       *) exit;;
     esac
