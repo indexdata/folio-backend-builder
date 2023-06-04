@@ -1,8 +1,14 @@
 workdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-CONFIG_FILE=$1
-if [[ -z "$CONFIG_FILE" ]]; then
-  printf "Please provide JSON config file that lists and configures modules to be installed, like:  ./clone-and-compile.sh projects/my-folio.json"
+projectFile=$1
+if [[ -z "$projectFile" ]]; then
+  printf "\n  Usage:  ./clone-and-compile-project.sh projects/my-folio.json\n\n"
+  printf "  The script will 'git clone' modules that are not present in the specified directories\n"
+  printf "  and 'mvn install' and optionally 'docker build' those that have no target directory.\n\n"
+  exit
+fi
+if [[ ! -f "$projectFile" ]]; then
+  printf "\n  Could not find project file [%s] to clone and compile modules from.\n\n" "$projectFile"
   exit
 fi
 started=$(date)
@@ -11,9 +17,9 @@ started=$(date)
 source "$workdir/lib/ConfigReader.sh"
 source "$workdir/lib/Utils.sh"
 
-mainSourceDirectory=$(sourceDirectory "$CONFIG_FILE")
+mainSourceDirectory=$(sourceDirectory "$projectFile")
 if [[ -z "$mainSourceDirectory" ]]; then
-  printf "\n !! Project configuration has no main source directory ("sourceDirectory" not set), cannot continue.\n\n"
+  printf "\n !! Project configuration has no main source directory ('sourceDirectory' not set), cannot continue.\n\n"
   exit
 elif [[ ! -d "$mainSourceDirectory" ]]; then
   printf "\n !! The projects main source directory for module check-outs does not exist. Please create '%s' to run with this configuration.\n\n" "$mainSourceDirectory"
@@ -23,13 +29,13 @@ fi
 printf "\nGit clone and Maven install of selected modules"
 printf "\n***********************************************\n"
 # Checking file system status for all requested modules
-moduleNames=$(jq -r '(.basicModules, .selectedModules)[] | .name ' "$CONFIG_FILE")
+moduleNames=$(jq -r '(.basicModules, .selectedModules)[] | .name ' "$projectFile")
 clone=""
 compile=""
 skip=""
 printf "\nChecking file system status of selected modules\n"
 for moduleName in $moduleNames ; do
-  sourceDirectory=$(moduleDirectory "$moduleName" "$CONFIG_FILE")
+  sourceDirectory=$(moduleDirectory "$moduleName" "$projectFile")
   modulePath="$sourceDirectory/$moduleName"
   if [ -d "$sourceDirectory" ]; then
     if [ -d "$modulePath" ]; then
@@ -56,10 +62,12 @@ else
   printf "\nWill clone:   %s\n" "${clone:-" NONE"}"
   printf "Will compile: %s\n" "${compile:-" NONE"}"
   printf "Skipping:     %s\n" "${skip:-" NONE"}"
-  printf "\nUsing source directories "
-  sourceDirectories=$(jq -r '(.basicModules,.selectedModules) | unique_by(.sourceDirectory)[].sourceDirectory' "$CONFIG_FILE")
+  printf "\nUsing main source directory: %s" "$sourceDirectory"
+  sourceDirectories=$(jq -r '(.basicModules,.selectedModules) | unique_by(.sourceDirectory)[].sourceDirectory' "$projectFile")
   for symbol in $sourceDirectories ; do
-    printf "%s:%s " "$symbol" "$(alternativeDirectory "$symbol" "$CONFIG_FILE")"
+    if [[ "$symbol" != "null" ]]; then
+      printf "Alternative directory: %s:%s " "$symbol" "$(alternativeDirectory "$symbol" "$projectFile")"
+    fi
   done
 fi 
 printf "\n\n"
@@ -74,33 +82,18 @@ do
 done
 
 for moduleName in $moduleNames ; do
-  sourceDirectory=$(moduleDirectory "$moduleName" "$CONFIG_FILE")
+  sourceDirectory=$(moduleDirectory "$moduleName" "$projectFile")
   modulePath="$sourceDirectory/$moduleName"
-  gitHost=$(moduleRepoOrDefault "$moduleName" "$CONFIG_FILE")
+  gitHost=$(moduleRepoOrDefault "$moduleName" "$projectFile")
   if [ -d "$sourceDirectory" ]; then
     if [ ! -d "$modulePath" ]; then
       printf "\n$(date) Cloning %s to %s from %s/%s\n" "$moduleName" "$sourceDirectory" "$gitHost" "$moduleName"
       git clone -q --recurse-submodules "$gitHost/$moduleName"  "$modulePath"
     fi
-    gitStatus=$(gitStatus "$modulePath")
     if [ ! -f "$modulePath/target/ModuleDescriptor.json" ]; then
-      printf "$(date) Compiling %s in %s" "$moduleName$gitStatus" "$modulePath"
-      javaHome=$(javaHome "$moduleName" "$CONFIG_FILE")
-      javaHome=${javaHome#null/""}
-      javaHome=${javaHome/#~/$HOME}
-      method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
-      printf " with JVM [%s]\n" "$javaHome"
-      dir=$(pwd)
-      cd "$modulePath" || return
-      export JAVA_HOME="$javaHome" ; mvn -q clean install -D skipTests
-      if [[ "$method" == "DOCKER" ]]; then
-        dockerImage=$(jq -r '.launchDescriptor.dockerImage' "$modulePath/target/ModuleDescriptor.json")
-        printf "Building docker image %s\n" "$dockerImage"
-        docker build -q -t "$dockerImage" .
-      fi
-      cd "$dir" || return
+      ./compile-module.sh "$moduleName" "$projectFile"
     fi
-  else 
+  else
     printf "Cannot clone %s to %s. Directory does not exist.\n" "$moduleName" "$sourceDirectory"
   fi  
 done

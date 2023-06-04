@@ -385,7 +385,7 @@ interfaces. It probably goes without saying that some cautiousness is warranted 
 
 ## Git cloning and Maven installing modules.
 
-The script `clone-and-compile.sh` can be run on a configuration file to check out (clone) all the basic and selected modules
+The script [clone-and-compile-project.sh](clone-and-compile-project.sh) can be run on a configuration file to check out (clone) all the basic and selected modules
 from Git, and compile (mvn install) them.
 
 For example, create an empty directory, like ~/folio-modules. Define the source directories in the configuration file
@@ -393,7 +393,7 @@ to point to that base directory (see `clone-and-compile-demo.json`).
 
 Then run
 
-`./clone-and-compile.sh  projects/clone-and-compile-demo.json`
+`./clone-and-compile-project.sh  projects/clone-and-compile-demo.json`
 
 The script should tell what it's planning to do and ask for yes or no to continue.
 
@@ -433,7 +433,7 @@ mkdir ~/folio-modules
 
 # Clone the selected modules from git and compile them 
 
-./clone-and-compile.sh   projects/clone-and-compile-demo.json
+./clone-and-compile-project.sh   projects/clone-and-compile-demo.json
 
 # Run the validations and take a moment to check results
 
@@ -442,7 +442,7 @@ printf "Press Enter " ; read
 
 # Install the modules to Okapi
 
-./install-folio.sh projects/clone-and-compile-demo.json
+./install-folio-project.sh projects/clone-and-compile-demo.json
 ```
 
 It should now be possible to log in as `diku_admin/admin` and GET some instances from `/instance-storage/instances`.
@@ -462,5 +462,4 @@ be nice to resolve.
 The script drop-pgdb-okapi_modules-and-roles.sh will drop any roles it knows of. I might just drop the currently
 relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip it.
 
-#### Script for easy re-deploy
 

@@ -3,13 +3,13 @@
 
 workdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-CONFIG_FILE=$1
-if [[ -z "$CONFIG_FILE" ]]; then
+projectFile=$1
+if [[ -z "$projectFile" ]]; then
   printf "Please provide JSON config file listing and configuring modules to be install:  ./install-folio.sh projects/my-folio.json\n"
   exit
 fi
-if [[ ! -f "$CONFIG_FILE" ]]; then
-  printf "\n\nError: Could not find JSON config file [%s]. Have to bail, sorry.\n\n" "$CONFIG_FILE"
+if [[ ! -f "$projectFile" ]]; then
+  printf "\n\nError: Could not find JSON config file [%s]. Got to bail.\n\n" "$projectFile"
   exit 
 fi
 started=$(date)
@@ -45,30 +45,30 @@ function report() {
 function setPgHostInModuleDescriptor() {
   moduleName=$1
   thisHost=$(hostname -I | { read first rest ; echo $first ; })
-  sourceDirectory=$(moduleDirectory "$moduleName" "$CONFIG_FILE")
+  sourceDirectory=$(moduleDirectory "$moduleName" "$projectFile")
   newMd=$(jq --arg pgHost "$thisHost" -r '(.launchDescriptor.env[] | select(.name == "DB_HOST")).value=$pgHost ' "$sourceDirectory/$moduleName/target/ModuleDescriptor.json")
   echo "$newMd" > "$sourceDirectory/$moduleName/target/ModuleDescriptor.json"
 }
 ## Will post partly generated, partly static ModuleDescriptors and DeploymentDescriptors to Okapi.
 function registerAndDeploy() {
   moduleName=$1
-  if [[ -z $(moduleConfig "$moduleName" "$CONFIG_FILE") ]]; then
-    printf "ERROR: No configuration found in %s for %s. Have to bail." "$CONFIG_FILE" "$moduleName"
+  if [[ -z $(moduleConfig "$moduleName" "$projectFile") ]]; then
+    printf "ERROR: No configuration found in %s for %s. Have to bail." "$projectFile" "$moduleName"
     exit
   fi
-  sourceDirectory=$(moduleDirectory "$moduleName" "$CONFIG_FILE")
-  method=$(deploymentMethod "$moduleName" "$CONFIG_FILE")
-  moduleId=$(moduleDescriptorId "$moduleName" "$CONFIG_FILE")
+  sourceDirectory=$(moduleDirectory "$moduleName" "$projectFile")
+  method=$(deploymentMethod "$moduleName" "$projectFile")
+  moduleId=$(moduleDescriptorId "$moduleName" "$projectFile")
   if [[ -n "$moduleId" ]]; then
     if [[ "$method" == "DOCKER" ]]; then
         setPgHostInModuleDescriptor "$moduleName"
     fi
     printf "Register %-40s" "$moduleId"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d @"$sourceDirectory"/"$moduleName"/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules)"
-    printf "Deploy   - %-40s%s from %s %s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")" "$sourceDirectory" "$(moduleRepo "$moduleName" "$CONFIG_FILE")"
+    printf "Deploy   - %-40s%s from %s %s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")" "$sourceDirectory" "$(moduleRepo "$moduleName" "$projectFile")"
     if [[ "$method" == "DD" ]]
       then
-        deploymentDescriptor=$(makeDeploymentDescriptor "$moduleName" "$CONFIG_FILE")
+        deploymentDescriptor=$(makeDeploymentDescriptor "$moduleName" "$projectFile")
         report "$(curl -s -w "$format" -H "Content-type: application/json" -d "$deploymentDescriptor" http://localhost:9130/_/discovery/modules)"
     else
         report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"srvcId": "'"$moduleId"'", "nodeId": "localhost"}' http://localhost:9130/_/discovery/modules)"
@@ -82,13 +82,13 @@ function registerAndDeploy() {
 
 ## Basic user infrastructure to be able to create a user with credentials and permissions
 ### Create tenant
-tenants=$(tenants "$CONFIG_FILE")
+tenants=$(tenants "$projectFile")
 printf "Create tenant %s" "$tenants"
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants)"
 ### Deploy fake APIs, if any
-if [[ "null" != "$(jq -r '.fakeApis.provides' "$CONFIG_FILE")" ]]; then
+if [[ "null" != "$(jq -r '.fakeApis.provides' "$projectFile")" ]]; then
   pathToFaker="$workdir/lib/api-faker"
-  provides="$(jq -r '.fakeApis.provides' "$CONFIG_FILE")"
+  provides="$(jq -r '.fakeApis.provides' "$projectFile")"
   if [ ! -f "$pathToFaker/target/mod-fake-fat.jar" ];  then
     mvn clean install -f "$pathToFaker"
   fi
@@ -102,21 +102,21 @@ if [[ "null" != "$(jq -r '.fakeApis.provides' "$CONFIG_FILE")" ]]; then
   report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "mod-fake-1.0.0"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
 fi
 ### Install basic modules
-basicModules=$(jq -r '.basicModules[] | .name' "$CONFIG_FILE")
+basicModules=$(jq -r '.basicModules[] | .name' "$projectFile")
 for name in $basicModules; do
-  registerAndDeploy "$name" "$CONFIG_FILE"
+  registerAndDeploy "$name" "$projectFile"
   if [[ "$name" != "mod-authtoken" && "$name" != "mod-users-bl" ]]; then  # Activation deferred until permissions assigned for all modules.
-    moduleId=$(moduleDescriptorId "$name" "$CONFIG_FILE")
+    moduleId=$(moduleDescriptorId "$name" "$projectFile")
     printf "Install  - %-40s" "$moduleId"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
   fi
 done
 ### Create a user with credentials and initial permissions
-users=$(users "$CONFIG_FILE")
+users=$(users "$projectFile")
 printf "***********************\n"
 printf "Create user diku_admin. "
 report "$(curl -s -w "$format" -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d "$users" http://localhost:9130/users)"
-credentials=$(credentials "$CONFIG_FILE")
+credentials=$(credentials "$projectFile")
 printf "Give diku_admin credentials. "
 report "$(curl -s -w "$format" -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d "$credentials" http://localhost:9130/authn/credentials)"
 printf "Give diku_admin initial permissions. "
@@ -130,13 +130,13 @@ else
   printf " OK.\n"
 fi
 printf "***********************\n"
-## Install selected/optional modules
+## Install selected (=optional) modules
 
-selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name' "$CONFIG_FILE")
+selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name' "$projectFile")
 for name in $selectedModules; do
   registerAndDeploy "$name"
-  moduleId=$(moduleDescriptorId "$name" "$CONFIG_FILE" )
-  tenantParams=$(installParameters "$name" "$CONFIG_FILE")
+  moduleId=$(moduleDescriptorId "$name" "$projectFile" )
+  tenantParams=$(installParameters "$name" "$projectFile")
   if [[ -n "$tenantParams" ]]; then
     # Has tenant init parameters - send to 'install' end-point
     printf "Install  - %s with parameters %s. " "$name" "$tenantParams"
@@ -148,7 +148,7 @@ for name in $selectedModules; do
   fi
   status=$(statusCode "$respAssign")
   if [[ " 200 201 " == *"$status"* ]]; then
-    userPermissions=$(permissions "$name" "$CONFIG_FILE")
+    userPermissions=$(permissions "$name" "$projectFile")
     for permission in $userPermissions; do
       printf " - Permit %s. " "$permission"
       report "$(curl -s -w "$format" -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" \
@@ -162,10 +162,10 @@ done
 ## Enable authentication
 
 printf "\nLock down module access to authenticated users\n"
-authId=$(moduleDescriptorId "mod-authtoken" "$CONFIG_FILE")
+authId=$(moduleDescriptorId "mod-authtoken" "$projectFile")
 printf "Assign mod-authtoken to DIKU. "
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$authId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
-usersId=$(moduleDescriptorId "mod-users-bl" "$CONFIG_FILE" )
+usersId=$(moduleDescriptorId "mod-users-bl" "$projectFile" )
 printf "Assign mod-users-bl to DIKU. "
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$usersId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
 
@@ -173,14 +173,14 @@ report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'
 
 ## Report results
 
-printf "\n\nInstallation of a FOLIO using %s finished\n\n" "$CONFIG_FILE"
-printf "Started: %s\n" "$started"
-printf "Ended:   %s\n" "$(date)"
+printf "\n\nInstallation of a FOLIO using %s finished\n\n" "$projectFile"
 printf "\nInstalled modules, diku:\n"
 curl -s http://localhost:9130/_/proxy/tenants/diku/modules | jq -r '.[].id'
 ## Report any errors
 if [ "${#Errors[@]}" == "0" ]; then
-  printf "\n\nThe installation of [%s] completed!\n\n" "$CONFIG_FILE"
+  printf "\n\nThe installation of [%s] completed!\n\n" "$projectFile"
+  printf "Started: %s\n" "$started"
+  printf "Ended:   %s\n" "$(date)"
 else
   printf "\n\n************************************************\nThe installation had errors:\n\n"
   for i in "${Errors[@]}"; do
