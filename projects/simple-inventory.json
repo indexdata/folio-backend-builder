@@ -100,7 +100,7 @@
       ],
       "deployment": {
         "method": "DD",
-        "env": "STANDARD-PG",
+        "env": "STANDARD-PG-KAFKA",
         "jvm": "JAVA11",
         "pathToJar": "target/mod-inventory-storage-fat.jar"
       },

@@ -1,5 +1,5 @@
 *.log
 .idea/
 folio-backend-builder.code-workspace
-ignore/
+_ignore/
 /.vscode/settings.json

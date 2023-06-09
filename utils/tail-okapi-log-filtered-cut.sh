@@ -1,0 +1,1 @@
+tail -f "$1"  | awk -F '\\[|\\]' '!/mod-users/ && !/mod-permissions/ && !/mod-configuration/ && !/mod-authtoken/ && !/CQL2PgJSON/ && !/CQLWrapper/ && !/patron-blocks/ && !/users\/expire\/timer/ {printf "* %-52s%s\n", substr($9,29), $17}'

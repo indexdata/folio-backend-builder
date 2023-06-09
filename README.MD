@@ -12,87 +12,26 @@ The order of operations of the `install-folio.sh` is roughly:
 * Install selected FOLIO modules for 'diku' with permissions to 'diku_admin'
 * Lock down auth by enabling authtoken and users-bl for tenant diku
 
-## Prerequisites for running `install-folio.sh`
+## Prerequisites 
 
-Before the script can be run, following environment must be in place. There are helper scripts in this project for some
-of these tasks.
-
-* Postgres installed and running.
-* Kafka installed and running. [Kafka quickstart](https://kafka.apache.org/quickstart)
-* Docker (if any modules should be deployed as Docker containers)
-* Postgres has the user `okapi` and database `okapi` [see below](https://github.com/indexdata/folio-backend-builder#create-okapi-user-okapi-database-folio_admin-user-in-postgres-once)
-* Postgres has the user `folio_admin` and database `okapi_modules` [see below](https://github.com/indexdata/folio-backend-builder#create-okapi-user-okapi-database-folio_admin-user-in-postgres-once)
-* All FOLIO modules to be installed are checked out and compiled and perhaps dockerized, manually or using [the provided script](#git-cloning-and-maven-installing-modules)
-* Okapi is checked out, installed, and started [see below](#initialize-okapi-database-and-start-okapi)
-
-Apache Maven is required for compiling Okapi and modules.
-
-For compiling and running the modules, multiple versions of Java may be required, depending on which modules are
-included. At the time of writing JDK 8 should be phased out for most modules but JDK 11, 17, and 18 seems to be in play.
+* Apache Maven is required for compiling Okapi and modules.
+* Docker is required for creating the basic infrastructure -- Postgres, Kafka, and ElasticSearch -- as well as for running individual models as Docker containers if preferred. (Postgres and Kafka can alternatively be installed in the host rather than using the provided Docker container specification). 
+* Various versions of Java may be required for running the modules, depending on which modules are
+included and what version they are currently at. At the time of writing JDK 8 should be phased out for most modules but JDK 11, 17, and 18 seems to be in play.
 Most modules and Okapi will compile and run with JDK 11 (Okapi should still be able to run with JDK 8 actually).
+* The module installation script requires `curl` and `jq` to function.
 
-Finally, `curl` and `jq` are required for the module installation script.
+#### Initialize infrastructure and start Okapi
 
-The main Folio guides describe much better the software versions required, how to set up the databases etc., and options
-for building and starting Okapi.
+Before modules can be installed, the basic infrastructure and Okapi must be up and running.
 
-* [Developer Setup](https://dev.folio.org/guides/developer-setup/)
-* [Compiling and running Okapi](https://github.com/folio-org/okapi/blob/master/doc/guide.md#compiling-and-running)
-* [Okapi storage](https://github.com/folio-org/okapi/blob/master/doc/guide.md#storage)
-* [Okapi README](https://github.com/folio-org/okapi/blob/master/README.md)
+The script [start-infrastructure-okapi](./start-infrastructure-okapi.sh) takes care of both, by starting a Docker container with Postgres and Kafka and then start Okapi.
 
+## Install FOLIO modules
 
-## One time preparation of the database
+Now the installation script can be run using a select FOLIO project file; pass in the project configuration JSON, like this:
 
-### Create okapi user, okapi database, folio_admin user in Postgres (once)
-
-Create okapi user
-
-```
-sudo -u postgres -i
-createuser -P okapi   # When it asks for a password, enter okapi25
-createdb -O okapi okapi
-```
-
-Create folio_admin user that modules will use for access to their database schema in the `okapi_modules` database.
-
-```
-sudo -u postgres -i
-createuser -P --superuser folio_admin   # When it asks for a password, enter folio_admin
-```
-
-## Recurring preparations of the database and Okapi
-
-Following actions can be performed before each new run of the modules installation script to clean up previous
-installations.
-
-#### Create the modules database, potentially removing previously installed modules first
-
-Clean up first:
-`./postgresdb/drop-pgdb-okapi_modules-and-roles.sh`
-
-Create the database (again):
-`./postgresdb/create-pg-okapi_modules.sh`
-
-#### Initialize Okapi database and start Okapi
-
-Assuming that Okapi is checked out from https://github.com/folio-org/okapi to, say, `~/folio` and installed (`mvn install`) there, do:
-
-`java -Dport=8600 -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar initdatabase`
-
-`java -Dstorage=postgres -jar ~/folio/okapi/okapi-core/target/okapi-core-fat.jar dev`
-
-#### A script for all of the above (clean up database, start Okapi)
-
-`./clean-db-start-okapi.sh ~/folio`
-
-## Install the modules
-
-Now the installation script can be run; pass in a selected project configuration JSON, for example:
-
-`./install-folio.sh projects/simple-inventory.json`
-
-`./install-folio.sh projects/my-folio.json`
+`./install-folio-project.sh projects/my-folio.json`
 
 ## Validate the configuration first?
 
@@ -408,26 +347,16 @@ the build directory, `/target`, the script will not `mvn install`.
 This also means that a clone-and-compile job can be resumed after an interruption, or it can add new modules to the
 directory later without touching the existing ones.
 
-## All-in-one
-
-In separate windows: Start Kafka
+## All-in-one from scratch
 
 ```
-.[kafka-install]/bin/zookeeper-server-start.sh config/zookeeper.properties`
-.[kafka-install]/bin/kafka-server-start.sh config/server.properties` 
-```   
+# Check out and compile Okapi, for example in directory HOME/folio
 
-In a separate window: Clean up past installations from the database and start Okapi
+git clone --recurse-submodules https://github.com/folio-org/okapi
+cd okapi
+mvn clean install -D skipTests 
 
-```
-./clean-db-start-okapi.sh ~/folio    # <- use actual location of the Okapi root directory
-```
-
-Then, create the target directory for the module check-outs, and, in `/.../folio-backend-builder`, run the
-clone-compile, validate, and install scripts:
-
-```
-# Create empty directory `~/folio-modules`
+# Create empty directory `folio-modules` in HOME
 
 mkdir ~/folio-modules
 
@@ -440,12 +369,17 @@ mkdir ~/folio-modules
 ./validate-config.sh projects/clone-and-compile-demo.json
 printf "Press Enter " ; read
 
+# Start the FOLIO infrastructure (Postgres, Kafka), and Okapi
+
+./start-infrastructure-okapi.sh
+
 # Install the modules to Okapi
 
 ./install-folio-project.sh projects/clone-and-compile-demo.json
 ```
 
 It should now be possible to log in as `diku_admin/admin` and GET some instances from `/instance-storage/instances`.
+
 
 ## Could-Dos
 
@@ -457,9 +391,5 @@ The script will only handle one tenant from the config and one user. Also, despi
 configurable, the installation script in its current form will only work with 'diku' and 'diku_admin'. Both issues would
 be nice to resolve.
 
-#### Only drop PG roles for modules that are being installed.
-
-The script drop-pgdb-okapi_modules-and-roles.sh will drop any roles it knows of. I might just drop the currently
-relevant roles. Not a big deal, i.e. if the role doesn't exist it will just skip it.
 
 
