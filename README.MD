@@ -1,19 +1,19 @@
 # FOLIO back-end builder
 
-Scripts for installing a local, single server, FOLIO backend, entirely built from local directories of Git checkouts.
+Scripts for installing a local, single server, FOLIO backend, entirely built from Git checkouts of modules in local directories.
 
-The installation script `install-folio.sh` is based on a given project specific installation file written in JSON.
+The installation script `install-folio.sh` is running with a project specific installation file in JSON, that specifies which modules to include.
 
 ## Prerequisites 
 
 * Apache Maven is required for compiling Okapi and modules.
-* Docker is required for creating the basic infrastructure -- Postgres, Kafka, and ElasticSearch -- as well as for running individual models as Docker containers if preferred. (Postgres and Kafka can alternatively be installed in the host rather than using the provided Docker container specification). 
+* Docker is required for creating the basic infrastructure -- Postgres, Kafka, and ElasticSearch -- as well as for running individual modules as Docker containers if preferred. (Postgres and Kafka can alternatively be installed in the host rather than using the provided Docker container specification). 
 * Various versions of Java may be required for running the modules, depending on which modules are
 included and what version they are currently at. At the time of writing JDK 8 should be phased out for most modules but JDK 11, 17, and 18 seems to be in play.
 Most modules and Okapi will compile and run with JDK 11 (Okapi should still be able to run with JDK 8 actually).
 * The module installation script requires `curl` and `jq` to function.
 
-#### Initialize infrastructure and start Okapi
+## Initialize infrastructure and start Okapi
 
 Before modules can be installed, the basic infrastructure and Okapi must be up and running.
 
@@ -25,7 +25,7 @@ Now the installation script can be run using a select FOLIO project file; pass i
 
 `./install-folio-project.sh projects/my-folio.json`
 
-## What install-folio-project.sh does
+### What install-folio-project.sh does
 
 * Creates tenant diku
 * Installs basic modules for handling users
