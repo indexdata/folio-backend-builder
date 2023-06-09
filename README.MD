@@ -4,14 +4,6 @@ Scripts for installing a local, single server, FOLIO backend, entirely built fro
 
 The installation script `install-folio.sh` is based on a given project specific installation file written in JSON.
 
-The order of operations of the `install-folio.sh` is roughly:
-
-* Create tenant diku
-* Install basic modules for the user infrastructure
-* Create user 'diku_admin' with credentials
-* Install selected FOLIO modules for 'diku' with permissions to 'diku_admin'
-* Lock down auth by enabling authtoken and users-bl for tenant diku
-
 ## Prerequisites 
 
 * Apache Maven is required for compiling Okapi and modules.
@@ -32,6 +24,14 @@ The script [start-infrastructure-okapi](./start-infrastructure-okapi.sh) takes c
 Now the installation script can be run using a select FOLIO project file; pass in the project configuration JSON, like this:
 
 `./install-folio-project.sh projects/my-folio.json`
+
+## What install-folio-project.sh does
+
+* Creates tenant diku
+* Installs basic modules for handling users
+* Creates user 'diku_admin' with credentials
+* Installs selected FOLIO modules for 'diku' with permissions to 'diku_admin'
+* Locks down auth by enabling authtoken and users-bl for tenant diku
 
 ## Validate the configuration first?
 
@@ -356,7 +356,7 @@ git clone --recurse-submodules https://github.com/folio-org/okapi
 cd okapi
 mvn clean install -D skipTests 
 
-# Create empty directory `folio-modules` in HOME
+# Create directory `folio-modules` in HOME
 
 mkdir ~/folio-modules
 
@@ -369,11 +369,11 @@ mkdir ~/folio-modules
 ./validate-config.sh projects/clone-and-compile-demo.json
 printf "Press Enter " ; read
 
-# Start the FOLIO infrastructure (Postgres, Kafka), and Okapi
+# Start the FOLIO infrastructure (Postgres, Kafka) followed by Okapi
 
 ./start-infrastructure-okapi.sh
 
-# Install the modules to Okapi
+# Install the selected modules to Okapi
 
 ./install-folio-project.sh projects/clone-and-compile-demo.json
 ```
