@@ -17,15 +17,15 @@ Most modules and Okapi will compile and run with JDK 11 (Okapi should still be a
 
 Before modules can be installed, the basic infrastructure and Okapi must be up and running.
 
-The script [start-infrastructure-okapi](./start-infrastructure-okapi.sh) takes care of both, by starting a Docker container with Postgres and Kafka and then start Okapi.
+The script [start-folio-back-end](folio-service/start.sh) takes care of both, by starting a Docker container with Postgres and Kafka and then start Okapi.
 
 ## Install FOLIO modules
 
 Now the installation script can be run using a select FOLIO project file; pass in the project configuration JSON, like this:
 
-`./install-folio-project.sh projects/my-folio.json`
+`./install-modules.sh projects/my-folio.json`
 
-### What install-folio-project.sh does
+### What install-modules.sh does
 
 * Creates tenant diku
 * Installs basic modules for handling users
@@ -324,7 +324,7 @@ interfaces. It probably goes without saying that some cautiousness is warranted 
 
 ## Git cloning and Maven installing modules.
 
-The script [clone-and-compile-project.sh](clone-and-compile-project.sh) can be run on a configuration file to check out (clone) all the basic and selected modules
+The script [clone-and-compile-modules.sh](clone-and-compile-modules.sh) can be run on a configuration file to check out (clone) all the basic and selected modules
 from Git, and compile (mvn install) them.
 
 For example, create an empty directory, like ~/folio-modules. Define the source directories in the configuration file
@@ -332,7 +332,7 @@ to point to that base directory (see `clone-and-compile-demo.json`).
 
 Then run
 
-`./clone-and-compile-project.sh  projects/clone-and-compile-demo.json`
+`./clone-and-compile-modues.sh  projects/clone-and-compile-demo.json`
 
 The script should tell what it's planning to do and ask for yes or no to continue.
 
@@ -362,7 +362,7 @@ mkdir ~/folio-modules
 
 # Clone the selected modules from git and compile them 
 
-./clone-and-compile-project.sh   projects/clone-and-compile-demo.json
+./clone-and-compile-modules.sh   projects/clone-and-compile-demo.json
 
 # Run the validations and take a moment to check results
 
@@ -371,11 +371,11 @@ printf "Press Enter " ; read
 
 # Start the FOLIO infrastructure (Postgres, Kafka) followed by Okapi
 
-./start-infrastructure-okapi.sh
+./start-folio-back-end.sh
 
 # Install the selected modules to Okapi
 
-./install-folio-project.sh projects/clone-and-compile-demo.json
+./install-modules.sh projects/clone-and-compile-demo.json
 ```
 
 It should now be possible to log in as `diku_admin/admin` and GET some instances from `/instance-storage/instances`.

@@ -26,9 +26,6 @@
   "selectedModules": [
     {
       "name": "mod-inventory-storage"
-    },
-    {
-      "name": "mod-inventory-update"
     }
   ],
   "sourceDirectory": "~/folio-modules",

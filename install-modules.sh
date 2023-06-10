@@ -5,7 +5,7 @@ workdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 projectFile=$1
 if [[ -z "$projectFile" ]]; then
-  printf "Please provide JSON config file listing and configuring modules to be install:  ./install-folio.sh projects/my-folio.json\n"
+  printf "Please provide JSON config file listing and configuring modules to be install:  ./install-modules.sh projects/my-folio.json\n"
   exit
 fi
 if [[ ! -f "$projectFile" ]]; then

@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./okapi-db-init.sql:/docker-entrypoint-initdb.d/okapi-db-init.sql
+      - ./okapi-database.sql:/docker-entrypoint-initdb.d/okapi-database.sql
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper

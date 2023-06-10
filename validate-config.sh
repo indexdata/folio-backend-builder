@@ -118,7 +118,7 @@ for moduleName in $modules ; do
         logError "Missing configuration for $mod: 'deployment.method'."
     else
       sourceDirectory="$(moduleDirectory "$moduleName" "$CF")"
-      if [[ ! -d "$sourceDirectory/$mod" ]]; then
+      if [[ ! -d "$sourceDirectory/$moduleName" ]]; then
         logError "No check-out of $moduleName found at $sourceDirectory/$mod"
       fi
       if [[ "$methodSymbol" == "DD" ]]; then
