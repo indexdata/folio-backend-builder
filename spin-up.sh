@@ -11,7 +11,7 @@ stopOkapi=0
 validateConfig=0
 cloneAndCompile=0
 
-while getopts ":fvcl:p:" option; do
+while getopts ":fvcl:o:" option; do
    case $option in
       f) # Stop currently running Okapi 
          stopOkapi=1;;
@@ -19,9 +19,9 @@ while getopts ":fvcl:p:" option; do
          validateConfig=1;;
       c) # Clone and compile missing modules if any
          cloneAndCompile=1;;
-      l) # file to send Okapi logs to
+      l) # log file to send Okapi logs to
          logFile=$OPTARG;;
-      p) # Path to Okapi
+      o) # Path to Okapi
           pathToOkapi=$OPTARG;;
      \?) # Invalid option
          echo "Error: Invalid option"

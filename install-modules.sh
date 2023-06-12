@@ -65,7 +65,13 @@ function registerAndDeploy() {
     fi
     printf "Register %-40s" "$moduleId"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d @"$sourceDirectory"/"$moduleName"/target/ModuleDescriptor.json http://localhost:9130/_/proxy/modules)"
-    printf "Deploy   - %-40s%s from %s %s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")" "$sourceDirectory" "$(moduleRepo "$moduleName" "$projectFile")"
+    jarFile=$(pathToJar "$moduleName" "$projectFile")
+    if [[ $jarFile == "null" ]]; then
+      filesAge="?"
+    else
+      filesAge="$(filesAge "$sourceDirectory"/"$moduleName"/"$jarFile")"
+    fi
+    printf "Deploy   - %-40s%s from %s %s  Age: %s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")" "$sourceDirectory" "$(moduleRepo "$moduleName" "$projectFile")" "$filesAge"
     if [[ "$method" == "DD" ]]
       then
         deploymentDescriptor=$(makeDeploymentDescriptor "$moduleName" "$projectFile")

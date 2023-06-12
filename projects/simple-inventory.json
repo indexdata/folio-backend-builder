@@ -2,26 +2,17 @@
   "description": "Template FOLIO configuration.",
 
   "basicModules" : [
-    { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
-    { "name": "mod-users",              "version": "19.2.0-SNAPSHOT" },
-    { "name": "mod-login",              "version": "7.10.0-SNAPSHOT" },
-    { "name": "mod-password-validator", "version": "3.1.0-SNAPSHOT" },
-    { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT" },
-    { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT" },
-    { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
+    { "name": "mod-permissions" },
+    { "name": "mod-users" },
+    { "name": "mod-login" },
+    { "name": "mod-password-validator" },
+    { "name": "mod-authtoken" },
+    { "name": "mod-configuration" },
+    { "name": "mod-users-bl" }
   ],
   "selectedModules": [
-    { "name": "mod-inventory-storage",  "version": "26.1.0-SNAPSHOT" },
-    { "name": "mod-inventory-update",   "version": "3.1.1-SNAPSHOT" }
+    { "name": "mod-inventory-storage" }
   ],
-  "fakeApis": {
-    "provides": [
-      {
-        "id": "fake-api",
-        "version": "1.0"
-      }
-    ]
-  },
   "sourceDirectory": "~/folio",
   "alternativeDirectories": [
     {
@@ -117,7 +108,9 @@
         "mod-users-bl"
       ],
       "deployment": {
-        "method": "DOCKER"
+        "method": "DOCKER",
+        "jvm":"JAVA17",
+        "pathToJar": "target/mod-password-validator-3.1.0-SNAPSHOT.jar"
       },
       "permissions": []
     },
@@ -530,6 +523,65 @@
       },
       "permissions": [
         "inventory-update.all"
+      ]
+    },
+    {
+      "name": "mod-search",
+      "requiredBy": [],
+      "comment": "Env not finalized and module needs ES installed",
+      "deployment": {
+        "method": "DD",
+        "pathToJar": "target/mod-search-2.1.0-SNAPSHOT.jar",
+        "jvm": "JAVA17",
+        "env": [
+          { "name": "ENV", "value": "folio" },
+          { "name": "JAVA_OPTIONS", "value": "-XX:MaxRAMPercentage=85.0" },
+          { "name": "KAFKA_HOST", "value": "localhost" },
+          { "name": "KAFKA_PORT", "value": "9092" },
+          { "name": "KAFKA_SECURITY_PROTOCOL", "value": "PLAINTEXT" },
+          { "name": "KAFKA_SSL_KEYSTORE_LOCATION", "value": "" },
+          { "name": "KAFKA_SSL_KEYSTORE_PASSWORD", "value": "" },
+          { "name": "KAFKA_SSL_TRUSTSTORE_LOCATION", "value": "" },
+          { "name": "KAFKA_SSL_TRUSTSTORE_PASSWORD", "value": "" },
+          { "name": "ELASTICSEARCH_URL", "value": "http://localhost:9200" },
+          { "name": "DB_HOST", "value": "localhost" },
+          { "name": "DB_PORT", "value": "5432" },
+          { "name": "DB_USERNAME", "value": "folio_admin" },
+          { "name": "DB_PASSWORD", "value": "folio_admin" },
+          { "name": "DB_DATABASE", "value": "okapi_modules" },
+          { "name": "DB_QUERYTIMEOUT", "value": "60000" },
+          { "name": "DB_CHARSET", "value": "UTF-8" },
+          { "name": "DB_MAXPOOLSIZE", "value": "5" },
+          { "name": "INITIAL_LANGUAGES", "value": "eng" },
+          { "name": "SYSTEM_USER_PASSWORD", "value": "Mod-search-1-0-0" },
+          { "name": "OKAPI_URL", "value": "http://localhost:9130" }
+        ]      
+      },
+      "permissions": [
+        "search.index.indices.item.post",
+        "search.index.mappings.item.post",
+        "search.index.records.collection.post",
+        "search.index.settings.item.put",
+        "search.instances.collection.get",
+        "search.authorities.collection.get",
+        "browse.call-numbers.instances.collection.get",
+        "browse.subjects.instances.collection.get",
+        "browse.contributors.instances.collection.get",
+        "browse.authorities.collection.get",
+        "search.config.languages.item.post",
+        "search.config.languages.collection.get",
+        "search.config.languages.item.put",
+        "search.config.languages.item.delete",
+        "search.index.inventory.reindex.post",
+        "search.facets.collection.get",
+        "search.instances.ids.collection.get",
+        "search.holdings.ids.collection.get",
+        "search.resources.ids.collection.get",
+        "search.resources.ids.jobs.get",
+        "search.resources.ids.jobs.post",
+        "search.config.features.collection.get",
+        "search.config.features.item.post",
+        "search.config.features.item.put"
       ]
     }
   ],
