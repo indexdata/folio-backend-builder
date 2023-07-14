@@ -97,6 +97,21 @@
       ]
     },
     {
+      "name": "mod-settings",
+      "requiredBy": [
+        "mod-circulation"
+      ],
+      "deployment": {
+        "method": "DD",
+        "env": "STANDARD-PG",
+        "jvm": "JAVA17",
+        "pathToJar": "target/mod-settings-fat.jar"
+      },
+      "permissions": [
+        "mod-settings.entries.all"
+      ]
+    },
+    {
       "name": "mod-users-bl",
       "requiredBy": [],
       "deployment": {
@@ -464,7 +479,7 @@
       "deployment": {
         "method": "DD",
         "pathToJar": "target/mod-circulation.jar",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "env": [
           {
             "name": "JAVA_OPTIONS",
@@ -630,7 +645,6 @@
     {
       "name": "mod-harvester-admin",
       "version": "1.0.1-SNAPSHOT",
-      "gitHost": "https://github.com/indexdata",
       "requiredBy": [],
       "deployment": {
         "method": "DD",
