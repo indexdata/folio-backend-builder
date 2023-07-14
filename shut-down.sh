@@ -1,0 +1,1 @@
+./folio-service/shutdown.sh
