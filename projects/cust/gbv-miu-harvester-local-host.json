@@ -39,6 +39,10 @@
     {
       "symbol": "JAVA17",
       "home": "/usr/lib/jvm/java-17-openjdk-amd64"
+    },
+    {
+      "symbol": "JAVA18",
+      "home": "~/.jdks/openjdk-18.0.2.1"
     }
   ],
   "moduleConfigs": [
@@ -271,6 +275,21 @@
       },
       "permissions": [
         "configuration.all"
+      ]
+    },
+    {
+      "name": "mod-settings",
+      "requiredBy": [
+        "mod-circulation"
+      ],
+      "deployment": {
+        "method": "DD",
+        "env": "STANDARD-PG",
+        "jvm": "JAVA17",
+        "pathToJar": "target/mod-settings-fat.jar"
+      },
+      "permissions": [
+        "mod-settings.entries.all"
       ]
     },
     {
@@ -640,7 +659,7 @@
           }
         ],
         "pathToJar": "target/mod-harvester-admin-fat.jar",
-        "jvm": "JAVA18"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "harvester-admin.all"
