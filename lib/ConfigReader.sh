@@ -137,7 +137,7 @@ makeDeploymentDescriptor() {
     env=$(env "$moduleName" "$configFile")
     echo '{ "srvcId": "'"$mdId"'",  "nodeId": "localhost",
             "descriptor": {
-              "exec": "'"$jvm"/bin/java' -Dport=%p -jar '"$sourceDirectory"'/'"$moduleName"'/'"$jar"' -Dhttp.port=%p",
+              "exec": "'"$jvm"/bin/java' -Xms64M -Xmx192M -Dport=%p -jar '"$sourceDirectory"'/'"$moduleName"'/'"$jar"' -Dhttp.port=%p",
               "env": '"$env"' }}'
   fi
 }
