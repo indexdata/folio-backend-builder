@@ -79,7 +79,7 @@ for jvm in $requestedJvms; do
   if [[ ! "$jvm" == "null" ]]; then
     found=$(jq --arg jvm "$jvm" -r '.jvms | any(.symbol == $jvm)' "$CF")
     if [[ "$found" != "true" ]]; then 
-      logError"JVM $jvm is requested by a module but is not defined in 'jvms'"
+      logError "JVM $jvm is requested by a module but is not defined in 'jvms'"
     else   
      javaHome=$(jq --arg jvm "$jvm" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$CF")
      if [ ! -d "$javaHome" ]; then
@@ -119,7 +119,7 @@ for moduleName in $modules ; do
     else
       sourceDirectory="$(moduleDirectory "$moduleName" "$CF")"
       if [[ ! -d "$sourceDirectory/$moduleName" ]]; then
-        logError "No check-out of $moduleName found at $sourceDirectory/$mod"
+        logError "No check-out of $moduleName found at $sourceDirectory/$moduleName"
       fi
       if [[ "$methodSymbol" == "DD" ]]; then
         pathToJar="$(pathToJar "$moduleName" "$CF")"
@@ -132,12 +132,12 @@ for moduleName in $modules ; do
         if [ "$(env "$moduleName" "$CF")" == "null" ]; then
           logError "Missing configuration for $moduleName: 'deployment.env'."
         fi 
-        if [[ -d "$sourceDirectory/$mod" && "$pathToJar" != "null" ]]; then
-          if [[ ! -d "$sourceDirectory/$mod" ]]; then
+        if [[ -d "$sourceDirectory/$moduleName" && "$pathToJar" != "null" ]]; then
+          if [[ ! -d "$sourceDirectory/$moduleName" ]]; then
             logError "Module directory [$sourceDirectory/$moduleName] not found."
             printf "%s/%s not found" "$sourceDirectory" "$moduleName"
           elif [[ ! -d "$sourceDirectory/$moduleName/target" ]]; then
-            logError "$mod's checkout directory found but the module doesn't seem to be built. No /target in [$sourceDirectory/$moduleName]"
+            logError "$moduleName's checkout directory found but the module doesn't seem to be built. No /target in [$sourceDirectory/$moduleName]"
             printf "\n  Can't find build for '%s'. No /target directory in %s/%s" "$moduleName" "$sourceDirectory" "$moduleName"
           elif [[ ! -f "$sourceDirectory/$moduleName/$pathToJar" ]]; then
             logError "$moduleName's checkout directory with subdir /target found but cannot find the requested jar file [$sourceDirectory/$moduleName/$pathToJar]"
