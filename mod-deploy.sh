@@ -18,8 +18,7 @@ function reportCompilationsAge() {
 
 dd=$(makeDeploymentDescriptor "$moduleName" "$projectFile")
 id=$(moduleDescriptorId "$moduleName" "$projectFile")
-curl -X DELETE "http://localhost:9130/_/discovery/modules/$id"
 curl -w '\n' -D - -s -H "Content-type: application/json" -d "$dd" http://localhost:9130/_/discovery/modules
 
 jarFile=$(moduleDirectory "$moduleName" "$projectFile")/$moduleName/$(pathToJar "$moduleName" "$projectFile")
-printf "\n\n%s: Redeployment of %s. %s\n\n" "$(date)" "$jarFile"  "$(reportCompilationsAge "$jarFile")"
+printf "\n\nDeployed %s. %s\n\n" "$jarFile"  "$(reportCompilationsAge "$jarFile")"
