@@ -11,8 +11,16 @@
     { "name": "mod-users-bl" }
   ],
   "selectedModules": [
-    { "name": "mod-inventory-storage" }
+    { "name": "mod-inventory-storage" },
+    { "name": "mod-inventory"}
   ],
+  "fakeApis": {
+    "provides": [
+        { "id": "source-storage-records", "version": "3.0" },
+        { "id": "instance-authority-links", "version": "1.0" },
+        { "id": "request-storage", "version": "4.0"}
+    ]
+  },
   "sourceDirectory": "~/folio",
   "alternativeDirectories": [
     {
@@ -506,7 +514,7 @@
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
         "pathToJar": "target/mod-inventory.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "inventory.all"
