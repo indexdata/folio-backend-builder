@@ -13,19 +13,56 @@ included and what version they are currently at. At the time of writing JDK 8 sh
 Most modules and Okapi will compile and run with JDK 11 (Okapi should still be able to run with JDK 8 actually).
 * The module installation script requires `curl` and `jq` to function.
 
-## Initialize infrastructure and start Okapi
+
+## All-in-one from scratch
+This paragraph describes everything required to check out, build, install and run a small FOLIO instance. Following paragraphs will go into details of the individual parts of the process.
+
+
+```
+# Check out and compile Okapi, for example in directory HOME/folio
+
+git clone --recurse-submodules https://github.com/folio-org/okapi
+cd okapi
+mvn clean install -D skipTests 
+
+# Create directory `folio-demo` in HOME
+
+mkdir ~/folio-demo
+
+# Clone the selected modules from git and compile them 
+
+./clone-and-compile-modules.sh   projects/clone-and-compile-demo.json
+
+# Run the validations and take a moment to check results
+
+./validate-config.sh projects/clone-and-compile-demo.json
+printf "Press Enter " ; read
+
+# Start op FOLIO with select modules
+
+This will start Okapi and required infrastructure services and then install the selected modules to Okapi.
+
+./spin-up.sh projects/clone-and-compile-demo.json
+
+```
+
+It should now be possible to log in as `diku_admin/admin` and GET some instances from `/instance-storage/instances`.
+
+## The check-out, build, install, and run process in more details. 
+
+### Initialize infrastructure and start Okapi
 
 Before modules can be installed, the basic infrastructure and Okapi must be up and running.
 
 The script [start-folio-back-end](folio-service/start.sh) takes care of both, by starting a Docker container with Postgres and Kafka and then start Okapi.
 
-## Install FOLIO modules
+### Install FOLIO modules
 
 Now the installation script can be run using a select FOLIO project file; pass in the project configuration JSON, like this:
 
 `./install-modules.sh projects/my-folio.json`
 
-### What install-modules.sh does
+#### What install-modules.sh does
 
 * Creates tenant diku
 * Installs basic modules for handling users
@@ -33,7 +70,7 @@ Now the installation script can be run using a select FOLIO project file; pass i
 * Installs selected FOLIO modules for 'diku' with permissions to 'diku_admin'
 * Locks down auth by enabling authtoken and users-bl for tenant diku
 
-## Validate the configuration first?
+### Validate the configuration first?
 
 It's possible to validate a given configuration file using [validate-config.sh](validate-config.sh)
 
@@ -48,7 +85,7 @@ The validation script will
 
 `./validate-config.sh projects/my-folio.json`
 
-## Configuration details
+### Configuration details
 
 The project configuration consists of 10 sections that are described in more detail in the following paragraphs. 
 
@@ -67,7 +104,7 @@ The project configuration consists of 10 sections that are described in more det
 
 So the essential configuration properties to check are 'sourceDirectory', 'selectedModules' and 'jvms'. 
 
-### Selecting modules
+#### Selecting modules
 
 The installation process requires at least seven basic modules to be installed. These are modules making it possible to
 create users and give them credentials and permissions.
@@ -104,9 +141,9 @@ On top of that, any number of optional modules can be added:
 The `version` property is optional. It's potentially used for flagging if a checked out version
 diverged from the specified version.
 
-### System dependent settings
+#### System dependent settings
 
-#### Source directories
+##### Source directories
 
 The configuration must define the source directory, or directories, where the modules are checked out.
 
@@ -141,7 +178,7 @@ in `alternativeDirectories`, for example:
 The scripts will not create these root directories, they must be created beforehand. The scripts should flag if the
 specified directories don't exist.
 
-#### Sample JVM settings
+##### Sample JVM settings
 
 Most modules build and run with Java 11, a few require 17 or 18 to compile.
 
@@ -162,7 +199,7 @@ Most modules build and run with Java 11, a few require 17 or 18 to compile.
 ]
 ```
 
-#### Standard environment variables
+##### Standard environment variables
 
 Many modules use one of a few standard sets of environment variables. The module configuration can reference one of them
 or supply a specific set of variables of its own. Here is a sample of standard sets:
@@ -198,7 +235,7 @@ or supply a specific set of variables of its own. Here is a sample of standard s
 ]
 ```
 
-### Module configurations
+#### Module configurations
 
 With the above basic system dependent settings defined, each module to install can be configured. For example:
 
@@ -226,7 +263,7 @@ With the above basic system dependent settings defined, each module to install c
 The property `requiredBy` is optional/informational. Keeping notes of interdependencies here can be convenient when
 wanting to include or exclude modules from the package.
 
-### Specifying Git repositories
+#### Specifying Git repositories
 
 If using the script in this tool that clones modules from GitHub, then modules are by default cloned
 from https://github.com/folio-org.
@@ -264,21 +301,21 @@ from `folio-org` to another organization
 In other words, the Git repository will be "https://github.com/folio-org", unless this is overridden by `gitHost` in the module
 configuration, unless this is overridden by `repo` in the modules listing.
 
-#### Method of deployment
+##### Method of deployment
 
 For modules that are deployed using a deployment descriptor, the `deployment.method` should be "DD". Otherwise, the
 installation script will assume that the module descriptor has a launch descriptor, like is usually the case for Docker
 based
 deployment.
 
-#### Select a runtime JVM
+##### Select a runtime JVM
 
 The JVM to use must also be specified in `deployment.jvm`. The property takes a short symbol to each JVM path, and that
 JVM is then referenced in the module config by that symbol. At the time of writing most projects can be deployed using
 Java 11, and in the sample JSON the symbol for that is "JAVA11". The path itself might very well have to be changed to
 match the system the script is running on.
 
-#### Select or provide environment variables
+##### Select or provide environment variables
 
 Finally, environment variables may have to be set. There are currently three predefined standard settings to choose
 from:
@@ -290,11 +327,11 @@ from:
 A few modules have specific extra parameters though. For that the `deployment.env` property can be populated with the
 exact parameters the module needs. See `mod-pubsub` in the sample config.
 
-#### Setting permissions
+##### Setting permissions
 
 In `permissions`, provide a list of permissions to assign to `diku_admin` for the module.
 
-### Faking modules
+#### Faking modules
 
 A single interface dependency of a module can sometimes pull in a large dependency tree, or require modules that are
 complicated to install, and where all the additional modules that must be installed to satisfy the dependency and the
@@ -322,7 +359,7 @@ The property `fakeApis` can be used for that:
 This will prompt the installation of a module called `mod-fake-1.0.0`, which will ostensibly provide the listed
 interfaces. It probably goes without saying that some cautiousness is warranted with this feature activated.
 
-## Git cloning and Maven installing modules.
+### Git cloning and Maven installing modules.
 
 The script [clone-and-compile-modules.sh](clone-and-compile-modules.sh) can be run on a configuration file to check out (clone) all the basic and selected modules
 from Git, and compile (mvn install) them.
@@ -347,38 +384,6 @@ the build directory, `/target`, the script will not `mvn install`.
 This also means that a clone-and-compile job can be resumed after an interruption, or it can add new modules to the
 directory later without touching the existing ones.
 
-## All-in-one from scratch
-
-```
-# Check out and compile Okapi, for example in directory HOME/folio
-
-git clone --recurse-submodules https://github.com/folio-org/okapi
-cd okapi
-mvn clean install -D skipTests 
-
-# Create directory `folio-modules` in HOME
-
-mkdir ~/folio-modules
-
-# Clone the selected modules from git and compile them 
-
-./clone-and-compile-modules.sh   projects/clone-and-compile-demo.json
-
-# Run the validations and take a moment to check results
-
-./validate-config.sh projects/clone-and-compile-demo.json
-printf "Press Enter " ; read
-
-# Start the FOLIO infrastructure (Postgres, Kafka) followed by Okapi
-
-./start-folio-back-end.sh
-
-# Install the selected modules to Okapi
-
-./install-modules.sh projects/clone-and-compile-demo.json
-```
-
-It should now be possible to log in as `diku_admin/admin` and GET some instances from `/instance-storage/instances`.
 
 
 ## Could-Dos
