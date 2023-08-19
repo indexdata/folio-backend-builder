@@ -37,6 +37,15 @@ services:
     depends_on:
       - zookeeper
 
-networks: 
+  elasticsearch:
+    image: bitnami/elasticsearch:latest
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      ELASTICSEARCH_PLUGINS: analysis-icu, analysis-kuromoji, analysis-smartcn, analysis-nori, analysis-phonetic
+      ELASTICSEARCH_PORT_NUMBER: 9200
+
+networks:
   default: 
     name: folio_network

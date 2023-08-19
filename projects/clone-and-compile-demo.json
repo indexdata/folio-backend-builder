@@ -28,7 +28,7 @@
       "name": "mod-inventory-storage"
     }
   ],
-  "sourceDirectory": "~/folio-modules",
+  "sourceDirectory": "~/folio-demo",
   "alternativeDirectories": [
     {
       "symbol": "OTHER-GIT",
@@ -67,7 +67,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-users-fat.jar"
       },
       "permissions": []
@@ -82,7 +82,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-permissions-fat.jar"
       },
       "permissions": []
@@ -96,7 +96,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-login-fat.jar"
       },
       "permissions": []
@@ -120,7 +120,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-authtoken-fat.jar"
       },
       "permissions": []
@@ -139,7 +139,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar"
       },
       "permissions": [
@@ -152,7 +152,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-users-bl-fat.jar"
       },
       "permissions": []
@@ -169,7 +169,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-inventory-storage-fat.jar"
       },
       "install": {
@@ -188,7 +188,7 @@
       ],
       "deployment": {
         "method": "DD",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "mod-pubsub-server/target/mod-pubsub-server-fat.jar",
         "env": [
           {
@@ -278,7 +278,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-circulation-storage-fat.jar"
       },
       "permissions": [
