@@ -14,9 +14,10 @@ Most modules and Okapi will compile and run with JDK 11 (Okapi should still be a
 * The module installation script requires `curl` and `jq` to function.
 
 
-## All-in-one from scratch
+## Check-out and install a FOLIO instance
 This paragraph describes everything required to check out, build, install and run a small FOLIO instance. Following paragraphs will go into details of the individual parts of the process.
 
+The project configuration used, clone-and-compile-demo.json, assumes certain JVMs for building and running modules to be present at configured file system locations. If the given Java versions resides somewhere else, the jvms section of clone-and-compile-demo.json should be modified accordingly.    
 
 ```
 # Check out and compile Okapi, for example in directory HOME/folio
@@ -40,9 +41,9 @@ printf "Press Enter " ; read
 
 # Start op FOLIO with select modules
 
-This will start Okapi and required infrastructure services and then install the selected modules to Okapi.
+This will start Okapi and required infrastructure services and then install the selected modules to Okapi. By default the script expects Okapi to be found in HOME/folio/okapi. If Okapi is to run from another location, that path can be specified with option `-o <path>` 
 
-./spin-up.sh projects/clone-and-compile-demo.json
+./spin-up.sh -o ~/folio projects/clone-and-compile-demo.json 
 
 ```
 
