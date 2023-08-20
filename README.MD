@@ -41,7 +41,9 @@ printf "Press Enter " ; read
 
 # Start op FOLIO with select modules
 
-This will start Okapi and required infrastructure services and then install the selected modules to Okapi. By default the script expects Okapi to be found in HOME/folio/okapi. If Okapi is to run from another location, that path can be specified with option `-o <path>` 
+# This will start Okapi and required infrastructure services and then install the selected modules to Okapi. 
+" By default the script expects Okapi to be found in HOME/folio/okapi. If Okapi is to run from another location, 
+# the path can be specified with option `-o <path>` 
 
 ./spin-up.sh -o ~/folio projects/clone-and-compile-demo.json 
 
