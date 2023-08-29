@@ -2,8 +2,6 @@
 
 Scripts for installing a local, single server, FOLIO backend, entirely built from Git checkouts of modules in local directories.
 
-The installation script `install-folio.sh` is running with a project specific installation file in JSON, that specifies which modules to include.
-
 ## Prerequisites 
 
 * Apache Maven is required for compiling Okapi and modules.
