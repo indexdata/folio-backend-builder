@@ -23,7 +23,10 @@ mainDirectory=$(sourceDirectory "$CF")
 if [[ -z "$mainDirectory" ]]; then
   printf "Main (default) source directory not defined\n\n"
 else
-  printf "Main (default) source directory is [%s]\n\n" "$mainDirectory"
+  printf "Main (default) source directory is specified as [%s]\n\n" "$mainDirectory"
+  if [ ! -d "$mainDirectory" ]; then
+       logError "The specified main source directory [$mainDirectory] not found on this file system"
+  fi
 fi
 
 
@@ -59,7 +62,7 @@ printf "* Checking that the seven basic user infrastructure modules are selected
 for name in mod-permissions mod-users mod-login mod-password-validator mod-authtoken mod-configuration mod-users-bl ; do
   found=$(jq --arg name "$name" -r ' .basicModules | any(.name == $name) ' "$CF")
   if [[ "$found"  != "true" ]]; then
-    logError"Basic module $name is missing. Users and authentication will not work without it"
+    logError "Basic module $name is missing. Users and authentication will not work without it"
   fi
 done
 
@@ -69,7 +72,7 @@ for mod in $allModules; do
   found=$(jq --arg mod "$mod" -r '.moduleConfigs[] | select(.name == $mod)' "$CF")
   if [[ -z "$found" ]]
     then
-      logError"No configuration found for selected module: $mod"
+      logError "No configuration found for selected module: $mod"
   fi
 done
 
@@ -83,7 +86,7 @@ for jvm in $requestedJvms; do
     else   
      javaHome=$(jq --arg jvm "$jvm" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$CF")
      if [ ! -d "$javaHome" ]; then
-       logError"Specified path to Java [$javaHome] not found on this file system"
+       logError "Specified path to Java [$javaHome] not found on this file system"
      fi
     fi
   fi
@@ -101,7 +104,7 @@ if [[ "$requestedCheckoutDirs" != "null" ]]; then
       else
         directory=$(jq --arg dir "$dir" -r '.alternativeDirectories[] | select(.symbol == $dir).directory | sub("~";env.HOME)' "$CF")
         if [ ! -d "$directory" ]; then
-          logError"Specified check-out directory [$directory] not found on this file system"
+          logError "Specified check-out directory [$directory] not found on this file system"
         fi
       fi
     fi
