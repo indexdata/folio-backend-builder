@@ -1,0 +1,20 @@
+{
+    "id": "a uuid",
+    "host": "imap1.mail.com",
+    "port": 465,
+    "username": "me@mail.com",
+    "password": "a pw",
+    "ssl": true,
+    "trustAll": true,
+    "loginOption": "REQUIRED",
+    "startTlsOptions": "OPTIONAL",
+    "authMethods": "CRAM-MD5",
+    "from": "me@mail.com",
+    "emailHeaders": [
+      {
+        "name": "Reply-To",
+        "value": "me@mail.com"
+      }
+    ]
+  }
+  
