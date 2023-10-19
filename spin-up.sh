@@ -63,7 +63,7 @@ if [[ -n "$okapiPid" ]]; then
   pkill -f okapi-core-fat.jar
 fi
 
-printf "Start FOLIO service, Okapi at '%s', sending log to %s\n" "$pathToOkapi" "$logFile"
+printf "Start FOLIO service, Okapi at '%s'\n" "$pathToOkapi" 
 ./folio-service/start.sh -p "$pathToOkapi" -o "$logFile"
 printf "Installing modules\n"
 ./install-modules.sh "$project"

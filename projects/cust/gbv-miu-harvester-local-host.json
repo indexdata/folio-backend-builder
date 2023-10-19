@@ -549,7 +549,7 @@
         "method": "DD",
         "env": "NO-ENV-VARS",
         "pathToJar": "target/mod-inventory-update-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "inventory-update.all"

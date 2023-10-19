@@ -12,7 +12,8 @@
   ],
   "selectedModules": [
     { "name": "mod-inventory-storage" },
-    { "name": "mod-inventory"}
+    { "name": "mod-inventory"},
+    { "name": "mod-search"}
   ],
   "fakeApis": {
     "provides": [

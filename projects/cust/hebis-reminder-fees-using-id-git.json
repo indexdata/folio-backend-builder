@@ -358,7 +358,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-circulation-storage-fat.jar"
       },
       "permissions": [
@@ -443,7 +443,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-feesfines-fat.jar"
       },
       "permissions": [
@@ -634,7 +634,7 @@
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
         "pathToJar": "mod-audit-server/target/mod-audit-server-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "audit.all"
