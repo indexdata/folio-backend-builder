@@ -29,6 +29,10 @@
     {
       "symbol": "ID-GIT",
       "directory": "~/gitprojects"
+    },
+    {
+      "symbol": "NE-GIT",
+      "directory": "~/gitne"
     }
   ],
   "jvms": [
@@ -659,7 +663,7 @@
           }
         ],
         "pathToJar": "target/mod-harvester-admin-fat.jar",
-        "jvm": "JAVA17"
+        "jvm": "JAVA18"
       },
       "permissions": [
         "harvester-admin.all"

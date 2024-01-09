@@ -1,6 +1,6 @@
 {
-  "description": "Modules for Hebis reminder fees project.",
-  "sourceDirectory": "~/folio-modules",
+  "description": "Modules for testing Order Import Tool.",
+  "sourceDirectory": "~/folio-oit",
   "selectedModules": [
     {
       "name": "mod-inventory-storage"
@@ -9,9 +9,7 @@
       "name": "mod-pubsub"
     },
     {
-      "name": "mod-circulation-storage",
-      "repo": "https://github.com/indexdata",
-      "sourceDirectory": "ID-GIT"
+      "name": "mod-circulation-storage"
     },
     {
       "name": "mod-event-config"
@@ -23,17 +21,13 @@
       "name": "mod-email"
     },
     {
-      "name": "mod-sender",
-      "repo": "https://github.com/indexdata",
-      "sourceDirectory": "ID-GIT"
+      "name": "mod-sender"
     },
     {
       "name": "mod-notify"
     },
     {
-      "name": "mod-feesfines",
-      "repo": "https://github.com/indexdata",
-      "sourceDirectory": "ID-GIT"
+      "name": "mod-feesfines"
     },
     {
       "name": "mod-patron-blocks"
@@ -48,22 +42,34 @@
       "name": "mod-settings"
     },
     {
-      "name": "mod-circulation",
-      "repo": "https://github.com/indexdata",
-      "sourceDirectory": "ID-GIT"
+      "name": "mod-circulation"
     },
     {
       "name": "mod-inventory"
     },
     {
-      "name": "mod-audit",
-      "repo": "https://github.com/indexdata",
-      "sourceDirectory": "ID-GIT"
+      "name": "mod-audit"
     },
     {
-      "name": "mod-batch-print",
-      "repo": "https://github.com/indexdata",
-      "sourceDirectory": "ID-GIT"
+      "name": "mod-organizations-storage"
+    },
+    {
+      "name": "mod-tags"
+    },
+    {
+      "name": "mod-orders-storage"
+    },
+    {
+      "name": "mod-finance-storage"
+    },
+    {
+      "name": "mod-finance"
+    },
+    {
+      "name": "mod-orders"
+    },
+    {
+      "name": "mod-search"
     }
   ],
   "alternativeDirectories": [
@@ -73,7 +79,7 @@
     },
     {
       "symbol": "FOLIO",
-      "directory": "~/folio"
+      "directory": "~/folio-oit"
     }
   ],
   "jvms": [
@@ -99,6 +105,18 @@
       {
         "id": "instance-authority-links",
         "version": "2.0"
+      },
+      {
+        "id": "authority-storage",
+        "version": "2.0"
+      },
+      {
+        "id": "authority-reindex",
+        "version": "0.1"
+      },
+      {
+        "id": "data-import-converter-storage",
+        "version": "1.4"
       }
     ]
   },
@@ -196,7 +214,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-authtoken-fat.jar"
       },
       "permissions": []
@@ -215,7 +233,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar"
       },
       "permissions": [
@@ -260,7 +278,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-inventory-storage-fat.jar"
       },
       "install": {
@@ -279,7 +297,7 @@
       ],
       "deployment": {
         "method": "DD",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "mod-pubsub-server/target/mod-pubsub-server-fat.jar",
         "env": [
           {
@@ -383,7 +401,7 @@
       ],
       "deployment": {
         "method": "DOCKER",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": []
     },
@@ -554,7 +572,7 @@
         "method": "DD",
         "env": "STANDARD-PG",
         "pathToJar": "target/mod-patron-blocks-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "patron-block-conditions.collection.get",
@@ -632,7 +650,7 @@
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
         "pathToJar": "target/mod-inventory.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "inventory.all"
@@ -657,8 +675,8 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "pathToJar": "target/mod-organizations-fat.jar",
-        "jvm": "JAVA11"
+        "pathToJar": "target/mod-organizations-storage-fat.jar",
+        "jvm": "JAVA17"
       },
       "permissions": [
         "organizations-storage.module.all"
@@ -674,7 +692,7 @@
         "method": "DD",
         "env": "STANDARD-PG",
         "pathToJar": "target/mod-finance-storage-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "finance.module.all"
@@ -689,7 +707,7 @@
         "method": "DD",
         "env": [],
         "pathToJar": "target/mod-finance-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "finance.all"
@@ -704,7 +722,7 @@
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
         "pathToJar": "target/mod-orders-storage-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "comment": "? { \"name\": \"consumer.verticle.mandatory\",  \"value\": \"false\" }",
       "permissions": [
@@ -719,12 +737,54 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "pathToJar": "target/mod-tags-2.1.0-SNAPSHOT.jar",
-        "jvm": "JAVA11"
+        "pathToJar": "target/mod-tags-2.1.1-SNAPSHOT.jar",
+        "jvm": "JAVA17"
       },
       "permissions": [
         "tags.all"
       ]
+    },
+    {
+      "name": "mod-invoice-storage",
+      "deployment": {
+        "method": "DD",
+        "env": "STANDARD-PG",
+        "pathToJar": "target/mod-invoice-storage-fat.jar",
+        "jvm": "JAVA17"
+      },
+      "permissions": [
+        "invoice-storage.module.all"
+      ]
+    },
+    {
+      "name": "mod-invoice",
+      "deployment": {
+        "method": "DD",
+        "env": [
+          {
+            "name": "JAVA_OPTIONS",
+            "value": "-XX:MaxRAMPercentage=66.0"
+          },
+          {
+            "name": "KAFKA_HOST",
+            "value": "localhost"
+          },
+          {
+            "name": "KAFKA_PORT",
+            "value": "9092"
+          },
+          {
+            "name": "dataimport.consumer.verticle.mandatory",
+            "value": "false"
+          },
+          {
+            "name": "dataimport.max-active-threads",
+            "value": "1"
+          }
+        ],
+        "pathToJar": "target/mod-invoice-fat.jar",
+        "jvm": "JAVA17"
+      }
     },
     {
       "name": "mod-orders",
@@ -733,7 +793,7 @@
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
         "pathToJar": "target/mod-orders-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "orders.all"
@@ -745,108 +805,57 @@
       "comment": "Env not finalized and module needs ES installed",
       "deployment": {
         "method": "DD",
+        "pathToJar": "target/mod-search-3.1.0-SNAPSHOT.jar",
+        "jvm": "JAVA17",
         "env": [
-          {
-            "name": "ENV",
-            "value": "folio"
-          },
-          {
-            "name": "JAVA_OPTIONS",
-            "value": "-XX:MaxRAMPercentage=85.0"
-          },
-          {
-            "name": "KAFKA_HOST",
-            "value": "localhost"
-          },
-          {
-            "name": "KAFKA_PORT",
-            "value": "9092"
-          },
-          {
-            "name": "KAFKA_SECURITY_PROTOCOL",
-            "value": "PLAINTEXT"
-          },
-          {
-            "name": "KAFKA_SSL_KEYSTORE_LOCATION",
-            "value": ""
-          },
-          {
-            "name": "KAFKA_SSL_KEYSTORE_PASSWORD",
-            "value": ""
-          },
-          {
-            "name": "KAFKA_SSL_TRUSTSTORE_LOCATION",
-            "value": ""
-          },
-          {
-            "name": "KAFKA_SSL_TRUSTSTORE_PASSWORD",
-            "value": ""
-          },
-          {
-            "name": "ELASTICSEARCH_URL",
-            "value": "http://elasticsearch:9200"
-          },
-          {
-            "name": "ELASTICSEARCH_USERNAME",
-            "value": "elastic"
-          },
-          {
-            "name": "ELASTICSEARCH_PASSWORD",
-            "value": "s3cret"
-          },
-          {
-            "name": "DB_HOST",
-            "value": "localhost"
-          },
-          {
-            "name": "DB_PORT",
-            "value": "5432"
-          },
-          {
-            "name": "DB_USERNAME",
-            "value": "folio_admin"
-          },
-          {
-            "name": "DB_PASSWORD",
-            "value": "folio_admin"
-          },
-          {
-            "name": "DB_DATABASE",
-            "value": "okapi_modules"
-          },
-          {
-            "name": "DB_QUERYTIMEOUT",
-            "value": "60000"
-          },
-          {
-            "name": "DB_CHARSET",
-            "value": "UTF-8"
-          },
-          {
-            "name": "DB_MAXPOOLSIZE",
-            "value": "5"
-          },
-          {
-            "name": "INITIAL_LANGUAGES",
-            "value": "eng"
-          },
-          {
-            "name": "SYSTEM_USER_PASSWORD",
-            "value": "Mod-search-1-0-0"
-          }
+          {"name": "ENV", "value": "folio"},
+          {"name": "JAVA_OPTIONS", "value": "-XX:MaxRAMPercentage=85.0"},
+          {"name": "KAFKA_HOST", "value": "localhost"},
+          {"name": "KAFKA_PORT", "value": "9092"},
+          {"name": "KAFKA_SECURITY_PROTOCOL", "value": "PLAINTEXT"},
+          {"name": "KAFKA_SSL_KEYSTORE_LOCATION", "value": ""},
+          {"name": "KAFKA_SSL_KEYSTORE_PASSWORD", "value": ""},
+          {"name": "KAFKA_SSL_TRUSTSTORE_LOCATION", "value": ""},
+          {"name": "KAFKA_SSL_TRUSTSTORE_PASSWORD", "value": ""},
+          {"name": "ELASTICSEARCH_URL", "value": "http://localhost:9200"},
+          {"name": "DB_HOST", "value": "localhost"},
+          {"name": "DB_PORT", "value": "5432"},
+          {"name": "DB_USERNAME", "value": "folio_admin"},
+          {"name": "DB_PASSWORD", "value": "folio_admin"},
+          {"name": "DB_DATABASE", "value": "okapi_modules"},
+          {"name": "DB_QUERYTIMEOUT", "value": "60000"},
+          {"name": "DB_CHARSET", "value": "UTF-8"},
+          {"name": "DB_MAXPOOLSIZE", "value": "5"},
+          {"name": "INITIAL_LANGUAGES", "value": "eng"},
+          {"name": "SYSTEM_USER_PASSWORD", "value": "Mod-search-1-0-0"},
+          {"name": "OKAPI_URL", "value": "http://localhost:9130"}
         ]
-      }
-    },
-    {
-      "name": "mod-batch-print",
-      "deployment": {
-        "method": "DD",
-        "env": "STANDARD-PG-KAFKA",
-        "pathToJar": "target/mod-batch-print-fat.jar",
-        "jvm": "JAVA17"
       },
       "permissions": [
-        "mod-batch-print.entries.all"
+        "search.index.indices.item.post",
+        "search.index.mappings.item.post",
+        "search.index.records.collection.post",
+        "search.index.settings.item.put",
+        "search.instances.collection.get",
+        "search.authorities.collection.get",
+        "browse.call-numbers.instances.collection.get",
+        "browse.subjects.instances.collection.get",
+        "browse.contributors.instances.collection.get",
+        "browse.authorities.collection.get",
+        "search.config.languages.item.post",
+        "search.config.languages.collection.get",
+        "search.config.languages.item.put",
+        "search.config.languages.item.delete",
+        "search.index.inventory.reindex.post",
+        "search.facets.collection.get",
+        "search.instances.ids.collection.get",
+        "search.holdings.ids.collection.get",
+        "search.resources.ids.collection.get",
+        "search.resources.ids.jobs.get",
+        "search.resources.ids.jobs.post",
+        "search.config.features.collection.get",
+        "search.config.features.item.post",
+        "search.config.features.item.put"
       ]
     },
     {
