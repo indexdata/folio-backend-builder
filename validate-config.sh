@@ -86,7 +86,7 @@ for jvm in $requestedJvms; do
     else   
      javaHome=$(jq --arg jvm "$jvm" -r '.jvms[] | select(.symbol == $jvm).home | sub("~";env.HOME)' "$CF")
      if [ ! -d "$javaHome" ]; then
-       logError "Specified path to Java [$javaHome] not found on this file system"
+       logError "Warning: Specified path to Java [$javaHome] not found on this file system"
      fi
     fi
   fi

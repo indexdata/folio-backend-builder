@@ -62,11 +62,11 @@ else
   printf "\nWill clone:   %s\n" "${clone:-" NONE"}"
   printf "Will compile: %s\n" "${compile:-" NONE"}"
   printf "Skipping:     %s\n" "${skip:-" NONE"}"
-  printf "\nUsing main source directory: %s" "$sourceDirectory"
+  printf "\nUsing main source directory: %s" "$mainSourceDirectory"
   sourceDirectories=$(jq -r '(.basicModules,.selectedModules) | unique_by(.sourceDirectory)[].sourceDirectory' "$projectFile")
   for symbol in $sourceDirectories ; do
     if [[ "$symbol" != "null" ]]; then
-      printf "Alternative directory: %s:%s " "$symbol" "$(alternativeDirectory "$symbol" "$projectFile")"
+      printf " Alternative directory: %s:%s " "$symbol" "$(alternativeDirectory "$symbol" "$projectFile")"
     fi
   done
 fi 

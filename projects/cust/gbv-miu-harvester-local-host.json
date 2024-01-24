@@ -24,7 +24,7 @@
       { "id": "request-storage", "version": "5.0"}
     ]
   },
-  "sourceDirectory": "~/folio",
+  "sourceDirectory": "~/folio-modules",
   "alternativeDirectories": [
     {
       "symbol": "ID-GIT",
@@ -46,7 +46,7 @@
     },
     {
       "symbol": "JAVA18",
-      "home": "~/.jdks/openjdk-18.0.2.1"
+      "home": "/usr/lib/jvm/java-17-openjdk-amd64"
     }
   ],
   "moduleConfigs": [
@@ -59,7 +59,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-permissions-fat.jar"
       },
       "permissions": []
@@ -81,7 +81,7 @@
       "deployment" : {
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-users-fat.jar"
       },
       "permissions": []
@@ -95,7 +95,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-login-fat.jar"
       },
       "permissions": []
@@ -111,7 +111,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-inventory-storage-fat.jar"
       },
       "install": {
@@ -127,9 +127,10 @@
         "mod-users-bl"
       ],
       "deployment": {
-        "method": "DOCKER",
-        "jvm":"JAVA17",
-        "pathToJar": "target/mod-password-validator-3.1.0-SNAPSHOT.jar"
+        "method": "DD",
+        "env": "STANDARD-PG-KAFKA",
+        "jvm": "JAVA18",
+        "pathToJar": "target/mod-password-validator-3.1.1-SNAPSHOT.jar"
       },
       "permissions": []
     },
@@ -141,7 +142,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm":"JAVA11",
+        "jvm":"JAVA17",
         "pathToJar": "target/mod-authtoken-fat.jar"
       },
       "permissions": []
@@ -155,7 +156,7 @@
       ],
       "deployment": {
         "method": "DD",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "mod-pubsub-server/target/mod-pubsub-server-fat.jar",
         "env": [
           {
@@ -245,7 +246,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-circulation-storage-fat.jar"
       },
       "permissions": [
@@ -258,7 +259,10 @@
         "mod-notify"
       ],
       "deployment": {
-        "method": "DOCKER"
+        "method": "DD",
+        "env": "STANDARD-PG-KAFKA",
+        "jvm": "JAVA17",
+        "pathToJar": "target/mod-event-config-fat.jar"
       },
       "permissions": []
     },
@@ -274,7 +278,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar"
       },
       "permissions": [
@@ -302,7 +306,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-users-bl-fat.jar"
       },
       "permissions": []
@@ -315,7 +319,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-template-engine-fat.jar"
       },
       "permissions": [
@@ -330,7 +334,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-email-fat.jar"
       },
       "permissions": [
@@ -346,7 +350,7 @@
       "deployment": {
         "method": "DD",
         "env": "NO-ENV-VARS",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-sender-fat.jar"
       },
       "permissions": []
@@ -357,7 +361,10 @@
         "mod-feesfines"
       ],
       "deployment": {
-        "method": "DOCKER"
+        "method": "DD",
+        "env": "STANDARD-PG",
+        "jvm": "JAVA17",
+        "pathToJar": "target/mod-notify-fat.jar"
       },
       "permissions": [
         "notify.all"
@@ -371,7 +378,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-feesfines-fat.jar"
       },
       "permissions": [
@@ -471,7 +478,7 @@
         "method": "DD",
         "env": "STANDARD-PG",
         "pathToJar": "target/mod-patron-blocks-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "patron-block-conditions.collection.get",
@@ -492,7 +499,10 @@
       "name": "mod-calendar",
       "requiredBy": ["mod-circulation"],
       "deployment": {
-        "method": "DOCKER"
+        "method": "DD",
+        "env": "STANDARD-PG",
+        "jvm": "JAVA17",
+        "pathToJar": "target/mod-calendar-2.6.0-SNAPSHOT.jar"
       },
       "permissions": [
         "calendar.create",
@@ -506,7 +516,10 @@
         "mod-circulation"
       ],
       "deployment": {
-        "method": "DOCKER"
+        "method": "DD",
+        "env": "STANDARD-PG",
+        "jvm": "JAVA17",
+        "pathToJar": "target/mod-notes-5.2.0-SNAPSHOT.jar"
       },
       "permissions": [
         "notes.all"
@@ -518,7 +531,7 @@
       "deployment": {
         "method": "DD",
         "pathToJar": "target/mod-circulation.jar",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "env": [
           { "name": "JAVA_OPTIONS",
             "value": "-XX:MaxRAMPercentage=66.0"
@@ -540,7 +553,7 @@
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
         "pathToJar": "target/mod-inventory.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA17"
       },
       "permissions": [
         "inventory.all"
