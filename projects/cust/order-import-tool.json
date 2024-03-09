@@ -84,16 +84,12 @@
   ],
   "jvms": [
     {
-      "symbol": "JAVA11",
-      "home": "/usr/lib/jvm/java-11-openjdk-amd64"
-    },
-    {
       "symbol": "JAVA17",
       "home": "/usr/lib/jvm/java-17-openjdk-amd64"
     },
     {
       "symbol": "JAVA18",
-      "home": "~/.jdks/openjdk-18.0.2.1"
+      "home": "/usr/lib/jvm/java-18-openjdk-amd64"
     }
   ],
   "fakeApis": {
@@ -115,8 +111,8 @@
         "version": "0.1"
       },
       {
-        "id": "data-import-converter-storage",
-        "version": "1.4"
+        "id": "batch-print",
+        "version": "1.0"
       }
     ]
   },
@@ -610,8 +606,10 @@
         "mod-circulation"
       ],
       "deployment": {
-        "method": "DOCKER",
-        "jvm": "JAVA17"
+        "method": "DD",
+        "env": "STANDARD-PG",
+        "jvm": "JAVA17",
+        "pathToJar": "target/mod-notes-5.2.0-SNAPSHOT.jar"
       },
       "permissions": [
         "notes.all"
@@ -805,7 +803,7 @@
       "comment": "Env not finalized and module needs ES installed",
       "deployment": {
         "method": "DD",
-        "pathToJar": "target/mod-search-3.1.0-SNAPSHOT.jar",
+        "pathToJar": "target/mod-search-3.2.0-SNAPSHOT.jar",
         "jvm": "JAVA17",
         "env": [
           {"name": "ENV", "value": "folio"},
