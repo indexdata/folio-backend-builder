@@ -1,6 +1,0 @@
-{
-  "schedule": {
-    "cron": "1 16 * * *",
-    "zone": "CET"
-  }
-}
