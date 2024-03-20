@@ -30,9 +30,7 @@
       "name": "mod-notify"
     },
     {
-      "name": "mod-feesfines",
-      "repo": "https://github.com/indexdata",
-      "sourceDirectory": "ID-GIT"
+      "name": "mod-feesfines"
     },
     {
       "name": "mod-patron-blocks"
@@ -47,9 +45,7 @@
       "name": "mod-settings"
     },
     {
-      "name": "mod-circulation",
-      "repo": "https://github.com/indexdata",
-      "sourceDirectory": "ID-GIT"
+      "name": "mod-circulation"
     },
     {
       "name": "mod-inventory"
