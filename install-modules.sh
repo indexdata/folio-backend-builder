@@ -53,7 +53,7 @@ function setPgHostInModuleDescriptor() {
 function registerAndDeploy() {
   moduleName=$1
   if [[ -z $(moduleConfig "$moduleName" "$projectFile") ]]; then
-    printf "ERROR: No configuration found in %s for %s. Have to bail." "$projectFile" "$moduleName"
+    printf "ERROR: No configuration found in %s for %s. Have to bail.\n\n" "$projectFile" "$moduleName"
     exit
   fi
   sourceDirectory=$(moduleDirectory "$moduleName" "$projectFile")
@@ -111,7 +111,7 @@ fi
 basicModules=$(jq -r '.basicModules[] | .name' "$projectFile")
 for name in $basicModules; do
   registerAndDeploy "$name" "$projectFile"
-  if [[ "$name" != "mod-authtoken" && "$name" != "mod-users-bl" ]]; then  # Activation deferred until permissions assigned for all modules.
+  if [[ "$name" != "mod-authtoken" && "$name" != "mod-users-bl" ]]; then  # Activation deferred until permissions are bootstrapped.
     moduleId=$(moduleDescriptorId "$name" "$projectFile")
     printf "Install  - %-40s" "$moduleId"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$moduleId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
@@ -125,19 +125,28 @@ report "$(curl -s -w "$format" -H "X-Okapi-Tenant: diku" -H "Content-type: appli
 credentials=$(credentials "$projectFile")
 printf "Give diku_admin credentials. "
 report "$(curl -s -w "$format" -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d "$credentials" http://localhost:9130/authn/credentials)"
-printf "Give diku_admin initial permissions. "
+printf "Give diku_admin initial permissions.\n"
 PU_ID=$(curl -s -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" -d '{
     "userId" : "1ad737b0-d847-11e6-bf26-cec0c932ce01",
-    "permissions" : ["perms.all", "login.all", "users.all", "configuration.all"]}' http://localhost:9130/perms/users | jq -r '.id')
+    "permissions" : ["perms.all", "login.all", "users.all", "configuration.all", "perms.users.item.post"]}' http://localhost:9130/perms/users | jq -r '.id')
 if [[ "$PU_ID" == "null" ]]; then
   printf "Error: There was a problem giving diku_admin initial permissions."
   logError "There was a problem giving diku_admin initial permissions."
 else
-  printf " OK.\n"
+  printf "***********************\n"
+  authId=$(moduleDescriptorId "mod-authtoken" "$projectFile")
+  printf "Assign mod-authtoken to DIKU. "
+  report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$authId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
+  usersId=$(moduleDescriptorId "mod-users-bl" "$projectFile" )
+  printf "Assign mod-users-bl to DIKU. "
+  report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$usersId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
+  printf "***********************\n"
 fi
-printf "***********************\n"
-## Install selected (=optional) modules
 
+
+TOKEN=$(curl -s -X POST -D - -H "Content-type: application/json" -H "X-Okapi-Tenant: diku"  -d "{ \"username\": \"diku_admin\", \"password\": \"admin\"}" "http://localhost:9130/authn/login" | grep x-okapi-token | tr -d '\r' | cut -d " " -f2)
+
+## Install selected (=optional) modules
 selectedModules=$(jq -r '.selectedModules[] | select(.name != null) | .name' "$projectFile")
 for name in $selectedModules; do
   registerAndDeploy "$name"
@@ -157,23 +166,13 @@ for name in $selectedModules; do
     userPermissions=$(permissions "$name" "$projectFile")
     for permission in $userPermissions; do
       printf " - Permit %s. " "$permission"
-      report "$(curl -s -w "$format" -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" \
+      report "$(curl -s -w "$format" -H "X-Okapi-Token: $TOKEN" -H "X-Okapi-Tenant: diku" -H "Content-type: application/json" \
         -d '{"permissionName": "'"$permission"'"}' http://localhost:9130/perms/users/"$PU_ID"/permissions)"
     done
   else
     printf "Installation of %s failed, cannot assign permissions.\n" "$name"
   fi
 done
-
-## Enable authentication
-
-printf "\nLock down module access to authenticated users\n"
-authId=$(moduleDescriptorId "mod-authtoken" "$projectFile")
-printf "Assign mod-authtoken to DIKU. "
-report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$authId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
-usersId=$(moduleDescriptorId "mod-users-bl" "$projectFile" )
-printf "Assign mod-users-bl to DIKU. "
-report "$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$usersId"'"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
 
 # Reporting
 
