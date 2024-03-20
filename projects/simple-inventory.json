@@ -101,7 +101,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
-        "jvm": "JAVA11",
+        "jvm": "JAVA17",
         "pathToJar": "target/mod-inventory-storage-fat.jar"
       },
       "install": {
@@ -131,7 +131,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm":"JAVA11",
+        "jvm":"JAVA17",
         "pathToJar": "target/mod-authtoken-fat.jar"
       },
       "permissions": []
