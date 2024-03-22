@@ -1,4 +1,4 @@
-workdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+here=${0%/*}
 
 projectFile=$1
 if [[ -z "$projectFile" ]]; then
@@ -14,8 +14,8 @@ fi
 started=$(date)
 
 # Import jq functions for retrieving settings from the config file
-source "$workdir/lib/ConfigReader.sh"
-source "$workdir/lib/Utils.sh"
+source "$here/lib/ConfigReader.sh"
+source "$here/lib/Utils.sh"
 
 mainSourceDirectory=$(sourceDirectory "$projectFile")
 if [[ -z "$mainSourceDirectory" ]]; then

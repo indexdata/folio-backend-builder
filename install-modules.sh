@@ -1,8 +1,6 @@
 # Installs all selected modules. User diku_admin is created once basic user infrastructure is in place,
 #so that permissions can be assigned to diku_admin during subsequent module installations.
-
-workdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-
+here=${0%/*}
 projectFile=$1
 if [[ -z "$projectFile" ]]; then
   printf "Please provide JSON config file listing and configuring modules to be install:  ./install-modules.sh projects/my-folio.json\n"
@@ -15,8 +13,8 @@ fi
 started=$(date)
 
 # Import jq functions for retrieving installation instructions from the passed-in configuration file
-source "$workdir/lib/ConfigReader.sh"
-source "$workdir/lib/Utils.sh"
+source "$here/lib/ConfigReader.sh"
+source "$here/lib/Utils.sh"
 
 # Functions for: Error reporting, manipulation of descriptors, registration and deployment.
 
@@ -93,7 +91,7 @@ printf "Create tenant %s" "$tenants"
 report "$(curl -s -w "$format" -H "Content-type: application/json" -d "$tenants" http://localhost:9130/_/proxy/tenants)"
 ### Deploy fake APIs, if any
 if [[ "null" != "$(jq -r '.fakeApis.provides' "$projectFile")" ]]; then
-  pathToFaker="$workdir/lib/api-faker"
+  pathToFaker="$here/lib/api-faker"
   provides="$(jq -r '.fakeApis.provides' "$projectFile")"
   if [ ! -f "$pathToFaker/target/mod-fake-fat.jar" ];  then
     mvn clean install -f "$pathToFaker"

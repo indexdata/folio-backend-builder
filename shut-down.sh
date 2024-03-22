@@ -1,1 +1,2 @@
-./folio-service/shutdown.sh
+here=${0%/*}
+"$here"/folio-service/shutdown.sh

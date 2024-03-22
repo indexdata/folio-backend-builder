@@ -1,4 +1,4 @@
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+here=${0%/*}
 pathToOkapi=~/folio
 logToFile=0
 logFile=
@@ -19,7 +19,7 @@ echo "path: $pathToOkapi"
 
 if [ -d "$pathToOkapi"/okapi/okapi-core/target ]; then
   printf "Stopping Docker Postgres and Kafka services if running.\n"
-  docker compose -f "$SCRIPT_DIR"/docker-compose.yml down
+  docker compose -f "$here"/docker-compose.yml down
 
   # Check if another postgresql might be running on port 5432  
   if [[ "$(nc -z 127.0.0.1 5432; echo $?)" == "0" ]]; then 
@@ -37,9 +37,9 @@ if [ -d "$pathToOkapi"/okapi/okapi-core/target ]; then
   fi    
 
   printf "Starting Postgres and Kafka.\n"
-  docker compose -f "$SCRIPT_DIR"/docker-compose.yml up -d
+  docker compose -f "$here"/docker-compose.yml up -d
   if [[ $logToFile -eq 1 ]]; then
-      "$SCRIPT_DIR"/okapi/init-db-start-okapi.sh "$pathToOkapi" >> "$logFile" 2>&1 &
+      "$here"/okapi/init-db-start-okapi.sh "$pathToOkapi" >> "$logFile" 2>&1 &
       printf "Okapi starting ..."
       sleep 20
       if [[ "$(tail -1 "$logFile")" == *supertenant\ ok ]]; then
@@ -49,7 +49,7 @@ if [ -d "$pathToOkapi"/okapi/okapi-core/target ]; then
         printf "Okapi started in back-ground.\nLogs redirected to '%s'.\n\n" "$logFile"
       fi
   else
-     "$SCRIPT_DIR"/okapi/init-db-start-okapi.sh "$pathToOkapi"
+     "$here"/okapi/init-db-start-okapi.sh "$pathToOkapi"
   fi
 else
   printf "Could not find Okapi installation at %s/okapi/okapi-core/target.\n" "$pathToOkapi"

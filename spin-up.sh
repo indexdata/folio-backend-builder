@@ -1,5 +1,6 @@
 project=${*: -1}
 pathToOkapi=~/folio
+here=${0%/*}
 
 if [[ $project == $0 ]]; then
   printf "Usage: ./spin-up.sh [options] \"<project-file.json>\"\n\n"
@@ -8,7 +9,7 @@ if [[ $project == $0 ]]; then
   printf "  -v:           run project file validation first\n"
   printf "  -c:           clone and compile any modules selected in project file but not present in file system\n"
   printf "  -l <file>:    send Okapi log to specified log-file\n"
-  printf "  -o <path>:    path to Okapi check-out -- default: $HOME/folio\n\n"  
+  printf "  -o <path>:    path to Okapi check-out -- default: %s/folio\n\n"  "$HOME"
   exit
 fi
 # -f force, stop okapi if already running
@@ -42,11 +43,11 @@ done
 okapiPid=$(pgrep -f okapi-core-fat.jar)
 
 if [[ $validateConfig -eq 1 ]]; then
-  ./validate-config.sh "$project"
+  "$here"/validate-config.sh "$project"
   printf "Press Enter to continue "; read -r;
 fi
 if [[ $cloneAndCompile  -eq 1 ]]; then
-  ./clone-and-compile-modules.sh "$project"
+  "$here"/clone-and-compile-modules.sh "$project"
 fi
 if [[ -n "$okapiPid" ]]; then
   if [[ $stopOkapi -eq 0 ]]; then
@@ -64,7 +65,7 @@ if [[ -n "$okapiPid" ]]; then
 fi
 
 printf "Start FOLIO service, Okapi at '%s'\n" "$pathToOkapi" 
-./folio-service/start.sh -p "$pathToOkapi" -o "$logFile"
+"$here"/folio-service/start.sh -p "$pathToOkapi" -o "$logFile"
 printf "Installing modules\n"
-./install-modules.sh "$project"
+"$here"/install-modules.sh "$project"
 

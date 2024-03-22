@@ -1,4 +1,5 @@
 CF=$1
+here=${0%/*}
 
 if [[ -z "$CF" ]]; then
   printf "\nPlease provide JSON config file to validate:  ./validate-config.sh my-folio.json\n"
@@ -15,8 +16,8 @@ Errors=()
 function logError() {
   Errors=("${Errors[@]}" "$1")
 }
-source lib/Utils.sh
-source lib/ConfigReader.sh
+source "$here"/lib/Utils.sh
+source "$here"/lib/ConfigReader.sh
 
 mainDirectory=$(sourceDirectory "$CF")
 

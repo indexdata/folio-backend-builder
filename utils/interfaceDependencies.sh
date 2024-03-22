@@ -1,7 +1,7 @@
 # For a FOLIO configuration, builds list of all provided interfaces with module id and API paths.
-workdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+srcHere="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-oneDirUp=$(echo "$workdir" | rev | cut -d'/' -f2- | rev)
+oneDirUp=$(echo "$srcHere" | rev | cut -d'/' -f2- | rev)
 source "$oneDirUp"/lib/ConfigReader.sh
 source "$oneDirUp"/lib/Utils.sh
 

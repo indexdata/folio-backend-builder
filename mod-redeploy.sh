@@ -1,9 +1,8 @@
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-workdir=$SCRIPT_DIR
+here=${0%/*}
 moduleName=$1
 projectFile=$2
-source "$workdir/lib/ConfigReader.sh"
-source "$workdir/lib/Utils.sh"
+source "$here/lib/ConfigReader.sh"
+source "$here/lib/Utils.sh"
 
 function reportCompilationsAge() {
   age="$(filesAge "$jarFile")"
