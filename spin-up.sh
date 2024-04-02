@@ -17,7 +17,7 @@ fi
 # -c clone and/or compile missing modules
 # -l file to send okapi log to (default "okapi.log)
 # -p path to okapi check-out (default "~/folio")
-
+[[ ! -e $project ]] && printf "Could not find project file %s, exiting " "$project"; exit
 stopOkapi=0
 validateConfig=0
 cloneAndCompile=0

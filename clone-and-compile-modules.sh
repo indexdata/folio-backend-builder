@@ -91,7 +91,7 @@ for moduleName in $moduleNames ; do
       git clone -q --recurse-submodules "$gitHost/$moduleName"  "$modulePath"
     fi
     if [ ! -f "$modulePath/target/ModuleDescriptor.json" ]; then
-      ./mod-compile.sh "$moduleName" "$projectFile"
+      "$here"/mod-compile.sh "$moduleName" "$projectFile"
     fi
   else
     printf "Cannot clone %s to %s. Directory does not exist.\n" "$moduleName" "$sourceDirectory"
