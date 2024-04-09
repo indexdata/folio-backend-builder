@@ -133,11 +133,17 @@ makeDeploymentDescriptor() {
     jvm=$(javaHome "$moduleName" "$configFile")
     sourceDirectory=$(moduleDirectory "$moduleName" "$configFile")
     mdId=$(moduleDescriptorId "$moduleName" "$configFile")
-    jar=$(pathToJar "$moduleName" "$configFile")
+    jar="$sourceDirectory"'/'"$moduleName"'/'$(pathToJar "$moduleName" "$configFile")
+    if [[ ! -f "$jar" ]]; then
+      alt="${jar%/*}/$mdId.jar"
+      if [[ -f "$alt" ]]; then
+        jar="$alt"
+      fi
+    fi
     env=$(env "$moduleName" "$configFile")
     echo '{ "srvcId": "'"$mdId"'",  "nodeId": "localhost",
             "descriptor": {
-              "exec": "'"$jvm"/bin/java' -Xms64M -Xmx192M -Dserver.port=%p -Dport=%p -jar '"$sourceDirectory"'/'"$moduleName"'/'"$jar"' -Dhttp.port=%p",
+              "exec": "'"$jvm"/bin/java' -Xms64M -Xmx192M -Dserver.port=%p -Dport=%p -jar '"$jar"' -Dhttp.port=%p",
               "env": '"$env"' }}'
   fi
 }

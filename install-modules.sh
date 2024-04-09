@@ -67,7 +67,18 @@ function registerAndDeploy() {
     if [[ $jarFile == "null" ]]; then
       filesAge="?"
     else
-      filesAge="$(filesAge "$sourceDirectory"/"$moduleName"/"$jarFile")"
+      fullPathToJar="$sourceDirectory"/"$moduleName"/"$jarFile"
+      if [[ -f "$fullPathToJar" ]]; then
+        filesAge="$(filesAge "$fullPathToJar")"
+      else
+        altName="${fullPathToJar%/*}/$moduleId.jar"
+        if [[ -f "$altName" ]]; then
+          printf "Project file says %s but got %s\n" "${fullPathToJar##*/}" "${altName##*/}"
+          filesAge="$(filesAge "$altName")"
+        else
+          logError "Could not find jar file. $moduleName not being installed. "
+        fi
+      fi
     fi
     printf "Deploy   - %-40s%s from %s %s  Age: %s" "$moduleId" "$(gitStatus "$sourceDirectory/$moduleName")" "$sourceDirectory" "$(moduleRepo "$moduleName" "$projectFile")" "$filesAge"
     if [[ "$method" == "DD" ]]
