@@ -36,7 +36,7 @@ if [ -d "$pathToOkapi"/okapi/okapi-core/target ]; then
     fi  
   fi    
 
-  printf "Starting Postgres and Kafka.\n"
+  printf "Starting Postgres, Kafka, elastic search.\n"
   docker compose -f "$here"/docker-compose.yml up -d
   if [[ $logToFile -eq 1 ]]; then
       "$here"/okapi/init-db-start-okapi.sh "$pathToOkapi" >> "$logFile" 2>&1 &

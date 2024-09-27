@@ -2,7 +2,7 @@ project=${*: -1}
 pathToOkapi=~/folio
 here=${0%/*}
 
-if [[ $project == $0 ]]; then
+if [[ $project == "$0" ]]; then
   printf "Usage: ./spin-up.sh [options] \"<project-file.json>\"\n\n"
   printf "  Options: \n\n"
   printf "  -f:           stop Okapi first, if it's already running\n"
@@ -17,7 +17,6 @@ fi
 # -c clone and/or compile missing modules
 # -l file to send okapi log to (default "okapi.log)
 # -p path to okapi check-out (default "~/folio")
-[[ ! -e $project ]] && printf "Could not find project file %s, exiting " "$project"; exit
 stopOkapi=0
 validateConfig=0
 cloneAndCompile=0

@@ -794,7 +794,8 @@
         "jvm": "JAVA17"
       },
       "permissions": [
-        "orders.all"
+        "orders.all",
+        "isbn-utils.convert-to-13.get"
       ]
     },
     {

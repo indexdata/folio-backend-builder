@@ -1,7 +1,6 @@
-version: "3.7"
 services:
   postgres:
-    image: "postgres:12-alpine"
+    image: "postgres:16-alpine"
     environment:
       - POSTGRES_USER=folio_admin
       - POSTGRES_PASSWORD=folio_admin
