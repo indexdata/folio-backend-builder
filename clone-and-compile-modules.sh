@@ -1,4 +1,4 @@
-here=${0%/*}
+here="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 projectFile=$1
 if [[ -z "$projectFile" ]]; then

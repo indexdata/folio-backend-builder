@@ -1,4 +1,4 @@
-here=dir=${0%/*}
+here="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 moduleName=$1
 projectFile=$2
 source "$here/lib/ConfigReader.sh"
