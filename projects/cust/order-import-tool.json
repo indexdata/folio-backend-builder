@@ -794,16 +794,16 @@
         "jvm": "JAVA17"
       },
       "permissions": [
-        "orders.all"
+        "orders.all",
+        "isbn-utils.convert-to-13.get"
       ]
     },
     {
       "name": "mod-search",
       "requiredBy": [],
-      "comment": "Env not finalized and module needs ES installed",
       "deployment": {
         "method": "DD",
-        "pathToJar": "target/mod-search-3.2.0-SNAPSHOT.jar",
+        "pathToJar": "target/mod-search-3.3.0-SNAPSHOT.jar",
         "jvm": "JAVA17",
         "env": [
           {"name": "ENV", "value": "folio"},
