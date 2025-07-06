@@ -4,7 +4,7 @@
 
 `docker system df`
 
-root@ne-t14:/var/lib/docker/volumes# docker system df
+/var/lib/docker/volumes# docker system df
 TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
 Images          53        7         14.42GB   13.53GB (93%)
 Containers      24        0         298.4kB   298.4kB (100%)
