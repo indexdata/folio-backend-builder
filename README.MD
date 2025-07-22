@@ -43,7 +43,7 @@ printf "Press Enter " ; read
 " By default the script expects Okapi to be found in HOME/folio/okapi. If Okapi is to run from another location, 
 # the path can be specified with option `-o <path>` 
 
-./spin-up.sh -o ~/folio projects/clone-and-compile-demo.json 
+./startup-project.sh -o ~/folio projects/clone-and-compile-demo.json
 
 ```
 
@@ -370,7 +370,7 @@ to point to that base directory (see `clone-and-compile-demo.json`).
 
 Then run
 
-`./clone-and-compile-modues.sh  projects/clone-and-compile-demo.json`
+`./clone-and-compile-modules.sh  projects/clone-and-compile-demo.json`
 
 The script should tell what it's planning to do and ask for yes or no to continue.
 
