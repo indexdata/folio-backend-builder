@@ -64,7 +64,7 @@ if [[ -n "$okapiPid" ]]; then
 fi
 
 printf "Start FOLIO service, Okapi at '%s'\n" "$pathToOkapi" 
-"$here"/folio-service/start.sh -p "$pathToOkapi" -o "$logFile"
+"$here"/folio-service/startup.sh -p "$pathToOkapi" -l "$logFile"
 printf "Installing modules\n"
 "$here"/install-modules.sh "$project"
 

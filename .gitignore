@@ -4,3 +4,4 @@
 folio-backend-builder.code-workspace
 _ignore/
 /.vscode/settings.json
+/.resourceCache/

@@ -3,11 +3,19 @@ pathToOkapi=~/folio
 logToFile=0
 logFile=
 
-while getopts ":p:o:" option; do
+# Will docker 'up' back-end services, postgres, kafka, elastic search (will docker 'down' them first if already running)
+# Will initialize Okapi's database and start Okapi
+#   if a logfile name is provided (-l <log file name>) Okapi is started in background with its output spooled to the logfile
+#   - otherwise Okapi is started in foreground with output sent to stdout
+#   The path to Okapi can be provided as -p <path>, it defaults to `~/folio`
+#
+# If a postgres service is already running on the host, will offer to shot it down.
+
+while getopts ":p:l:" option; do
    case $option in
       p) # Path to Okapi
          pathToOkapi=$OPTARG;;
-      o) # Send output to log file
+      l) # Send output to log file
          logToFile=1
          logFile=${OPTARG:-"okapi.log"};;
      \?) # Invalid option
