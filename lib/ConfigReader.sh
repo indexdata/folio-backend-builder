@@ -81,6 +81,11 @@ javaHome() {
   echo "${found#null}"
 }
 
+javaMem() {
+  mem=$(moduleConfig "$1" "$2" | jq -r '.deployment.xmsXmx')
+  echo "${mem/#null/"-Xms64M -Xmx192M"}"
+}
+
 pathToJar() {
   moduleConfig "$1" "$2" | jq -r '.deployment.pathToJar'
 }
@@ -131,6 +136,7 @@ makeDeploymentDescriptor() {
   method=$(deploymentMethod "$moduleName" "$configFile")
   if [[ "$method" == "DD" ]]; then
     jvm=$(javaHome "$moduleName" "$configFile")
+    mem=$(javaMem "$moduleName" "$configFile")
     sourceDirectory=$(moduleDirectory "$moduleName" "$configFile")
     mdId=$(moduleDescriptorId "$moduleName" "$configFile")
     jar="$sourceDirectory"'/'"$moduleName"'/'$(pathToJar "$moduleName" "$configFile")
@@ -143,7 +149,7 @@ makeDeploymentDescriptor() {
     env=$(env "$moduleName" "$configFile")
     echo '{ "srvcId": "'"$mdId"'",  "nodeId": "localhost",
             "descriptor": {
-              "exec": "'"$jvm"/bin/java' -Xms64M -Xmx192M -Dserver.port=%p -Dport=%p -Dhttp.port=%p -jar '"$jar"'",
+              "exec": "'"$jvm"/bin/java' '"$mem"' -Dserver.port=%p -Dport=%p -Dhttp.port=%p -jar '"$jar"'",
               "env": '"$env"' }}'
   fi
 }

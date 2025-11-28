@@ -12,17 +12,18 @@
   ],
   "selectedModules": [
     { "name": "mod-inventory-storage" },
-    { "name": "mod-inventory"},
-    { "name": "mod-search"}
+    { "name": "mod-inventory"}
   ],
   "fakeApis": {
     "provides": [
-        { "id": "source-storage-records", "version": "3.0" },
-        { "id": "instance-authority-links", "version": "1.0" },
-        { "id": "request-storage", "version": "4.0"}
+        { "id": "source-storage-records", "version": "3.4" },
+        { "id": "instance-authority-links", "version": "2.1" },
+        { "id": "authority-reindex", "version": "0.1" },
+        { "id": "request-storage", "version": "6.0"},
+        { "id": "authority-storage", "version": "2.0"}
     ]
   },
-  "sourceDirectory": "~/folio",
+  "sourceDirectory": "~/folio-modules",
   "alternativeDirectories": [
     {
       "symbol": "GIT-ID",
@@ -31,12 +32,8 @@
   ],
   "jvms": [
     {
-      "symbol": "JAVA11",
-      "home": "/usr/lib/jvm/java-11-openjdk-amd64"
-    },
-    {
-      "symbol": "JAVA17",
-      "home": "/usr/lib/jvm/java-17-openjdk-amd64"
+      "symbol": "JAVA21",
+      "home": "/usr/lib/jvm/java-21-openjdk-amd64"
     }
   ],
   "moduleConfigs": [
@@ -49,7 +46,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "target/mod-permissions-fat.jar"
       },
       "permissions": []
@@ -71,7 +68,7 @@
       "deployment" : {
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "target/mod-users-fat.jar"
       },
       "permissions": []
@@ -85,7 +82,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "target/mod-login-fat.jar"
       },
       "permissions": []
@@ -101,7 +98,8 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
-        "jvm": "JAVA17",
+        "jvm": "JAVA21",
+        "xmsXmx": "-Xms128M -Xmx512M",
         "pathToJar": "target/mod-inventory-storage-fat.jar"
       },
       "install": {
@@ -117,9 +115,10 @@
         "mod-users-bl"
       ],
       "deployment": {
-        "method": "DOCKER",
-        "jvm":"JAVA17",
-        "pathToJar": "target/mod-password-validator-3.1.0-SNAPSHOT.jar"
+        "method": "DD",
+        "env": "STANDARD-PG-KAFKA",
+        "jvm": "JAVA21",
+        "pathToJar": "target/mod-password-validator-3.3.1-SNAPSHOT.jar"
       },
       "permissions": []
     },
@@ -131,7 +130,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm":"JAVA17",
+        "jvm":"JAVA21",
         "pathToJar": "target/mod-authtoken-fat.jar"
       },
       "permissions": []
@@ -145,7 +144,7 @@
       ],
       "deployment": {
         "method": "DD",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "mod-pubsub-server/target/mod-pubsub-server-fat.jar",
         "env": [
           {
@@ -235,7 +234,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "target/mod-circulation-storage-fat.jar"
       },
       "permissions": [
@@ -264,7 +263,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "mod-configuration-server/target/mod-configuration-server-fat.jar"
       },
       "permissions": [
@@ -277,7 +276,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "target/mod-users-bl-fat.jar"
       },
       "permissions": []
@@ -290,7 +289,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "target/mod-template-engine-fat.jar"
       },
       "permissions": [
@@ -305,7 +304,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "target/mod-email-fat.jar"
       },
       "permissions": [
@@ -321,7 +320,7 @@
       "deployment": {
         "method": "DD",
         "env": "NO-ENV-VARS",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "target/mod-sender-fat.jar"
       },
       "permissions": []
@@ -346,7 +345,7 @@
       "deployment": {
         "method": "DD",
         "env": "STANDARD-PG",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "pathToJar": "target/mod-feesfines-fat.jar"
       },
       "permissions": [
@@ -446,7 +445,7 @@
         "method": "DD",
         "env": "STANDARD-PG",
         "pathToJar": "target/mod-patron-blocks-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA21"
       },
       "permissions": [
         "patron-block-conditions.collection.get",
@@ -493,7 +492,7 @@
       "deployment": {
         "method": "DD",
         "pathToJar": "target/mod-circulation.jar",
-        "jvm": "JAVA11",
+        "jvm": "JAVA21",
         "env": [
           { "name": "JAVA_OPTIONS",
             "value": "-XX:MaxRAMPercentage=66.0"
@@ -515,7 +514,7 @@
         "method": "DD",
         "env": "STANDARD-PG-KAFKA",
         "pathToJar": "target/mod-inventory.jar",
-        "jvm": "JAVA17"
+        "jvm": "JAVA21"
       },
       "permissions": [
         "inventory.all"
@@ -528,7 +527,7 @@
         "method": "DD",
         "env": "NO-ENV-VARS",
         "pathToJar": "target/mod-inventory-update-fat.jar",
-        "jvm": "JAVA11"
+        "jvm": "JAVA21"
       },
       "permissions": [
         "inventory-update.all"
@@ -541,7 +540,7 @@
       "deployment": {
         "method": "DD",
         "pathToJar": "target/mod-search-2.1.0-SNAPSHOT.jar",
-        "jvm": "JAVA17",
+        "jvm": "JAVA21",
         "env": [
           { "name": "ENV", "value": "folio" },
           { "name": "JAVA_OPTIONS", "value": "-XX:MaxRAMPercentage=85.0" },

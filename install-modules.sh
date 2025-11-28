@@ -163,10 +163,10 @@ for name in $selectedModules; do
   tenantParams=$(installParameters "$name" "$projectFile")
   if [[ -n "$tenantParams" ]]; then
     # Has tenant init parameters - send to 'install' end-point
-    printf "Install  - %s with parameters %s. " "$name" "$tenantParams"
+    printf "Install  - %s with parameters %s (%s)" "$name" "$tenantParams" "$(javaMem "$moduleName" "$projectFile")"
     report "$(curl -s -w "$format" -H "Content-type: application/json" -d '[{"id": "'"$moduleId"'", "action": "enable"}]' http://localhost:9130/_/proxy/tenants/diku/install?tenantParameters="$tenantParams")"
   else
-    printf "Assign   - %-40s" "$name"
+    printf "Assign   - %-40s (%s)" "$name" "$(javaMem "$moduleName" "$projectFile")"
     respAssign="$(curl -s -w "$format" -H "Content-type: application/json" -d '{"id": "'"$moduleId"'", "action": "enable"}' http://localhost:9130/_/proxy/tenants/diku/modules)"
     report "$respAssign"
   fi
