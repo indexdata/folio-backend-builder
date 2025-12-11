@@ -37,7 +37,7 @@ services:
       - zookeeper
 
   elasticsearch:
-    image: bitnami/elasticsearch:latest
+    image: elasticsearch:9.2.2
     ports:
       - 9200:9200
       - 9300:9300
