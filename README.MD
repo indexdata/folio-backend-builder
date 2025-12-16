@@ -119,12 +119,12 @@ version.
 ```
 "basicModules" : [
         { "name": "mod-permissions",        "version": "6.4.0-SNAPSHOT" },
-        { "name": "mod-users",              "version": "19.2.0-SNAPSHOT"},
-        { "name": "mod-login",              "version": "7.10.0-SNAPSHOT"},
-        { "name": "mod-password-validator", "version": "3.1.1-SNAPSHOT"},
-        { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT"},
-        { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT"},
-        { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT"}
+        { "name": "mod-users",              "version": "19.2.0-SNAPSHOT" },
+        { "name": "mod-login",              "version": "7.10.0-SNAPSHOT" },
+        { "name": "mod-password-validator", "version": "3.1.1-SNAPSHOT" },
+        { "name": "mod-authtoken",          "version": "2.14.0-SNAPSHOT" },
+        { "name": "mod-configuration",      "version": "5.9.2-SNAPSHOT" },
+        { "name": "mod-users-bl",           "version": "7.6.0-SNAPSHOT" }
 ]
 ```
 
@@ -210,7 +210,7 @@ or supply a specific set of variables of its own. Here is a sample of standard s
     {
         "symbol": "STANDARD-PG",
         "env": [
-            { "name": "DB_HOST", "value": "localhost"},
+            { "name": "DB_HOST", "value": "localhost" },
             { "name": "DB_PORT", "value": 5432},
             { "name": "DB_USERNAME", "value": "folio_admin" },
             { "name": "DB_PASSWORD", "value": "folio_admin" },
@@ -220,12 +220,12 @@ or supply a specific set of variables of its own. Here is a sample of standard s
     {
         "symbol": "STANDARD-PG-KAFKA",
         "env": [
-            { "name": "DB_HOST", "value": "localhost"},
+            { "name": "DB_HOST", "value": "localhost" },
             { "name": "DB_PORT", "value": 5432},
             { "name": "DB_USERNAME", "value": "folio_admin" },
             { "name": "DB_PASSWORD", "value": "folio_admin" },
             { "name": "DB_DATABASE", "value": "okapi_modules" },
-            { "name": "KAFKA_HOST", "value": "localhost"},
+            { "name": "KAFKA_HOST", "value": "localhost" },
             { "name": "KAFKA_PORT", "value": "9092" }
         ]
     },
@@ -293,9 +293,9 @@ from `folio-org` to another organization
 ```
 "selectedModules": [
     { "name": "mod-inventory",  "repo": "https://github.com/my-organisation" }
-    { "name": "mod-inventory-storage"},
-    { "name": "mod-pubsub"},
-    { "name": "mod-circulation-storage"}, 
+    { "name": "mod-inventory-storage" },
+    { "name": "mod-pubsub" },
+    { "name": "mod-circulation-storage" }, 
 ]
 ```
 
